@@ -52,7 +52,7 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 
 	@Override
 	public BaseOutput smsTaskHeadList(String userId, Integer index, Integer size, String smsTaskAppType,
-			String smsTaskStatus, String smsTaskName) throws Exception {
+			String smsTaskStatus, String smsTaskName, Integer orgId,Boolean firsthand) throws Exception {
 		BaseOutput output = this.newSuccessBaseOutput();
 		SmsTaskHead smsTaskHeadTemp = new SmsTaskHead();
 		if (StringUtils.isNotEmpty(smsTaskAppType)) {
@@ -69,7 +69,9 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 		smsTaskHeadTemp.setOrderFieldType("DESC");
 		smsTaskHeadTemp.setStartIndex((index - 1) * size);
 		smsTaskHeadTemp.setPageSize(size);
-
+		smsTaskHeadTemp.setOrgId(orgId);
+		smsTaskHeadTemp.setFirsthand(firsthand); 
+		
 		int totalCount = smsTaskHeadDao.selectListCount(smsTaskHeadTemp);
 		output.setTotalCount(totalCount);
 		if (totalCount > 0) {

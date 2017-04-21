@@ -22,16 +22,21 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.CampaignActionSendSmsDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
-import cn.rongcapital.mkt.job.service.base.TaskService;
+import cn.rongcapital.mkt.dao.dataauth.DataAuthMapper;
+import cn.rongcapital.mkt.dataauth.po.DataAuth;
+import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.CampaignActionSendSms;
 import cn.rongcapital.mkt.po.CampaignSwitch;
+import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.service.CampaignActionSendSmsService;
 import cn.rongcapital.mkt.service.SmsActivationCreateOrUpdateService;
+import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SmsActivationCreateIn;
 
 import com.alibaba.fastjson.JSON;
@@ -53,7 +58,6 @@ public class CampaignActionSendSmsTask extends CampaignAutoCancelTaskService  {
 	
 	@Autowired
 	private SmsActivationCreateOrUpdateService smsActivationCreateOrUpdateService;
-	
 	
 	public void task(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();

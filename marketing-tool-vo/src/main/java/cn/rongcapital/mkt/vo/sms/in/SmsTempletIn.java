@@ -34,6 +34,18 @@ public class SmsTempletIn {
     @NotEmpty
     private String name;
 
+    @NotNull
+    private Long orgid;
+    
+    @JsonProperty("org_id")
+    public Long getOrgid() {
+        return orgid;
+    }
+
+    public void setOrgid(Long orgid) {
+        this.orgid = orgid;
+    }
+
     private List<SmstempletMaterialVo> materialList = new ArrayList<SmstempletMaterialVo>();
     
     @JsonProperty("id")

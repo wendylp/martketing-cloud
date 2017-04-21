@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
@@ -21,19 +20,17 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
-
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.CampaignTagTypeEnum;
 import cn.rongcapital.mkt.dao.CampaignDecisionTagDao;
-//import cn.rongcapital.mkt.dao.DataPartyDao;
-import cn.rongcapital.mkt.job.service.base.TaskService;
-import cn.rongcapital.mkt.job.service.vo.ActiveMqMessageVO;
 import cn.rongcapital.mkt.po.CampaignDecisionTag;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
+
+import com.alibaba.fastjson.JSON;
+//import cn.rongcapital.mkt.dao.DataPartyDao;
 
 @Service
 public class CampaignDecisionTagTask extends CampaignAutoCancelTaskService {
@@ -137,6 +134,26 @@ public class CampaignDecisionTagTask extends CampaignAutoCancelTaskService {
 		List<Segment> segmentListToMqYes = new ArrayList<Segment>();//初始化"是"分支的数据对象list
 		List<Segment> segmentListToMqNo = new ArrayList<Segment>();//初始化"非"分支的数据对象list
 		for(Segment s:segmentList) {
+			Integer campaignHeadId = null; // 活动id
+			String itemId = null; // item id
+			if (CollectionUtils.isNotEmpty(campaignSwitchYesList)) {
+				CampaignSwitch csYes = campaignSwitchYesList.get(0);
+				campaignHeadId = csYes.getCampaignHeadId();
+				itemId = csYes.getItemId();
+			} else if (CollectionUtils.isNotEmpty(campaignSwitchNoList)) {
+				CampaignSwitch csNo = campaignSwitchNoList.get(0);
+				campaignHeadId = csNo.getCampaignHeadId();
+				itemId = csNo.getItemId();
+			}
+
+			if (campaignHeadId != null && StringUtils.isNotBlank(itemId)) {
+				if (!checkNodeAudienceExist(campaignHeadId, itemId, s.getDataId())) {// @since 1.9
+					logger.debug("保存流过节点的数据，活动id：{}， 节点id：{}", campaignHeadId, itemId);
+					insertNodeAudience(campaignHeadId, itemId, s);
+				}
+			} else {
+				logger.error("无效是数据，活动id：{}， 节点id：{}", campaignHeadId, itemId);
+			}
 			switch (rule) {
 			//全部匹配
 			case ApiConstant.CAMPAIGN_DECISION_TAG_RULE_MATCH_ALL:

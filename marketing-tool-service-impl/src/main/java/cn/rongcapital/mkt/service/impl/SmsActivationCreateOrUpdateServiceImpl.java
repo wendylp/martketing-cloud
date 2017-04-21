@@ -1,5 +1,6 @@
 package cn.rongcapital.mkt.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jms.JMSException;
@@ -16,6 +17,7 @@ import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
 import cn.rongcapital.mkt.dao.CampaignBodyDao;
 import cn.rongcapital.mkt.dao.SmsTaskBodyDao;
 import cn.rongcapital.mkt.dao.SmsTaskHeadDao;
+import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.CampaignBody;
 import cn.rongcapital.mkt.po.SmsTaskBody;
 import cn.rongcapital.mkt.po.SmsTaskHead;
@@ -48,6 +50,9 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 
 	@Autowired
 	private CampaignActionSendSmsService campaignActionSendSmsService;
+	
+	@Autowired
+	private DataAuthService dataAuthService;	
 
 	private static final String MQ_SMS_GENERATE_DETAIL_SERVICE = "generateSmsDetailTask";
 
@@ -125,7 +130,8 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 				insertSmsTaskHead.setSmsTaskCode(smsActivationCreateIn.getSmsTaskCode());
 				insertSmsTaskHead.setCampaignHeadId(smsActivationCreateIn.getCampaignHeadId()); // 保存活动头id
 				smsTaskHeadDao.insert(insertSmsTaskHead); // 短信头部
-
+				dataAuthService.put(smsActivationCreateIn.getOrgId(), "sms_task_head", insertSmsTaskHead.getId()); //数据权限插入语句
+				
 				// 2:获取task_head的Id,然后将相应得信息分条存储到body表中
 				if (!CollectionUtils.isEmpty(smsActivationCreateIn.getSmsTargetAudienceInArrayList())) {
 					for (SmsTargetAudienceIn smsTargetAudienceIn : smsActivationCreateIn.getSmsTargetAudienceInArrayList()) {
@@ -140,6 +146,7 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 						insertSmsTaskBody.setTargetName(smsTargetAudienceIn.getTargetAudienceName());
 						insertSmsTaskBody.setTargetType(smsTargetAudienceIn.getTargetAudienceType());
 						smsTaskBodyDao.insert(insertSmsTaskBody);
+						
 					}
 				}
 			}
@@ -163,6 +170,9 @@ public class SmsActivationCreateOrUpdateServiceImpl implements SmsActivationCrea
 			message.setMessage(String.valueOf(insertSmsTaskHead.getId()));
 			mqTopicService.senderMessage(MQ_SMS_GENERATE_DETAIL_SERVICE, message);
 
+			List<Object> smsTaskHeadList = new ArrayList<Object>();
+			smsTaskHeadList.add(insertSmsTaskHead);
+			baseOutput.setData(smsTaskHeadList);
 			return baseOutput;
 		}
 

@@ -1,67 +1,90 @@
 package cn.rongcapital.mkt.po;
 
-import cn.rongcapital.mkt.po.base.BaseQuery;
-
 import java.util.Date;
 
+import cn.rongcapital.mkt.po.base.BaseQuery;
+
 public class CampaignHead extends BaseQuery {
-    private Integer id;
 
-    private String name;
+	private static final long serialVersionUID = 1L;
 
-    private Byte publishStatus;
+	private Integer id;
 
-    private Byte status;
+	private String name;
 
-    private Date createTime;
+	private Byte publishStatus;
 
-    private Date updateTime;
+	private Byte status = 0;
 
-    public Integer getId() {
-        return id;
-    }
+	private Date createTime;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	private Date updateTime;
 
-    public String getName() {
-        return name;
-    }
+	private Date startTime;
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
+	private Date endTime;
 
-    public Byte getPublishStatus() {
-        return publishStatus;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setPublishStatus(Byte publishStatus) {
-        this.publishStatus = publishStatus;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public Byte getStatus() {
-        return status;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
+	public void setName(String name) {
+		this.name = name == null ? null : name.trim();
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public Byte getPublishStatus() {
+		return publishStatus;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public void setPublishStatus(Byte publishStatus) {
+		this.publishStatus = publishStatus;
+	}
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
+	public Byte getStatus() {
+		return status;
+	}
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
+	public void setStatus(Byte status) {
+		this.status = status;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
 }

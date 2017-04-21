@@ -6,6 +6,6 @@ public interface SegmentPublishstatusListService {
 
 	public SegmentPublishstatusListOut segmentPublishstatusList(String userToken,
 			    						   Integer publishStatus,Integer index,
-			    						   Integer size,String ver,String keyword);
+			    						   Integer size,String ver,String keyword,Integer orgId,Boolean firsthand);
 	
 }

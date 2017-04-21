@@ -1,22 +1,10 @@
 package cn.rongcapital.mkt.service.impl;
 
-import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
-import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
-import cn.rongcapital.mkt.common.util.DateUtil;
-import cn.rongcapital.mkt.dao.*;
-import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
-import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
-import cn.rongcapital.mkt.material.coupon.service.MaterialCouponStatusUpdateService;
-import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponStatusUpdateVO;
-import cn.rongcapital.mkt.po.*;
-import cn.rongcapital.mkt.service.SmsMaterialService;
-import cn.rongcapital.mkt.vo.BaseOutput;
-import cn.rongcapital.mkt.vo.sms.in.SmsMaterialMaterielIn;
-import cn.rongcapital.mkt.vo.in.SmsMaterialVariableIn;
-import cn.rongcapital.mkt.vo.sms.in.SmsMaterialDeleteIn;
-import cn.rongcapital.mkt.vo.sms.in.SmsMaterialIn;
+import java.util.Date;
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -25,9 +13,34 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.List;
+import cn.rongcapital.mkt.common.constant.ApiConstant;
+import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
+import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
+import cn.rongcapital.mkt.common.util.DateUtil;
+import cn.rongcapital.mkt.dao.SmsMaterialDao;
+import cn.rongcapital.mkt.dao.SmsMaterialMaterielMapDao;
+import cn.rongcapital.mkt.dao.SmsMaterialVariableMapDao;
+import cn.rongcapital.mkt.dao.SmsTaskHeadDao;
+import cn.rongcapital.mkt.dao.SmsTempletDao;
+import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthPut;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthWriteable;
+import cn.rongcapital.mkt.dataauth.interceptor.ParamType;
+import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
+import cn.rongcapital.mkt.material.coupon.service.MaterialCouponStatusUpdateService;
+import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponStatusUpdateVO;
+import cn.rongcapital.mkt.po.SmsMaterial;
+import cn.rongcapital.mkt.po.SmsMaterialMaterielMap;
+import cn.rongcapital.mkt.po.SmsMaterialVariableMap;
+import cn.rongcapital.mkt.po.SmsTaskHead;
+import cn.rongcapital.mkt.po.SmsTemplet;
+import cn.rongcapital.mkt.service.SmsMaterialService;
+import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.SmsMaterialVariableIn;
+import cn.rongcapital.mkt.vo.sms.in.SmsMaterialDeleteIn;
+import cn.rongcapital.mkt.vo.sms.in.SmsMaterialIn;
+import cn.rongcapital.mkt.vo.sms.in.SmsMaterialMaterielIn;
 
 @Service
 public class SmsMaterialServiceImpl implements SmsMaterialService {
@@ -60,6 +73,8 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @DataAuthWriteable(resourceType = "sms_material", orgId = "#smsMaterialIn.orgId", resourceId = "#smsMaterialIn.id", type = ParamType.SpEl)
+    @DataAuthPut(resourceType = "sms_material", orgId = "#smsMaterialIn.orgId", resourceId = "#smsMaterialIn.id", outputResourceId = "code == T(cn.rongcapital.mkt.common.constant.ApiErrorCode).SUCCESS.getCode() && data!=null && data.size()>0?data[0].id:null", type = ParamType.SpEl)
     public BaseOutput insertOrUpdateSmsMaterial(@NotEmpty SmsMaterialIn smsMaterialIn) {
         BaseOutput output = getNewSuccessBaseOutput();
         int couponStatus = 0;
@@ -81,6 +96,7 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
             smsMaterialDao.insert(smsMaterial);
             smsMaterialIn.setId(smsMaterial.getId());
             couponStatus = modifySmsMaterialComponentAndVariable(smsMaterialIn, MODIFY_TYPE_INSERT);
+            smsMaterialIn.setId(null);
         }
         output.getData().add(smsMaterial);
         output.setDate(DateUtil.getStringFromDate(new Date(), FORMAT_STRING));

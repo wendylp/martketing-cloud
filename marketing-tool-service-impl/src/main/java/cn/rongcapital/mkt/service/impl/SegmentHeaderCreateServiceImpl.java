@@ -33,6 +33,9 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.UserSessionUtil;
 import cn.rongcapital.mkt.dao.SegmentationHeadDao;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthPut;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthWriteable;
+import cn.rongcapital.mkt.dataauth.interceptor.ParamType;
 import cn.rongcapital.mkt.vo.ActiveMqMessageVO;
 import cn.rongcapital.mkt.po.SegmentationHead;
 import cn.rongcapital.mkt.service.MQTopicService;
@@ -65,6 +68,7 @@ public class SegmentHeaderCreateServiceImpl implements SegmentHeaderCreateServic
 	 */
 	@Override
 	@ReadWrite(type = ReadWriteType.WRITE)
+    @DataAuthPut(resourceType = "segmentation_head", orgId = "#body.orgid", resourceId = "#body.id", outputResourceId = "code == T(cn.rongcapital.mkt.common.constant.ApiErrorCode).SUCCESS.getCode() && data!=null && data.size()>0?data[0].id:null", type = ParamType.SpEl)
 	public BaseOutput segmentHeaderCreate(SegmentHeadCreateIn body, SecurityContext securityContext) {
 		SegmentationHead t = new SegmentationHead();
 		t.setName(body.getSegmentName());

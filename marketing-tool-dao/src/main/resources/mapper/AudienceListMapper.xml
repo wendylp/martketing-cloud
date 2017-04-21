@@ -8,7 +8,17 @@
 	</sql>
 
 	<!-- 查询列来源表-->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM audience_list]]></sql>
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM audience_list]]>
+		<include refid="QUERY_ORGANIZATION"/>
+	</sql>
+	
+	<!-- 组织机构 添加在表名后 -->
+	<sql id="QUERY_ORGANIZATION">
+		<if test="orgId != null"> 
+    		<![CDATA[ INNER JOIN data_auth da ON da.table_name='audience_list' AND da.resource_id = id AND da.org_id = #{orgId} ]]>
+   		   	<if test="firsthand != null "><![CDATA[ AND da.firsthand = #{firsthand}]]></if>
+   		</if>
+	</sql>
 	
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
