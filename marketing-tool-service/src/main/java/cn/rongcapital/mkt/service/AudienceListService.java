@@ -22,7 +22,7 @@ public interface AudienceListService {
      */
     public BaseOutput getAudienceByListId(String userToken, Integer audienceId, Integer size, Integer index);
 
-    BaseOutput audienceCount(String userToken);
+    BaseOutput audienceCount(String userToken, Integer orgId);
     
     boolean saveAudienceByMobile(Long taskHeadId, List<String> mobileList, String audienceName );
 
