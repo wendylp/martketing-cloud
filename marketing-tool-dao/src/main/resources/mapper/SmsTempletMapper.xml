@@ -149,7 +149,7 @@
 	<!-- 其它SQL语句 -->
 	
 	<!-- 分组计算数量 -->
-	<select id="getTempletCountByType" parameterType="String" resultType="Map">
+	<select id="getTempletCountByType" resultType="Map">
 		<![CDATA[SELECT TYPE AS type ,COUNT(1) AS count FROM `sms_templet`]]>
         <include refid="QUERY_ORGANIZATION"/>
 		<![CDATA[WHERE STATUS = '0']]>

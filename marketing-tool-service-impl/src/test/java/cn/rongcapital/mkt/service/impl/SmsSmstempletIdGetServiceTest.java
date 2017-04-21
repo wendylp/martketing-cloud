@@ -122,7 +122,7 @@ public class SmsSmstempletIdGetServiceTest {
     
     @Test
     public void testGetSmsSmstempletById() {
-        BaseOutput result = smsSmstempletIdGetService.getSmsSmstempletById(smsTemplet.getId(), org_id);
+        BaseOutput result = smsSmstempletIdGetService.getSmsSmstempletById(smsTemplet.getId(), org_id,true);
 
         Assert.assertEquals(ApiErrorCode.SUCCESS.getCode(), result.getCode());
         Assert.assertEquals(1, result.getTotal());
@@ -130,7 +130,7 @@ public class SmsSmstempletIdGetServiceTest {
         SmsSmstempletIdGetOut smsSmstempletIdGetOut = new SmsSmstempletIdGetOut(smsTemplet.getId(),
                         smsTemplet.getChannelType(), smsTemplet.getType(),
                         smsTemplet.getAuditStatus(), smsTemplet.getName(),
-                        smsTemplet.getAuditReason(), null, smsTemplet.getContent(), true, true);
+                        smsTemplet.getAuditReason(), null, smsTemplet.getContent(), false, false);
         smsSmstempletIdGetOut.setAuditTime(DateUtil.getStringFromDate(smsTemplet.getAuditTime(),
                         "yyyy-MM-dd HH:mm:ss"));
         result.getData().add(smsSmstempletIdGetOut);
