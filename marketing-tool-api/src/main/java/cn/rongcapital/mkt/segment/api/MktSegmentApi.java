@@ -510,7 +510,7 @@ public class MktSegmentApi {
     @Path("/mkt.segment.publishstatus.count.get")
     @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public Object segmentPublishstatusCount(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("org_id") Integer orgId,@QueryParam("firsthand") Boolean firsthand) throws Exception {
+            @NotEmpty @QueryParam("ver") String ver, @NotNull @QueryParam("org_id") Integer orgId,@QueryParam("firsthand") Boolean firsthand) throws Exception {
         return segmentPublishStatusCountService.segmentPublishstatusCount(userToken, ver,orgId,firsthand);
     }
     
