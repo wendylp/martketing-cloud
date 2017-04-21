@@ -422,9 +422,9 @@ public class MktSegmentApi {
             @NotNull @QueryParam("publish_status") Integer publishStatus,
             @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
             @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size,
-            @NotEmpty @QueryParam("ver") String ver, @QueryParam("keyword") String keyword,@NotNull @QueryParam("org_id") Integer orgId) throws Exception {
+            @NotEmpty @QueryParam("ver") String ver, @QueryParam("keyword") String keyword,@NotNull @QueryParam("org_id") Integer orgId,@QueryParam("firsthand") Boolean firsthand) throws Exception {
         return segmentPublishstatusListService.segmentPublishstatusList(userToken, publishStatus, index, size, ver,
-                keyword,orgId);
+                keyword,orgId,firsthand);
     }
 
     /**
@@ -436,8 +436,8 @@ public class MktSegmentApi {
     @Path("/mkt.segment.allsummary.list.get")
     public SegmentSummaryListOut segmentAllSummaryList(@NotEmpty @QueryParam("user_token") String userToken,
             @NotNull @QueryParam("publish_status") Integer publishStatus,
-            @NotEmpty @QueryParam("ver") String ver,@NotNull @QueryParam("org_id") Integer orgId) throws Exception {
-        return segmentAllSummaryListService.segmentAllSummaryList(userToken, publishStatus, ver,orgId);
+            @NotEmpty @QueryParam("ver") String ver,@NotNull @QueryParam("org_id") Integer orgId,@QueryParam("firsthand") Boolean firsthand) throws Exception {
+        return segmentAllSummaryListService.segmentAllSummaryList(userToken, publishStatus, ver,orgId,firsthand);
     }
 
     /**
@@ -504,8 +504,8 @@ public class MktSegmentApi {
     @GET
     @Path("/mkt.segment.publishstatus.count.get")
     public Object segmentPublishstatusCount(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("org_id") Integer orgId ) throws Exception {
-        return segmentPublishStatusCountService.segmentPublishstatusCount(userToken, ver,orgId);
+            @NotEmpty @QueryParam("ver") String ver, @NotEmpty @QueryParam("org_id") Integer orgId,@QueryParam("firsthand") Boolean firsthand) throws Exception {
+        return segmentPublishStatusCountService.segmentPublishstatusCount(userToken, ver,orgId,firsthand);
     }
     
     /**
