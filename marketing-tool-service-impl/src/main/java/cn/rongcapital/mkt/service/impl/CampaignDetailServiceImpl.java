@@ -384,7 +384,7 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 
 		String key = this.createKey(campaignId, itemId);
 		CampaignDetail detail = cache.get(key);
-		if (detail.getIsHaveSubTable().intValue() != HAVE_SUB_DATA) {
+		if (detail != null && detail.getIsHaveSubTable().intValue() != HAVE_SUB_DATA) {
 			detail.setIsHaveSubTable(HAVE_SUB_DATA);
 			this.updateCampaignDetailSubTableStatus(campaignId, itemId, HAVE_SUB_DATA);
 		}
