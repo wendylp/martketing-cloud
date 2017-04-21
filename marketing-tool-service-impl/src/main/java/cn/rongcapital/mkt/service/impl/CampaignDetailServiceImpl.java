@@ -340,7 +340,7 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 			logger.error("无效的活动：campaignId={}", campaignId);
 			return;
 		}
-		logger.info("活动详情=====>>>{}", campaignHead);
+		logger.debug("活动详情:{}", campaignHead);
 		List<CampaignBody> campaignBodiesType = this.selectCampaignItemList(campaignId, TRIGGER_TYPE);
 		if (campaignBodiesType == null || campaignBodiesType.isEmpty()) {
 			logger.error("无效的活动：campaignId={}", campaignId);
@@ -414,7 +414,7 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 			return;
 		}
 		CampaignHead campaignHead = this.selectCampaignHead(campaignId);
-		logger.info("活动详情=====>>>{}", campaignHead);
+		logger.debug("活动详情:{}", campaignHead);
 		Integer total = this.selectCampaignAudiencesTotalCount(campaignId);
 
 		Criteria criteria = Criteria.where("campaign_id").is(campaignId);
