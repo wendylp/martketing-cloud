@@ -256,9 +256,9 @@ public class MktSmsApi {
     @GET
     @Path("/mkt.sms.smstemplet.id.get")
     @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)public BaseOutput smsSmstempletIdGet(@NotEmpty @QueryParam("user_token") String userToken,
-                    @QueryParam("ver") String ver, @NotNull @QueryParam("id") Integer id,  @NotNull @QueryParam("org_id") Integer orgId)
+                    @QueryParam("ver") String ver, @NotNull @QueryParam("id") Integer id,  @NotNull @QueryParam("org_id") Integer orgId,@NotNull @QueryParam("firsthand")boolean firsthand)
                     throws Exception {
-        return smsSmstempletIdGetService.getSmsSmstempletById(id, orgId);
+        return smsSmstempletIdGetService.getSmsSmstempletById(id, orgId,firsthand);
     }
 
     /**
