@@ -54,7 +54,7 @@ public class SmsTempletDaoTest extends AbstractUnitTest {
     //组织id存在
     @Test
     public void testSelectByIdAndOrgId01(){
-    	 Map<String, Integer> map = new HashMap<String, Integer>();
+    	 Map<String, Object> map = new HashMap<String, Object>();
          map.put("id", 1);
          map.put("orgId", 13);
          List<SmsTemplet> sms = smsTempletDao.selectByIdAndOrgId(map);
@@ -64,7 +64,7 @@ public class SmsTempletDaoTest extends AbstractUnitTest {
     //组织id存在,资源id 为null
     @Test
     public void testSelectByIdAndOrgId02(){
-    	 Map<String, Integer> map = new HashMap<String, Integer>();
+    	 Map<String, Object> map = new HashMap<String, Object>();
          map.put("orgId", 13);
          List<SmsTemplet> sms = smsTempletDao.selectByIdAndOrgId(map);
          Assert.assertTrue(sms.size() == 0);
@@ -72,7 +72,7 @@ public class SmsTempletDaoTest extends AbstractUnitTest {
     //组织id为null
     @Test
     public void testSelectByIdAndOrgId03(){
-    	 Map<String, Integer> map = new HashMap<String, Integer>();
+    	 Map<String, Object> map = new HashMap<String, Object>();
     	 map.put("id", 1);
          List<SmsTemplet> sms = smsTempletDao.selectByIdAndOrgId(map);
          Assert.assertTrue(sms.size() == 0);
@@ -81,7 +81,7 @@ public class SmsTempletDaoTest extends AbstractUnitTest {
     //资源id 不存在
     @Test
     public void testSelectByIdAndOrgId04(){
-    	 Map<String, Integer> map = new HashMap<String, Integer>();
+    	 Map<String, Object> map = new HashMap<String, Object>();
     	 map.put("id", 1000);
     	 map.put("orgId", 13);
          List<SmsTemplet> sms = smsTempletDao.selectByIdAndOrgId(map);
@@ -91,7 +91,7 @@ public class SmsTempletDaoTest extends AbstractUnitTest {
     //组织id 不存在
     @Test
     public void testSelectByIdAndOrgId05(){
-    	 Map<String, Integer> map = new HashMap<String, Integer>();
+    	 Map<String, Object> map = new HashMap<String, Object>();
     	 map.put("id", 1);
     	 map.put("orgId", 1000);
          List<SmsTemplet> sms = smsTempletDao.selectByIdAndOrgId(map);
