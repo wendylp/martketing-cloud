@@ -111,6 +111,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             bbxCouponCode.setStoreCode("");
             bbxCouponCode.setCreateTime(new Date());
             bbxCouponCode.setSynchronizeable(Boolean.FALSE);
+            bbxCouponCode.setSynchSuccess(Boolean.FALSE);
             bbxCouponCode.setSynchronizedTime(null);
             bbxCouponCode.setPhone(vo.getUser());
             bbxCouponCode.setMainId(String.valueOf( member.getMid()));

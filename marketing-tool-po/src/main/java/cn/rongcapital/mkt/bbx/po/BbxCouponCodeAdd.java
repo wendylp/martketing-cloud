@@ -30,6 +30,8 @@ public class BbxCouponCodeAdd extends BaseQuery{
 
     private Boolean synchronizeable;
 
+    private Boolean synchSuccess;
+
     private Date synchronizedTime;
 
     private String phone;
@@ -124,6 +126,14 @@ public class BbxCouponCodeAdd extends BaseQuery{
 
     public void setSynchronizeable(Boolean synchronizeable) {
         this.synchronizeable = synchronizeable;
+    }
+
+    public Boolean getSynchSuccess() {
+        return synchSuccess;
+    }
+
+    public void setSynchSuccess(Boolean synchSuccess) {
+        this.synchSuccess = synchSuccess;
     }
 
     public Date getSynchronizedTime() {
