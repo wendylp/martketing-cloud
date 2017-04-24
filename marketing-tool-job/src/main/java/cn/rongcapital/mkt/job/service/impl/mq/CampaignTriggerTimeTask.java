@@ -57,8 +57,8 @@ public class CampaignTriggerTimeTask extends BaseMQService implements TaskServic
 		t.setId(campaignHeadId);
 		t.setPublishStatus(ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS);
 		t.setStartTime(new Date()); // @since 1.9 记录活动启动时间
-		this.campaignDetailService.saveCampaignDetail(campaignHeadId); // @since 1.9 记录活动统计数据
 		campaignHeadDao.updateById(t);
+		this.campaignDetailService.saveCampaignDetail(campaignHeadId); // @since 1.9 记录活动统计数据
 		//激活该活动对应的全部任务
 		taskScheduleDao.activateTaskByCampaignHeadId(campaignHeadId);
 	}

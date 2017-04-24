@@ -68,7 +68,6 @@ import cn.rongcapital.mkt.po.WechatPersonalUuid;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.po.mongodb.Segment;
-import cn.rongcapital.mkt.service.CampaignDetailService;
 import cn.rongcapital.mkt.vo.out.CampaignManualStartOut;
 
 import com.alibaba.fastjson.JSON;
@@ -107,8 +106,6 @@ public class BaseMQService {
 	private SegmentationHeadDao segmentationHeadDao;
 	@Autowired
 	private DataPartyDao dataPartyDao;
-	@Autowired
-	private CampaignDetailService campaignDetailService; // 活动统计
 
 	public synchronized void initJndiEvironment() {
 		if (isJndiInited) {
@@ -494,7 +491,6 @@ public class BaseMQService {
 		nodeAudience.setStatus(0);
 		nodeAudience.setWxCode(segment.getFansFriendsOpenId());
 		mongoTemplate.insert(nodeAudience);// 插入mongo的node_audience表
-		campaignDetailService.saveCampaignMember(campaignHeadId, itemId, segment.getDataId()); // @since 1.9 记录活动统计数据
 	}
 
 	protected boolean checkNodeAudienceExist(int campaignId, String itemId, int dataId) {

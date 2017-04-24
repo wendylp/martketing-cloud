@@ -82,12 +82,16 @@ public class CampaignHeaderUpdateServiceImpl implements CampaignHeaderUpdateServ
     	t.setPublishStatus(publishStatus);
 		if (ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS == publishStatus.byteValue()) {
 			t.setStartTime(new Date()); // @since 1.9 记录活动启动时间
-			this.campaignDetailService.saveCampaignDetail(campaignHeadId); // @since 1.9 记录活动统计数据
 		} else if (ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH == publishStatus.byteValue()) {
 			t.setEndTime(new Date()); // @since 1.9 记录活动手动停止时间
-			this.campaignDetailService.updateCampaignDetailMemberTotal(campaignHeadId); // @since 1.9 记录活动统计数据
 		}
     	campaignHeadDao.updateById(t);
+
+		if (ApiConstant.CAMPAIGN_PUBLISH_STATUS_IN_PROGRESS == publishStatus.byteValue()) {
+			this.campaignDetailService.saveCampaignDetail(campaignHeadId); // @since 1.9 记录活动统计数据
+		} else if (ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH == publishStatus.byteValue()) {
+			this.campaignDetailService.updateCampaignDetailMemberTotal(campaignHeadId); // @since 1.9 记录活动统计数据
+		}
 
     	Map<String,Object> map = new HashMap<String,Object>();
     	map.put("oper", UserSessionUtil.getUserNameByUserToken());//TODO:获取当前用户名
