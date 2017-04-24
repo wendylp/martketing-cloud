@@ -198,7 +198,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
                         code.setUser(phone);
                         code.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.RECEIVED.getCode());
                         code.setVerifyStatus(MaterialCouponCodeVerifyStatusEnum.VERIFIED.getCode());
-                        code.setVerifyTime(DateUtil.getDateFromString(head.getSaletime(),"yyyy-MM-dd HH:mm:ss") );
+                        code.setVerifyTime(head.getSaletime() );
                         this.couponCodeDao.updateByIdAndStatus(code);
                         
                       //仅同步以活动发送出去的优惠券信息，短信任务发送的不进行同步
