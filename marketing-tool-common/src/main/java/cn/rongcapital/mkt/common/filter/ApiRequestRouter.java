@@ -96,8 +96,10 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 		   		      if(inputStream!=null)
 		   		      {
 		   		          String temp=IOUtils.toString(inputStream);
-		   		              if(!"".equals(temp))
-		   		      requestContext.setProperty(ApiConstant.API_USER_ID,JSON.parseObject(temp).getString(ApiConstant.API_USER_ID));
+						  //将微信的回调过滤掉，在进行json转换
+						  if(!"".equals(temp) && !temp.contains("<xml>")) {
+						  	requestContext.setProperty(ApiConstant.API_USER_ID, JSON.parseObject(temp).getString(ApiConstant.API_USER_ID));
+						  }
 		   		      }
 		   		      requestContext.getUriInfo().getQueryParameters().add(ApiConstant.API_USER_TOKEN, ApiConstant.API_USER_TOKEN_VALUE);
 		   		    }
