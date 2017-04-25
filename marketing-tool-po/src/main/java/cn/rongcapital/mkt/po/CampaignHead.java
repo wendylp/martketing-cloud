@@ -87,4 +87,11 @@ public class CampaignHead extends BaseQuery {
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
+
+	@Override
+	public String toString() {
+		return "CampaignHead [id=" + id + ", name=" + name + ", publishStatus=" + publishStatus + ", status=" + status
+				+ ", createTime=" + createTime + ", updateTime=" + updateTime + ", startTime=" + startTime + ", endTime="
+				+ endTime + "]";
+	}
 }

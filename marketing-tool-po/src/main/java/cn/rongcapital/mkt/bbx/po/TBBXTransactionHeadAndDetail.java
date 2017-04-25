@@ -52,19 +52,11 @@ public class TBBXTransactionHeadAndDetail implements Serializable {
         this.orderid = orderid;
     }
 
-    /**
-     * @return the saletime
-     */
     public Date getSaletime() {
         return saletime;
     }
 
-    /**
-     * @param saletime the saletime to set
-     */
     public void setSaletime(Date saletime) {
         this.saletime = saletime;
     }
-    
-    
 }

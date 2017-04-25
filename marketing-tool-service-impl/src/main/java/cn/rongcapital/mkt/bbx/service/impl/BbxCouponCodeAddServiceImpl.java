@@ -11,13 +11,33 @@
  *************************************************/
 package cn.rongcapital.mkt.bbx.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
+
 import cn.rongcapital.mkt.bbx.po.BbxCouponCodeAdd;
+import cn.rongcapital.mkt.bbx.po.BbxCouponRule;
 import cn.rongcapital.mkt.bbx.po.TBBXMember;
 import cn.rongcapital.mkt.bbx.po.TBBXOrderPayDetail;
 import cn.rongcapital.mkt.bbx.po.TBBXTransactionHeadAndDetail;
 import cn.rongcapital.mkt.bbx.service.BbxCouponCodeAddService;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeVerifyStatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
@@ -27,33 +47,8 @@ import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.job.service.base.SpringDataPageable;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
-import cn.rongcapital.mkt.material.coupon.service.MaterialCouponCodeCheckService;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCodeStatusUpdateVO;
-import cn.rongcapital.mkt.mongodb.bbx.TBBXOrderPayDetailRepository;
-import cn.rongcapital.mkt.po.DataMember;
-import cn.rongcapital.mkt.po.mongodb.DataParty;
-import cn.rongcapital.mkt.po.mongodb.SystemCustomTagTree;
-import cn.rongcapital.mkt.po.mongodb.TagRecommend;
-import cn.rongcapital.mkt.vo.BaseOutput;
-import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Lists;
-import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import cn.rongcapital.mkt.service.CampaignDetailService;
 
 @Service
 public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
@@ -69,21 +64,11 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
 
     @Autowired
     private MaterialCouponCodeDao couponCodeDao;
+    
+    @Autowired
+    private CampaignDetailService campaignDetailService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
-
-    public class CouponRule{
-
-        private long couponId;
-
-        public long getCouponId() {
-            return couponId;
-        }
-
-        public void setCouponId(long couponId) {
-            this.couponId = couponId;
-        }
-    }
 
     @Override
     @Transactional
@@ -99,33 +84,41 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             MaterialCoupon coupon = this.getCouponById(couponCode.getCouponId());
             
             Map<String,Object> campasignMap = this.bbxCouponCodeAddDao.selectCampaignSmsItemByCouponId(vo.getId());
-            
-            long campsignId = (long)campasignMap.get("campaignHeadId");
-            long itemId = (long)campasignMap.get("itemId");
-            
+
+            Long campsignId = null;
+            Long itemId = null;
+            if(campasignMap !=null) {
+                 campsignId = (Long) campasignMap.get("campaignHeadId");
+                 itemId = (Long) campasignMap.get("itemId");
+            }
 
             //为贝贝熊同步一份优惠码的数据
             BbxCouponCodeAdd bbxCouponCode = new BbxCouponCodeAdd();
             bbxCouponCode.setActionId(ApiConstant.INT_ZERO);
             // 需要根据电话号码将相应的会员号码找到
             TBBXMember member = mongoTemplate.findOne(new Query(Criteria.where("phone").is(couponCode.getUser())), TBBXMember.class);
+            if(member == null){
+                continue;
+            }
             bbxCouponCode.setVipId(member.getMemberid());
             //只有贝贝熊的数据是这么处理的，优惠券rule字段存储着贝贝熊crm系统中的couponId
             String rule = coupon.getRule();
-            CouponRule couponRule = JSON.parseObject(rule, CouponRule.class);
-            bbxCouponCode.setCouponId((int) couponRule.getCouponId());
+            BbxCouponRule couponRule = JSON.parseObject(rule, BbxCouponRule.class);
+            bbxCouponCode.setCouponId((int) couponRule.getCouponid());
             bbxCouponCode.setCouponMoney(coupon.getAmount().doubleValue());
             bbxCouponCode.setCanUseBeginDate(DateUtil.getStringFromDate(coupon.getStartTime(),ApiConstant.DATE_FORMAT_yyyy_MM_dd) );
             bbxCouponCode.setCanUserEndDate(DateUtil.getStringFromDate(coupon.getEndTime(),ApiConstant.DATE_FORMAT_yyyy_MM_dd));
             bbxCouponCode.setStoreCode("");
             bbxCouponCode.setCreateTime(new Date());
             bbxCouponCode.setSynchronizeable(Boolean.FALSE);
+            bbxCouponCode.setSynchSuccess(Boolean.FALSE);
             bbxCouponCode.setSynchronizedTime(null);
             bbxCouponCode.setPhone(vo.getUser());
             bbxCouponCode.setMainId(String.valueOf( member.getMid()));
             bbxCouponCode.setCampsignId(campsignId);
             bbxCouponCode.setItemId(itemId);
             bbxCouponCode.setCouponCodeId(couponCode.getId());
+            bbxCouponCode.setChecked(false);
             list.add(bbxCouponCode);
         }
 
@@ -136,7 +129,10 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             bbxCouponCodeAddDao.batchInsert(item);
             
             for (BbxCouponCodeAdd bbxCouponCodeAdd : item) {
-              //TODO 将数据发送给刘奇的统计数据
+                //仅同步以活动发送出去的优惠券信息，短信任务发送的不进行同步
+                if(bbxCouponCodeAdd.getCampsignId() != null){
+                    this.campaignDetailService.updateCampaignMemberCouponId(bbxCouponCodeAdd.getCampsignId().intValue(),String.valueOf( bbxCouponCodeAdd.getItemId()),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 0, bbxCouponCodeAdd.getCouponId());
+                }
             }
         }
     }
@@ -200,12 +196,15 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
                        
                         code.setId(couponCodeId);
                         code.setUser(phone);
-                        code.setReleaseStatus(MaterialCouponCodeVerifyStatusEnum.VERIFIED.getCode());
-                        code.setVerifyTime(head.getSaletime());
+                        code.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.RECEIVED.getCode());
+                        code.setVerifyStatus(MaterialCouponCodeVerifyStatusEnum.VERIFIED.getCode());
+                        code.setVerifyTime(head.getSaletime() );
                         this.couponCodeDao.updateByIdAndStatus(code);
                         
-                        //TODO 将数据发送给刘奇的统计数据
-                      
+                      //仅同步以活动发送出去的优惠券信息，短信任务发送的不进行同步
+                        if(bbxCouponCodeAdd.getCampsignId() != null){
+                            this.campaignDetailService.updateCampaignMemberCouponId(bbxCouponCodeAdd.getCampsignId().intValue(),String.valueOf( bbxCouponCodeAdd.getItemId()),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 1, bbxCouponCodeAdd.getCouponId());
+                        }
                     }
                 }
 

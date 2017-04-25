@@ -12,11 +12,13 @@ package cn.rongcapital.mkt.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.AudienceListDao;
@@ -34,8 +36,10 @@ public class AudienceAllListServiceImpl implements AudienceAllListService {
 	
 	@Override
 	@ReadWrite(type=ReadWriteType.READ)
-	public BaseOutput audienceAllList(String userToken) {		
+	public BaseOutput audienceAllList(String userToken, Integer orgId, Boolean firsthand) {		
 		AudienceList param = new AudienceList();
+		param.setOrgId(orgId);
+		param.setFirsthand(firsthand);
 		param.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		int totalCount = audienceListDao.selectListCount(param);
 		param.setPageSize(totalCount);

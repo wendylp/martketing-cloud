@@ -43,8 +43,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
-
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.HttpClientUtil;
@@ -71,6 +69,8 @@ import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.vo.out.CampaignManualStartOut;
+
+import com.alibaba.fastjson.JSON;
 
 @Service
 public class BaseMQService {

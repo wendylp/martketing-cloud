@@ -68,5 +68,5 @@ public interface SmsTempletDao extends BaseDao<SmsTemplet>{
 	 * @param map
 	 * @return
 	 */
-	public List<SmsTemplet> selectByIdAndOrgId(Map<String, Integer> map);
+	public List<SmsTemplet> selectByIdAndOrgId(Map<String, Object> map);
 }

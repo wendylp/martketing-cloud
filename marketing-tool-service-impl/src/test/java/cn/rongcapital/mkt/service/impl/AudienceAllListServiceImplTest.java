@@ -43,7 +43,7 @@ public class AudienceAllListServiceImplTest {
     	Mockito.when(audienceListDao.selectListCount(any())).thenReturn(0);    	
 		Mockito.when(audienceListDao.selectList(any())).thenReturn(list);    	    	
     	
-    	BaseOutput out = audienceAllListServiceImpl.audienceAllList("token");
+    	BaseOutput out = audienceAllListServiceImpl.audienceAllList("token", 16, true);
     	Assert.assertEquals(0, out.getTotal());
     	Assert.assertEquals(0, out.getTotalCount());
     	Assert.assertEquals(0, out.getTotal());    	
@@ -60,7 +60,7 @@ public class AudienceAllListServiceImplTest {
     	Mockito.when(audienceListDao.selectListCount(any())).thenReturn(1);    	
 		Mockito.when(audienceListDao.selectList(any())).thenReturn(list);    	    	
     	
-    	BaseOutput out = audienceAllListServiceImpl.audienceAllList("token");
+    	BaseOutput out = audienceAllListServiceImpl.audienceAllList("token", 16, true);
     	Assert.assertEquals(1, out.getTotal());
     	Assert.assertEquals(1, out.getTotalCount());
     	Map<String, Object>  realAudienceList = (Map<String, Object>)out.getData().get(0);       	

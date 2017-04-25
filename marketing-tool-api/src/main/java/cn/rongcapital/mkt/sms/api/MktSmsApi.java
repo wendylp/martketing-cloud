@@ -117,9 +117,12 @@ public class MktSmsApi {
 	 */
 	@GET
 	@Path("/mkt.sms.audienct.get")
+	@CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
 	public SmsTargetAudienceListOut smsAudienceListGet(@NotEmpty @QueryParam("user_token") String userToken,
-			@QueryParam("ver") String ver) throws Exception {
-		return smsTargetAudienceListGetService.getSmsTargetAudienceList();
+			@NotNull @QueryParam("org_id") Integer orgId,
+			@QueryParam("ver") String ver,
+			@QueryParam("firsthand") Boolean firsthand) throws Exception {
+		return smsTargetAudienceListGetService.getSmsTargetAudienceList(orgId, firsthand);
 	}
 
 	/**
@@ -131,7 +134,7 @@ public class MktSmsApi {
 	@POST
 	@Path("/mkt.sms.message.createorupdate")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	//@CaasAuth(res = "#smsActivationCreateIn.orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
+	@CaasAuth(res = "#smsActivationCreateIn.orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
 	public BaseOutput createOrUpdateSmsMessage(@Valid SmsActivationCreateIn smsActivationCreateIn,
 			@Context SecurityContext securityContext) throws JMSException {
 		return smsActivationCreateOrUpdateService.createOrUpdateSmsActivation(smsActivationCreateIn);
@@ -197,11 +200,11 @@ public class MktSmsApi {
 	 */
     @GET
     @Path("/mkt.sms.smsmaterial.count.get")
-//    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public BaseOutput getSmsMaterialCount(@NotEmpty @QueryParam("user_token") String userToken,
-            @QueryParam("ver") String ver, @NotNull @DefaultValue("16") @QueryParam("org_id") Integer orgId,
-            @DefaultValue("true") @QueryParam("firsthand") Boolean firsthand,
-            @NotNull @QueryParam("channel_type") Integer channelType) throws Exception {
+            @QueryParam("ver") String ver, @NotNull @QueryParam("org_id") Integer orgId,
+            @QueryParam("firsthand") Boolean firsthand, @NotNull @QueryParam("channel_type") Integer channelType)
+            throws Exception {
         return smsMaterialGetService.getSmsMaterialCount(orgId, firsthand, channelType);
     }
 
@@ -226,11 +229,11 @@ public class MktSmsApi {
      */
     @GET
     @Path("/mkt.sms.smsmaterial.getlist")
-//    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public BaseOutput getSmsMaterial(@NotEmpty @QueryParam("user_token") String userToken,
                                      @QueryParam("ver") String ver,
-                                     @NotNull @DefaultValue("16") @QueryParam("org_id") Integer orgId,
-                                     @DefaultValue("true") @QueryParam("firsthand") Boolean firsthand,
+                                     @NotNull @QueryParam("org_id") Integer orgId,
+                                     @QueryParam("firsthand") Boolean firsthand,
                                      @QueryParam("search_word") String searchWord,
                                      @QueryParam("channel_type") Integer channelType,
                                      @NotNull @QueryParam("sms_type") Integer smsType,
@@ -253,9 +256,9 @@ public class MktSmsApi {
     @GET
     @Path("/mkt.sms.smstemplet.id.get")
     @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)public BaseOutput smsSmstempletIdGet(@NotEmpty @QueryParam("user_token") String userToken,
-                    @QueryParam("ver") String ver, @NotNull @QueryParam("id") Integer id,  @NotNull @QueryParam("org_id") Integer orgId)
+                    @QueryParam("ver") String ver, @NotNull @QueryParam("id") Integer id,  @NotNull @QueryParam("org_id") Integer orgId,@NotNull @QueryParam("firsthand")boolean firsthand)
                     throws Exception {
-        return smsSmstempletIdGetService.getSmsSmstempletById(id, orgId);
+        return smsSmstempletIdGetService.getSmsSmstempletById(id, orgId,firsthand);
     }
 
     /**
@@ -283,11 +286,10 @@ public class MktSmsApi {
 	 */
     @GET
     @Path("/mkt.sms.material.get")
-//    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public BaseOutput getSmsMaterialByStatus(@NotEmpty @QueryParam("user_token") String userToken,
-            @QueryParam("ver") String ver, @NotNull @DefaultValue("16") @QueryParam("org_id") Integer orgId,
-            @DefaultValue("true") @QueryParam("firsthand") Boolean firsthand,
-            @NotNull @QueryParam("channel_type") Integer channelType,
+            @QueryParam("ver") String ver, @NotNull @QueryParam("org_id") Integer orgId,
+            @QueryParam("firsthand") Boolean firsthand, @NotNull @QueryParam("channel_type") Integer channelType,
             @QueryParam("sms_material_name") String smsMaterialName) throws Exception {
         return smsMaterialGetService.getSmsMaterialByStatus(orgId, firsthand, channelType, smsMaterialName);
     }

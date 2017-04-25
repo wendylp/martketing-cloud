@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.dao.CampaignBodyDao;
@@ -21,6 +24,8 @@ import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.po.CampaignNodeItem;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.DataParty;
+import cn.rongcapital.mkt.po.mongodb.CampaignDetail;
+import cn.rongcapital.mkt.po.mongodb.CampaignMember;
 import cn.rongcapital.mkt.po.mongodb.NodeAudience;
 import cn.rongcapital.mkt.service.CampaignDetailService;
 import cn.rongcapital.mkt.vo.out.CampaignDetailOut;
@@ -53,6 +58,11 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 	public final static Byte ACTION_TYPE = 3; // 行动类型
 	public final static Byte WX_TYPE = 5; // 发送微信图文
 	public final static Byte SMS_TYPE = 6; // 发送短信
+	public final static int HAVE_SUB_DATA = 1; // 发送短信
+	/**
+	 * key: key:campaignId:itemId
+	 */
+	private Map<String, CampaignDetail> cache = new HashMap<String, CampaignDetail>();
 
 	@Override
 	public CampaignDetailOut campaignDetail(String name) {
@@ -141,7 +151,8 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 			return campaignItemAudiencesInfoList;
 		}
 		for (DataParty cur : dataPartyList) {
-			CampaignItemAudiencesInfo audiencesInfo = new CampaignItemAudiencesInfo(cur.getId(), cur.getMobile(), cur.getWxCode(), cur.getWxmpId());
+			CampaignItemAudiencesInfo audiencesInfo = new CampaignItemAudiencesInfo(cur.getId(), cur.getMobile(),
+					cur.getWxCode(), cur.getWxmpId());
 			campaignItemAudiencesInfoList.add(audiencesInfo);
 		}
 		logger.info("活动head_id={}，itemId={}， 受众人群：{}", campaignHeadId, itemId, campaignItemAudiencesInfoList);
@@ -214,6 +225,30 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 			return null;
 		}
 		return campaignHeads;
+	}
+
+	/**
+	 * 查询活动
+	 * 
+	 * @DB MySQL
+	 * @table campaign_head
+	 * @param id
+	 * @return
+	 */
+	public CampaignHead selectCampaignHead(Integer id) {
+		if (id == null) {
+			logger.error("无效的参数：id={}", id);
+			return null;
+		}
+
+		CampaignHead query = new CampaignHead();
+		query.setId(id);
+		List<CampaignHead> campaignHeads = campaignHeadDao.selectList(query);
+		if (campaignHeads == null || campaignHeads.isEmpty() || campaignHeads.size() > 1) {
+			logger.debug("没有找到或者找到多个活动， id={}", id);
+			return null;
+		}
+		return campaignHeads.get(0);
 	}
 
 	/**
@@ -292,5 +327,194 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 	public List<DataParty> selectDataParty(List<Integer> mids) {
 		List<DataParty> list = this.dataPartyDao.selectDataPartyList(mids);
 		return list;
+	}
+
+	@Override
+	public void saveCampaignDetail(Integer campaignId) {
+		if (!isValidForInteger(campaignId)) {
+			logger.error("无效的参数：campaignId={}", campaignId);
+			return;
+		}
+		CampaignHead campaignHead = this.selectCampaignHead(campaignId);
+		if (campaignHead == null) {
+			logger.error("无效的活动：campaignId={}", campaignId);
+			return;
+		}
+		logger.debug("活动详情:{}", campaignHead);
+		List<CampaignBody> campaignBodiesType = this.selectCampaignItemList(campaignId, TRIGGER_TYPE);
+		if (campaignBodiesType == null || campaignBodiesType.isEmpty()) {
+			logger.error("无效的活动：campaignId={}", campaignId);
+		}
+		Byte campaignType = campaignBodiesType.get(0).getItemType(); // 活动类型
+		List<CampaignBody> campaignBodies = this.selectCampaignItemList(campaignId, ACTION_TYPE);
+		CampaignDetail detail = null;
+		for (CampaignBody cur : campaignBodies) {
+			detail = new CampaignDetail(campaignId, campaignHead.getName(), campaignHead.getStartTime(), cur.getItemId());
+			detail.setCampaignMemberNum(campaignType.intValue() == 3 ? -1 : 0);
+			detail.setItemType(cur.getItemType().intValue());
+			String key = this.createKey(campaignId, cur.getItemId());
+			if (cache.containsKey(key)) {
+				cache.remove(key);
+			}
+			cache.put(key, detail); // 添加缓存
+			mongoTemplate.insert(detail);
+			logger.debug("detail={}", detail);
+		}
+	}
+
+	@Override
+	public void saveCampaignMember(Integer campaignId, String itemId, Integer mid) {
+		if (!isValidForInteger(campaignId, mid) || !isValidForString(itemId)) {
+			logger.error("无效的参数：campaignId={}, itemId={}, mid={}", campaignId, itemId, mid);
+			return;
+		}
+		DataParty dataParty = new DataParty();
+		dataParty.setId(mid);
+		List<DataParty> dataParties = this.dataPartyDao.selectList(dataParty);
+		if (dataParties == null || dataParties.isEmpty()) {
+			logger.error("没有找到对应的主数据： mid={}", mid);
+			return;
+		}
+		DataParty dp = dataParties.get(0);
+		CampaignMember member = new CampaignMember(campaignId, itemId, dp.getId());
+		member.setMemberId(0);
+		member.setPhone(dp.getMobile());
+		member.setWxId(dp.getWxmpId());
+		member.setOpenId(dp.getWxCode());
+		mongoTemplate.save(member);
+
+		String key = this.createKey(campaignId, itemId);
+		CampaignDetail detail = cache.get(key);
+		if (detail != null && detail.getIsHaveSubTable().intValue() != HAVE_SUB_DATA) {
+			detail.setIsHaveSubTable(HAVE_SUB_DATA);
+			this.updateCampaignDetailSubTableStatus(campaignId, itemId, HAVE_SUB_DATA);
+		}
+		logger.debug("campaignId={}, itemId={}, member={}", campaignId, itemId, member);
+
+	}
+
+	public void updateCampaignDetailSubTableStatus(Integer campaignId, String itemId, Integer isHaveSubTable) {
+		if (!isValidForInteger(campaignId, isHaveSubTable) || !isValidForString(itemId)) {
+			return;
+		}
+
+		Criteria criteria = Criteria.where("campaign_id").is(campaignId).and("item_id").is(itemId);
+		Query query = new Query(criteria);
+
+		Update update = new Update();
+		update.set("is_have_sub_table", isHaveSubTable);
+		mongoTemplate.updateFirst(query, update, CampaignDetail.class);
+		logger.debug("campaignId={}, itemId={}, total={}, isHaveSubTable={}", campaignId, itemId, isHaveSubTable);
+	}
+
+	@Override
+	public void updateCampaignDetailMemberTotal(Integer campaignId) {
+		if (!isValidForInteger(campaignId)) {
+			logger.error("无效的参数：campaignId={}", campaignId);
+			return;
+		}
+		CampaignHead campaignHead = this.selectCampaignHead(campaignId);
+		logger.debug("活动详情:{}", campaignHead);
+		Integer total = this.selectCampaignAudiencesTotalCount(campaignId);
+
+		Criteria criteria = Criteria.where("campaign_id").is(campaignId);
+		Query query = new Query(criteria);
+
+		Update update = new Update();
+		update.set("campaign_member_num", total);
+		update.set("campaign_end_time", campaignHead.getEndTime());
+		mongoTemplate.updateFirst(query, update, CampaignDetail.class);
+		this.removeCache(createKey(campaignId, "")); // 清楚缓存
+		logger.debug("campaignId={}, total={}", campaignId, total);
+	}
+
+	@Override
+	public CampaignDetail selectCampaignDetail(Integer campaignId, String itemId) {
+		if (!isValidForInteger(campaignId) || !isValidForString(itemId)) {
+			logger.error("无效的参数：campaignId={}, itemId={}", campaignId, itemId);
+			return null;
+		}
+
+		String key = this.createKey(campaignId, itemId);
+		if (cache.containsKey(key)) {
+			return cache.get(key);
+		}
+
+		Criteria criteria = Criteria.where("campaign_id").is(campaignId).and("item_id").is(itemId);
+		Query query = new Query(criteria);
+		CampaignDetail detail = mongoTemplate.findOne(query, CampaignDetail.class);
+		cache.put(key, detail);
+		logger.debug("campaignId={}, itemId={}, CampaignDetail={}", campaignId, itemId, detail);
+		return detail;
+	}
+
+	@Override
+	public void updateCampaignMemberCouponId(Integer campaignId, String itemId, Integer mid, Integer isTouch, Integer couponId) {
+		if (!isValidForInteger(campaignId, mid, isTouch, couponId) || !isValidForString(itemId)) {
+			logger.error("无效的参数：campaignId={}, itemId={}, mid={}, isTouch={}, couponId={}", campaignId, itemId, mid, isTouch, couponId);
+			return;
+		}
+		Criteria criteria = Criteria.where("campaign_id").is(campaignId).and("item_id").is(itemId).and("mid").is(mid);
+		Query query = new Query(criteria);
+
+		Update update = new Update();
+		update.set("is_touch", isTouch); // 是否触达
+		update.set("is_respond", isTouch); // 是否相应
+		update.set("coupon_id", couponId); // 优惠券ID
+		mongoTemplate.updateFirst(query, update, CampaignMember.class);
+		logger.debug("campaignId={}, itemId={}, mid={}, isTouch={}, couponId={}", campaignId, itemId, mid, isTouch, couponId);
+	}
+
+	public void setMongoTemplate(MongoTemplate mongoTemplate) {
+		this.mongoTemplate = mongoTemplate;
+	}
+
+	/**
+	 * 简单校验参数是否有效
+	 * 
+	 * @param args
+	 * @return
+	 */
+	public boolean isValidForInteger(Integer... args) {
+		for (Integer cur : args) {
+			if (cur == null) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public boolean isValidForString(String... args) {
+		for (String cur : args) {
+			if (StringUtils.isNotBlank(cur)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 支持模糊匹配
+	 * 
+	 * @param key
+	 */
+	public void removeCache(String key) {
+		Set<String> keys = cache.keySet();
+		for (String cur : keys) {
+			if (cur.startsWith(key)) {
+				cache.remove(cur);
+			}
+		}
+	}
+
+	public String createKey(Integer campaignId, String itemId) {
+		if (campaignId == null || campaignId.intValue() == 0) {
+			logger.error("无效的参数, campaignId={}", campaignId);
+			return null;
+		}
+		if (StringUtils.isBlank(itemId)) {
+			return "key:" + campaignId + ":";
+		}
+		return "key:" + campaignId + ":" + itemId;
 	}
 }
