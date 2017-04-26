@@ -41,6 +41,13 @@ public interface BbxCouponCodeAddDao extends BaseDao<BbxCouponCodeAdd>{
 	//List<T> selectListCountBycustomMap(Map<String,Object> paramMap);
 
 	/**
+	 * 高性能的分页查询，需要制定limit的其实ID
+	 * @param param
+	 * @return
+	 */
+	List<BbxCouponCodeAdd> selectListByMinId(BbxCouponCodeAdd param);
+
+	/**
 	 * 批量插入
 	 * @param list
 	 */

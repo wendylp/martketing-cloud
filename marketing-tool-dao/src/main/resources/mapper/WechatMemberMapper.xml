@@ -367,7 +367,7 @@
 		DELETE
 		<include refid="QUERY_FROM_TABLE"/>
 		WHERE pub_id=#{pubId} AND wx_code 
-		<foreach collection="wechatMembers" item="item" index="index" separator="," open="IN (" close=")">
+		<foreach collection="fansList" item="item" index="index" separator="," open="IN (" close=")">
 			#{item.wxCode}
 		</foreach>
 	</delete>	
