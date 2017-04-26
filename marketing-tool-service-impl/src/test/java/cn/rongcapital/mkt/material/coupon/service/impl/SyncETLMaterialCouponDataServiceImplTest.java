@@ -3,6 +3,8 @@ package cn.rongcapital.mkt.material.coupon.service.impl;
 import static org.mockito.Matchers.any;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Assert;
@@ -48,6 +50,8 @@ public class SyncETLMaterialCouponDataServiceImplTest {
     private Coupon c3;
     private Coupon c4;
     
+    private Calendar c = Calendar.getInstance();
+    
     @Before
 	public void setUp() throws Exception {
     	logger.info("测试：SyncETLMaterialCouponDataService 准备---------------------");
@@ -57,8 +61,13 @@ public class SyncETLMaterialCouponDataServiceImplTest {
 		c1.setCouponId(1L);
 		c1.setCouponName("Test1");
 		c1.setCouponValue(12.03);
-		c1.setBeginTime("2015-01-01");
-		c1.setEndTime("2016-01-02");
+		//c1.setBeginTime("2015-01-01");
+		//c1.setEndTime("2016-01-02");
+		
+		c.set(2015, 0, 1);
+		c1.setBeginTime(c.getTime());
+		c.set(2015, 0, 2);
+		c1.setEndTime(c.getTime());
 		
     	ReflectionTestUtils.setField(service, "mongoTemplate", mongoTemplate);
 		ReflectionTestUtils.setField(service, "materialCouponDao", materialCouponDao);
@@ -89,6 +98,7 @@ public class SyncETLMaterialCouponDataServiceImplTest {
 	@Test 
 	public void testSync03() {
 		//ETL数据格式不对  BeginTime 不是 "yyyy-mm-dd" 
+		/*
 		c1= new Coupon();
 		c1.setCouponId(1L);
 		c1.setCouponName("Test1");
@@ -105,13 +115,13 @@ public class SyncETLMaterialCouponDataServiceImplTest {
 		c2.setBeginTime("2015-01-01");
 		c2.setEndTime("15-Jun-01");
 		nodeAudienceList.add(c2);
-		
+		*/
 		//EndTime为空
 		c3= new Coupon();
 		c3.setCouponId(1L);
 		c3.setCouponName("Test1");
 		c3.setCouponValue(12.03);
-		c3.setBeginTime("2015-01-01");
+		c3.setBeginTime(c.getTime());
 		nodeAudienceList.add(c3);
 		
 		//BeginTime为空
@@ -119,14 +129,14 @@ public class SyncETLMaterialCouponDataServiceImplTest {
 		c2.setCouponId(1L);
 		c2.setCouponName("Test1");
 		c2.setCouponValue(12.03);
-		c2.setEndTime("2015-01-01");
+		c2.setEndTime(c.getTime());
 		nodeAudienceList.add(c4);
 		
 		Mockito.when(mongoTemplate.find(Query.query(Criteria.where("SyncFlag").exists(false)), Coupon.class)).thenReturn(nodeAudienceList);
 		Mockito.when(materialCouponDao.insert(any())).thenReturn(0);
         
 		int result = service.sync();
-		Assert.assertEquals(result,4);
+		Assert.assertEquals(result,2);
 	}
 	
 	@Test 
@@ -136,8 +146,8 @@ public class SyncETLMaterialCouponDataServiceImplTest {
 		c1.setCouponId(1L);
 		c1.setCouponName(null);
 		c1.setCouponValue(12.03);
-		c1.setBeginTime("2015-01-01");
-		c1.setEndTime("2015-01-01");
+		c1.setBeginTime(c.getTime());
+		c1.setEndTime(c.getTime());
 		nodeAudienceList.add(c1);
 		
 		//ETL数据格式不对  CouponId 为空
@@ -145,8 +155,8 @@ public class SyncETLMaterialCouponDataServiceImplTest {
 		c2.setCouponId(null);
 		c2.setCouponName("Test1");
 		c2.setCouponValue(12.03);
-		c2.setBeginTime("2015-01-01");
-		c2.setEndTime("2015-01-01");
+		c2.setBeginTime(c.getTime());
+		c2.setEndTime(c.getTime());
 		nodeAudienceList.add(c2);
 		
 		//CouponValue为空
@@ -154,8 +164,8 @@ public class SyncETLMaterialCouponDataServiceImplTest {
 		c3.setCouponId(1L);
 		c3.setCouponName("Test1");
 		c3.setCouponValue(null);
-		c3.setBeginTime("2015-01-01");
-		c3.setEndTime("2015-01-01");
+		c3.setBeginTime(c.getTime());
+		c3.setEndTime(c.getTime());
 		nodeAudienceList.add(c3);
 		
 		Mockito.when(mongoTemplate.find(Query.query(Criteria.where("SyncFlag").exists(false)), Coupon.class)).thenReturn(nodeAudienceList);
