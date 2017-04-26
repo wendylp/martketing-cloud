@@ -184,7 +184,8 @@ public class GetH5PubListServiceImpl implements TaskService {
 			wechatGroupDao.insert(wechatGroup);
 			logger.info("insert into wechat_group id:" + wechatGroup.getId());
 		} else {
-			wechatGroupinfo.setId(Integer.valueOf(id.toString()));
+			wechatGroup.setId(Integer.valueOf(id.toString()));
+			wechatGroup.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 			wechatGroupDao.updateById(wechatGroup);
 			logger.info("update wechat_group id:" + id);
 		}
@@ -210,6 +211,7 @@ public class GetH5PubListServiceImpl implements TaskService {
 			logger.info("insert into wechat_group id:" + wechatGroupinfo.getId());
 		} else {
 			wechatGroupinfo.setId(Integer.valueOf(id.toString()));
+			wechatGroupinfo.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 			wechatGroupDao.updateById(wechatGroupinfo);
 			logger.info("update wechat_group id:" + id);
 		}

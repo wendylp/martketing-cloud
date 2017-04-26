@@ -22,21 +22,18 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
-import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.CampaignActionSendSmsDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.dataauth.DataAuthMapper;
-import cn.rongcapital.mkt.dataauth.po.DataAuth;
 import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.CampaignActionSendSms;
 import cn.rongcapital.mkt.po.CampaignSwitch;
-import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.service.CampaignActionSendSmsService;
+import cn.rongcapital.mkt.service.CampaignDetailService;
 import cn.rongcapital.mkt.service.SmsActivationCreateOrUpdateService;
-import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SmsActivationCreateIn;
 
 import com.alibaba.fastjson.JSON;
@@ -58,13 +55,14 @@ public class CampaignActionSendSmsTask extends CampaignAutoCancelTaskService  {
 	
 	@Autowired
 	private SmsActivationCreateOrUpdateService smsActivationCreateOrUpdateService;
-	
+
     @Autowired
     private DataAuthMapper dataAuthMapper;
-    
     @Autowired
     private DataAuthService service;
-	
+	@Autowired
+	private CampaignDetailService campaignDetailService;
+
 	public void task(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
@@ -131,6 +129,7 @@ public class CampaignActionSendSmsTask extends CampaignAutoCancelTaskService  {
 		for(Segment segment:segmentList) {
 			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
 				insertNodeAudience(campaignHeadId, itemId, segment);
+				campaignDetailService.saveCampaignMember(campaignHeadId, itemId, segment.getDataId()); // @since 1.9 记录活动统计数据
 				Integer dataId = segment.getDataId();
 				//从mongo的主数据表中查询该条id对应的主数据详细信息
 				DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(dataId)), DataParty.class);
@@ -151,22 +150,7 @@ public class CampaignActionSendSmsTask extends CampaignAutoCancelTaskService  {
 		//创建发送短信
 		try {
 			SmsActivationCreateIn smsActivationCreateIn = campaignActionSendSmsService.getSmsActivationCreateIn(campaignHeadId, itemId, campaignActionSendSms,dataPartyIds);
-			BaseOutput output = smsActivationCreateOrUpdateService.createOrUpdateSmsActivation(smsActivationCreateIn);
-            if (output.getCode() == ApiErrorCode.SUCCESS.getCode() && CollectionUtils.isNotEmpty(output.getData())) {
-                // 获取ORGID
-                List<DataAuth> owners = dataAuthMapper.selectOwnerByResouceId("campaign_head", campaignHeadId);
-                if (CollectionUtils.isNotEmpty(owners)) {
-                    Long orgId = owners.get(0).getOrgId();
-                    // 添加Auth
-                    SmsTaskHead smsTaskHead = (SmsTaskHead) output.getData().get(0);
-                    DataAuth dataAuth =
-                            this.dataAuthMapper.selectByTableNameResourceIDOrgId("sms_task_head", orgId,
-                                    smsTaskHead.getId());
-                    if (dataAuth == null) {
-                        service.put(orgId, "sms_task_head", smsTaskHead.getId());
-                    }
-                }
-            }
+			smsActivationCreateOrUpdateService.createOrUpdateSmsActivation(smsActivationCreateIn);
 		} catch (JMSException e) {
 			logger.info(queueKey+"-out:"+JSON.toJSONString(e.getMessage()));
 		}

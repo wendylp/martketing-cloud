@@ -82,14 +82,15 @@ public class SmsSmstempletIdGetServiceImpl implements SmsSmstempletIdGetService 
 //        return result;
 //    }
     @Override
-    public BaseOutput getSmsSmstempletById(Integer id, Integer orgId) {
+    public BaseOutput getSmsSmstempletById(Integer id, Integer orgId,boolean firsthand) {
 
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
                         ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 
-        Map<String, Integer> map = new HashMap<String, Integer>();
+        Map<String, Object> map = new HashMap<String,Object>();
         map.put("id", id);
         map.put("orgId", orgId);
+        map.put("firsthand",firsthand);
         List<SmsTemplet> SmsTemplet = smsTempletDao.selectByIdAndOrgId(map);
         if(SmsTemplet.size() > 0){
         	SmsTemplet sms = SmsTemplet.get(0);

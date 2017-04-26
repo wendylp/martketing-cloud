@@ -1,9 +1,7 @@
 package cn.rongcapital.mkt.po.mongodb;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -35,15 +33,24 @@ public class CampaignDetail implements Serializable {
 	@Field(value = "campaign_member_num")
 	private Integer campaignMemberNum;
 	@Field(value = "item_id")
-	private String ItemId;
+	private String itemId;
 	@Field(value = "item_type")
-	private Integer ItemType;
+	private Integer itemType;
 	@Field(value = "is_have_sub_table")
-	private Integer IsHaveSubTable;
+	private Integer isHaveSubTable = 0;
 	@Field(value = "update_time")
-	private Date updateTime;
-	@Field(value = "campaign_member_list")
-	private List<CampaignMember> campaignMemberList = new ArrayList<CampaignMember>();
+	private Date updateTime = new Date();
+
+	public CampaignDetail() {
+
+	}
+
+	public CampaignDetail(Integer campaignId, String campaignName, Date campaignStartTime, String itemId) {
+		this.campaignId = campaignId;
+		this.campaignName = campaignName;
+		this.campaignStartTime = campaignStartTime;
+		this.itemId = itemId;
+	}
 
 	public Integer getCampaignId() {
 		return campaignId;
@@ -86,27 +93,27 @@ public class CampaignDetail implements Serializable {
 	}
 
 	public String getItemId() {
-		return ItemId;
+		return itemId;
 	}
 
 	public void setItemId(String itemId) {
-		ItemId = itemId;
+		this.itemId = itemId;
 	}
 
 	public Integer getItemType() {
-		return ItemType;
+		return itemType;
 	}
 
 	public void setItemType(Integer itemType) {
-		ItemType = itemType;
+		this.itemType = itemType;
 	}
 
 	public Integer getIsHaveSubTable() {
-		return IsHaveSubTable;
+		return isHaveSubTable;
 	}
 
 	public void setIsHaveSubTable(Integer isHaveSubTable) {
-		IsHaveSubTable = isHaveSubTable;
+		this.isHaveSubTable = isHaveSubTable;
 	}
 
 	public Date getUpdateTime() {
@@ -117,20 +124,13 @@ public class CampaignDetail implements Serializable {
 		this.updateTime = updateTime;
 	}
 
-	public List<CampaignMember> getCampaignMemberList() {
-		return campaignMemberList;
-	}
-
-	public void setCampaignMemberList(List<CampaignMember> campaignMemberList) {
-		this.campaignMemberList = campaignMemberList;
-	}
 
 	@Override
 	public String toString() {
 		return "CampaignDetail [id=" + id + ", campaignId=" + campaignId + ", campaignName=" + campaignName
 				+ ", campaignStartTime=" + campaignStartTime + ", campaignEndTime=" + campaignEndTime + ", campaignMemberNum="
-				+ campaignMemberNum + ", ItemId=" + ItemId + ", ItemType=" + ItemType + ", IsHaveSubTable=" + IsHaveSubTable
-				+ ", updateTime=" + updateTime + ", campaignMemberList=" + campaignMemberList + "]";
+				+ campaignMemberNum + ", ItemId=" + itemId + ", ItemType=" + itemType + ", isHaveSubTable=" + isHaveSubTable
+				+ ", updateTime=" + updateTime + "]";
 	}
 
 }

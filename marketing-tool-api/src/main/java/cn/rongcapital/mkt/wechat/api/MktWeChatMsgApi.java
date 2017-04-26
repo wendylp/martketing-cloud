@@ -60,7 +60,9 @@ public class MktWeChatMsgApi {
 			}			
 		} catch (Exception e) {
 			logger.info(e.getMessage());
-			logger.info("事件出现异常，给微信返回成功，使公众号可用。");
+		    e.fillInStackTrace();
+			e.printStackTrace();
+			logger.info("_事件出现异常，给微信返回成功，使公众号可用。");
 		}
 		return "success";		
 	}

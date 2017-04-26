@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.rongcapital.mkt.po.mongodb.CampaignDetail;
-import cn.rongcapital.mkt.po.mongodb.CampaignMember;
 import cn.rongcapital.mkt.vo.out.CampaignDetailOut;
 
 public interface CampaignDetailService {
@@ -25,7 +24,7 @@ public interface CampaignDetailService {
 	 * @table campaign_detail
 	 * @param detail
 	 */
-	default public void saveCampaignDetail(CampaignDetail detail) {
+	default public void saveCampaignDetail(Integer campaignId) {
 
 	}
 
@@ -37,18 +36,7 @@ public interface CampaignDetailService {
 	 * @param itemId
 	 * @param member
 	 */
-	default public void saveCampaignMember(Integer campaignId, String itemId, CampaignMember member) {
-	}
-
-	/**
-	 * 更新子表状态
-	 * 
-	 * @table campaign_detail
-	 * @param campaignId
-	 * @param itemId
-	 * @param isHaveSubTable
-	 */
-	default public void updateCampaignDetailSubTableStatus(Integer campaignId, String itemId, Integer isHaveSubTable) {
+	default public void saveCampaignMember(Integer campaignId, String itemId, Integer mid) {
 	}
 
 	/**
@@ -59,7 +47,7 @@ public interface CampaignDetailService {
 	 * @param itemId
 	 * @param total
 	 */
-	default public void updateCampaignDetailMemberTotal(Integer campaignId, Integer total) {
+	default public void updateCampaignDetailMemberTotal(Integer campaignId) {
 	}
 
 	/**

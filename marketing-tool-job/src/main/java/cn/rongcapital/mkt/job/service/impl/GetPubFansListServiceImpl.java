@@ -339,7 +339,7 @@ public class GetPubFansListServiceImpl implements TaskService {
 						wechatMemberDao.deleteFansByVO(wxFansListVO);
 						wechatMemberDao.batchInsertFans(fansListTemps);
 					} catch (Exception e) {
-						logger.info("更新粉丝失败："+JSONObject.toJSONString(fansListTemps));				
+						logger.info("更新粉丝失败："+JSONObject.toJSONString(fansListTemps));
 						continue;
 					}
                 }    
