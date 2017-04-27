@@ -94,6 +94,13 @@
 		    <artifactId>commons-discovery</artifactId>
 		    <version>0.5</version>
 		</dependency>
+		
+		 <dependency>
+            <groupId>cn.rongcapital.djob</groupId>
+            <artifactId>djob-client</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+		 
   </dependencies>
 
 </project>
