@@ -372,10 +372,14 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 	}
 	
 	private WechatQrcodeTicket getWechatQrcodeTicketOfLast(String authorizerAppid){
-		WechatQrcodeTicket wechatQrcodeTicketBack = new WechatQrcodeTicket();
+		WechatQrcodeTicket wechatQrcodeTicketBack = null;
 		WechatRegister wechatRegister = getWechatRegisterByAuthAppId(authorizerAppid);
 		WechatQrcodeTicket wechatQrcodeTicket = new WechatQrcodeTicket();
+	     //20170412 lhz 修改
+	     if(wechatRegister!=null)
 		wechatQrcodeTicket.setWxAcct(wechatRegister.getWxAcct());
+		    else
+		wechatQrcodeTicket.setWxAcct("临时处理无效微信服务号"); 
 		wechatQrcodeTicket.setOrderField("id");
 		wechatQrcodeTicket.setOrderFieldType("DESC");
 		wechatQrcodeTicket.setStartIndex(0);

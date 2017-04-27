@@ -93,12 +93,8 @@ public class SyncETLMaterialCouponDataServiceImpl implements SyncETLMaterialCoup
 	                coupon.setReadyStatus(MaterialCouponReadyStatusType.READY.getCode()); // 按照之前逻辑，码没有生成应该为 unready，但是unready不能修改优惠券码数量，所以这里做单独适配，为ready
 	                coupon.setCreateTime( new Date());
 	                coupon.setUpdateTime( new Date());
-					coupon.setStartTime(sdf.parse(temp.getBeginTime()) );
-					coupon.setEndTime(sdf.parse(temp.getEndTime()));
-				} catch (ParseException e) {
-					logger.debug("Convert beginTime{} , endTime{} failed",temp.getBeginTime(),temp.getEndTime());
-					logger.debug(e.getMessage());
-					procced = false;
+					coupon.setStartTime(temp.getBeginTime());
+					coupon.setEndTime(temp.getEndTime());
 				} catch (NullPointerException e){
 					logger.debug(e.getMessage());
 					procced = false;
@@ -131,10 +127,10 @@ public class SyncETLMaterialCouponDataServiceImpl implements SyncETLMaterialCoup
     	if(StringUtils.isBlank(con.getCouponName())){ // 数据库必填字段
     		flag = false;
     	}
-    	if(StringUtils.isBlank(con.getBeginTime())){
+    	if(con.getBeginTime()== null){
     		flag = false;
     	}
-    	if(StringUtils.isBlank(con.getEndTime())){
+    	if(con.getEndTime()== null){
     		flag = false;
     	}
     	if(con.getCouponId() == null){ //核销用
