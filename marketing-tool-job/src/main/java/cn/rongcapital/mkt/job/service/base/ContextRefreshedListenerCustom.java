@@ -41,7 +41,7 @@ public class ContextRefreshedListenerCustom implements ApplicationListener<Conte
             e.printStackTrace();
         }
 		
-		DJobUtil.registerSchedule(env.getProperty("djob-service"), 8080, "mc", "mc", "cn.rongcapital.mkt.job.service.base.BrithDayEventService", env.getProperty("djob-brithday-expression"));
+		DJobUtil.registerSchedule(env.getProperty("djob-service"),Integer.valueOf(env.getProperty("djob-port")), "mc", "mc", "cn.rongcapital.mkt.job.service.base.BrithDayEventService", env.getProperty("djob-brithday-expression"));
 		
 	}
 
