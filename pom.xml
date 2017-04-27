@@ -185,7 +185,7 @@
                 <mvnvar.log.path>/rc/log/mkt/dev</mvnvar.log.path>
                 <mvnvar.conf.path>conf_dev</mvnvar.conf.path>
                 <!-- 本机编译 -->
-                <maven.repository.rongcapital.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.rongcapital.url>
+                <maven.repository.rongcapital.url>http://nexus.in.dataengine.com/repository/maven-public/</maven.repository.rongcapital.url>
                 <!-- 服务器编译  -->
                 <!--  
                 <maven.repository.rongcapital.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.rongcapital.url>
@@ -197,7 +197,7 @@
             <properties>
             	<mvnvar.log.path>/rc/log/mkt/test</mvnvar.log.path>
                 <mvnvar.conf.path>conf_test</mvnvar.conf.path>
-                <maven.repository.rongcapital.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.rongcapital.url>
+                <maven.repository.rongcapital.url>http://nexus.in.dataengine.com/repository/maven-public/</maven.repository.rongcapital.url>
             </properties>
         </profile>
         <profile>
@@ -213,7 +213,7 @@
 			<properties>
 				<mvnvar.log.path>/rc/log/mkt/poc</mvnvar.log.path>
 				<mvnvar.conf.path>conf_poc</mvnvar.conf.path>
-				<maven.repository.remote.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.remote.url>
+				<maven.repository.remote.url>http://nexus.in.dataengine.com/repository/maven-public/</maven.repository.remote.url>
 			</properties>
 		</profile>
         <profile>
@@ -230,7 +230,7 @@
             <properties>
             	<mvnvar.log.path>/rc/log/mkt/production_sit</mvnvar.log.path>
                 <mvnvar.conf.path>cloud_dev</mvnvar.conf.path>
-                <maven.repository.remote.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.remote.url>
+                <maven.repository.remote.url>http://nexus.in.dataengine.com/repository/maven-public/</maven.repository.remote.url>
             </properties>
         </profile>
         <profile>
@@ -248,7 +248,7 @@
             <properties>
                 <mvnvar.log.path>/rc/log/event/dev</mvnvar.log.path>
                 <mvnvar.conf.path>event_conf_dev</mvnvar.conf.path>
-                <maven.repository.rongcapital.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.rongcapital.url>
+                <maven.repository.rongcapital.url>http://nexus.in.dataengine.com/repository/maven-public</maven.repository.rongcapital.url>
             </properties>
         </profile>
         <profile>
@@ -256,7 +256,7 @@
             <properties>
             	<mvnvar.log.path>/rc/log/event/test</mvnvar.log.path>
                 <mvnvar.conf.path>event_conf_test</mvnvar.conf.path>
-                <maven.repository.rongcapital.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.rongcapital.url>
+                <maven.repository.rongcapital.url>http://nexus.in.dataengine.com/repository/maven-public/</maven.repository.rongcapital.url>
             </properties>
         </profile>
         <profile>
@@ -272,7 +272,7 @@
 			<properties>
 				<mvnvar.log.path>/rc/log/event/poc</mvnvar.log.path>
 				<mvnvar.conf.path>event_conf_poc</mvnvar.conf.path>
-				<maven.repository.remote.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.remote.url>
+				<maven.repository.remote.url>http://nexus.in.dataengine.com/repository/maven-public/</maven.repository.remote.url>
 			</properties>
 		</profile>
         <profile>
