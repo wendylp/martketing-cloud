@@ -5,10 +5,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import cn.rongcapital.mkt.common.util.GenderUtils;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import cn.rongcapital.mkt.common.util.GenderUtils;
 
 /**
  * @author Administrator
@@ -112,6 +113,8 @@ public class DataParty implements Serializable {
 
 	// 购物记录的订单状态中，交易完成／交易关闭／待支付
 	private String orderStatus;
+
+	private Integer memberId;
 
 	@Field(value = "custom_tag_list")
 	private List<String> customTagList;
@@ -444,11 +447,19 @@ public class DataParty implements Serializable {
 		this.customTagList = customTagList;
 	}
 
+	
+	public Integer getMemberId() {
+		return memberId;
+	}
+	
+	public void setMemberId(Integer memberId) {
+		this.memberId = memberId;
+	}
     @Override
     public String toString() {
         return "DataParty [id=" + id + ", mid=" + mid + ", mdType=" + mdType + ", name=" + name
-                        + ", wxName=" + wxName + ", mappingKeyid=" + mappingKeyid
-                        + ", audienceList=" + audienceList + ", tagList=" + tagList
+                        + ", wxName=" + wxName + ", mappingKeyid=" + mappingKeyid+ ", memberId=" + memberId
+                        + ", audienceList=" + audienceList + ", tagList=" + tagList 
                         + ", fansOpenId=" + fansOpenId + ", pubId=" + pubId + ", subscribeTime="
                         + subscribeTime + ", mobile=" + mobile + ", maritalStatus=" + maritalStatus
                         + ", education=" + education + ", employment=" + employment + ", sex=" + sex

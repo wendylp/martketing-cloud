@@ -14,6 +14,34 @@
 		          <skip>true</skip>
 		        </configuration>
 		      </plugin>
+		<plugin>
+			<artifactId>maven-resources-plugin</artifactId>
+			<version>2.6</version>
+			<executions>
+				<execution>
+					<id>copy-resources</id>
+					<!-- here the phase you need -->
+					<phase>validate</phase>
+					<goals>
+						<goal>copy-resources</goal>
+					</goals>
+					<configuration>
+						<outputDirectory>${basedir}/target/classes</outputDirectory>
+						<resources>
+							<resource>
+								<directory>src/main/resources/${mvnvar.conf.path}</directory>
+								<includes>
+									<include>
+										**/djob-client.properties
+									</include>
+								</includes>
+								<filtering>true</filtering>
+							</resource>
+						</resources>
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
 	</plugins>
 	</build>
 	
