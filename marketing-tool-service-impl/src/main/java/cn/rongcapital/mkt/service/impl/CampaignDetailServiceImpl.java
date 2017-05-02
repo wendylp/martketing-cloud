@@ -375,8 +375,12 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 			logger.error("没有找到对应的主数据： mid={}", mid);
 			return;
 		}
+		Criteria criteria = Criteria.where("mid").is(mid);
+		Query query = new Query(criteria);
+		cn.rongcapital.mkt.po.mongodb.DataParty dp2 = mongoTemplate.findOne(query, cn.rongcapital.mkt.po.mongodb.DataParty.class, "data_party");
+
 		DataParty dp = dataParties.get(0);
-		CampaignMember member = new CampaignMember(campaignId, itemId, dp.getId());
+		CampaignMember member = new CampaignMember(campaignId, itemId, dp.getId(), dp2 == null ? null : dp2.getMemberId());
 		member.setMemberId(0);
 		member.setPhone(dp.getMobile());
 		member.setWxId(dp.getWxmpId());
