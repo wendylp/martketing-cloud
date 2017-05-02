@@ -29,6 +29,8 @@ import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.AudienceListDao;
 import cn.rongcapital.mkt.dao.AudienceListPartyMapDao;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthPut;
+import cn.rongcapital.mkt.dataauth.interceptor.ParamType;
 import cn.rongcapital.mkt.po.AudienceList;
 import cn.rongcapital.mkt.service.AudienceCreateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -48,6 +50,7 @@ public class AudienceCreateServiceImpl implements AudienceCreateService {
     @Override
     @ReadWrite(type = ReadWriteType.WRITE)
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @DataAuthPut(resourceType = "audience_list", orgId = "#in.orgId", outputResourceId = "code == T(cn.rongcapital.mkt.common.constant.ApiErrorCode).SUCCESS.getCode() && data!=null && data.size()>0?data[0][id]:null", type = ParamType.SpEl)
     public BaseOutput createAudience(AudienceCreateIn in) {
         logger.info("target audience {} is creating.", in.getName());
         Date now = new Date();
@@ -82,7 +85,15 @@ public class AudienceCreateServiceImpl implements AudienceCreateService {
         }
         audienceListPartyMapDao.batchInsert(paramInsertLists);
         logger.info("target audience {} is created.", in.getName());
-        return new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
+
+        BaseOutput output =
+                new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
+                        null);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("id", audienceSave.getId());
+        output.getData().add(map);
+        output.setTotal(output.getData().size());
+        return output;
     }
 
 }

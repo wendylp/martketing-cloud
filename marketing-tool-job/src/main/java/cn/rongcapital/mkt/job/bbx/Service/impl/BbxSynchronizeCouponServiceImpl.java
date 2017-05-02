@@ -17,6 +17,7 @@ import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.webservice.BBXCrmWSUtils;
 import cn.rongcapital.mkt.webservice.UpdateCouponResult;
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,12 +49,18 @@ public class BbxSynchronizeCouponServiceImpl implements TaskService {
         if (totalCount % pageSize > 0) {
             pageCount = pageCount + 1;
         }
+        List<BbxCouponCodeAdd> bbxCouponCodeAdds = null;
         for (int i = 0; i < pageCount; i++) {
             param.setPageSize(pageSize);
-            param.setStartIndex(i * pageSize);
-            List<BbxCouponCodeAdd> bbxCouponCodeAdds = this.bbxCouponCodeAddDao.selectList(param);
+            param.setOrderField("id");
+            param.setOrderFieldType("ASC");
+            if(CollectionUtils.isNotEmpty(bbxCouponCodeAdds)){
+                //取上一次最后一条数据的ID作为下一次查询的起始位置
+                param.setId(bbxCouponCodeAdds.get(bbxCouponCodeAdds.size()-1).getId());
+            }
+            bbxCouponCodeAdds = this.bbxCouponCodeAddDao.selectListByMinId(param);
             for (BbxCouponCodeAdd item : bbxCouponCodeAdds) {
-                loopSender(item);
+                sendMessageToBBX(item);
             }
         }
     }
@@ -62,27 +69,31 @@ public class BbxSynchronizeCouponServiceImpl implements TaskService {
      * 循环重试发送消息
      * @param item
      */
-    private void loopSender(BbxCouponCodeAdd item) {
+    private void sendMessageToBBX(BbxCouponCodeAdd item) {
         try {
             logger.info("Send message to bbx crm ,content is {}", JSON.toJSON(item));
             UpdateCouponResult result = BBXCrmWSUtils.UpdateVipCoupon(item.getVipId(), item.getCouponId(), item.getActionId(), item.getCouponMoney(), item.getCanUseBeginDate(), item.getCanUserEndDate(), item.getStoreCode());
             if(result.getSuccess()){
                 item.setSynchronizeable(Boolean.TRUE);
+                item.setSynchSuccess(Boolean.TRUE);
                 item.setSynchronizedTime(new Date());
             }else{
+                item.setSynchronizeable(Boolean.TRUE);
+                item.setSynchSuccess(Boolean.FALSE);
+                item.setSynchronizedTime(new Date());
                 item.setErrorMsg(result.getMsg());
             }
-            //如果没有异常出现，则做日志记录
-            this.bbxCouponCodeAddDao.updateById(item);
+
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("Send coupone code is error,message is :{}",e.getMessage());
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
-            loopSender(item);
+            //将同步webservice调用时，异常的情况记录，以便于重新发起同步操作
+            item.setSynchronizeable(Boolean.FALSE);
+            item.setSynchSuccess(Boolean.FALSE);
+            item.setErrorMsg(e.getMessage());
+        }finally {
+            //不管是否成功，都要记录结果
+            this.bbxCouponCodeAddDao.updateById(item);
         }
     }
 

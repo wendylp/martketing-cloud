@@ -18,6 +18,7 @@ import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
 import cn.rongcapital.mkt.po.DataMember;
 
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -61,6 +62,7 @@ public class BbxCouponCodeAddDaoTest extends AbstractUnitTest {
             bbxCouponCode.setStoreCode("");
             bbxCouponCode.setCreateTime(new Date());
             bbxCouponCode.setSynchronizeable(Boolean.FALSE);
+            bbxCouponCode.setSynchSuccess(Boolean.FALSE);
             bbxCouponCode.setSynchronizedTime(null);
             list.add(bbxCouponCode);
         }
@@ -71,6 +73,31 @@ public class BbxCouponCodeAddDaoTest extends AbstractUnitTest {
     public void testSelectCampaignSmsItemByCouponCodeId(){
         Map<String,Object> result =  this.dao.selectCampaignSmsItemByCouponId(18518757);
         Assert.assertEquals(100,result.get(""));
+    }
+
+    @Test
+    public void testSelectListByMinId(){
+        BbxCouponCodeAdd param = new BbxCouponCodeAdd();
+        param.setSynchronizeable(Boolean.TRUE);
+        int totalCount = this.dao.selectListCount(param);
+        int pageSize = 5;
+        int pageCount = totalCount / pageSize;
+        if (totalCount % pageSize > 0) {
+            pageCount = pageCount + 1;
+        }
+        List<BbxCouponCodeAdd> bbxCouponCodeAdds = null;
+        for (int i = 0; i < pageCount; i++) {
+            param.setPageSize(pageSize);
+            param.setOrderField("id");
+            param.setOrderFieldType("ASC");
+            if(CollectionUtils.isNotEmpty(bbxCouponCodeAdds)){
+                param.setId(bbxCouponCodeAdds.get(bbxCouponCodeAdds.size()-1).getId());
+            }
+            bbxCouponCodeAdds = this.dao.selectListByMinId(param);
+            for (BbxCouponCodeAdd item : bbxCouponCodeAdds) {
+                System.out.println(item.getId());
+            }
+        }
     }
 
 }

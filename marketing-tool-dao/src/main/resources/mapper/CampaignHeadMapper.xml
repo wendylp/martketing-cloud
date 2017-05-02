@@ -3,8 +3,11 @@
 <mapper namespace="cn.rongcapital.mkt.dao.CampaignHeadDao">
 
 	<!-- 所有查询列 -->
-	<sql id="QUERY_COLUMN_LIST">
+	<sql id="QUERY_COLUMN_LIST_BASE">
 		<![CDATA[ id as id,name as name,publish_status as publishStatus,status as status,create_time as createTime,update_time as updateTime, start_time as startTime, end_time as endTime]]>
+	</sql>
+	<sql id="QUERY_COLUMN_LIST">
+		<include refid="QUERY_COLUMN_LIST_BASE"/>
 		<include refid="QUERY_DATA_COLUMN_LIST"/>
 	</sql>
 	<!-- 所有数据权限列 -->
@@ -21,7 +24,12 @@
    		</if>
 	</sql>
 	<!-- 查询列来源表-->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM campaign_head]]>
+	<sql id="QUERY_FROM_TABLE_BASE">
+		<![CDATA[FROM campaign_head]]>
+	</sql>
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE">
+		<include refid="QUERY_FROM_TABLE_BASE"/>
 		<include refid="QUERY_ORGANIZATION"/>
 	</sql>
 	
@@ -184,8 +192,8 @@
 	
 	<select id="selectCampaignHeadListBySearchDate" resultType="cn.rongcapital.mkt.po.CampaignHead" parameterType="java.lang.String">
 		<![CDATA[SELECT]]>
-		<include refid="QUERY_COLUMN_LIST"/>
-		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_COLUMN_LIST_BASE"/>
+		<include refid="QUERY_FROM_TABLE_BASE"/>
 		WHERE 
 			publish_status IN (1,2) 
 		<![CDATA[

@@ -5,15 +5,12 @@
  * @对应项目名称：MC(营销云系统)
  * @author:liuhaizhan
  * @version: 版本v1.6
- * @date(创建、开发日期)：2017年4月18日 
- * @date(最后修改日期)：2017年4月18日 
+ * @date(创建、开发日期)：2017年4月14日 
+ * @date(最后修改日期)：2017年4月14日 
  * @复审人：
  *************************************************/
 
-package cn.rongcapital.mkt.job.service.impl.event;
-
-import cn.rongcapital.mkt.job.service.base.TaskService;
-import cn.rongcapital.mkt.po.mongodb.DataParty;
+package cn.rongcapital.mkt.job.service.base;
 
 import java.util.List;
 import java.util.Map;
@@ -23,11 +20,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.rongcapital.djob.JobExecutor;
+import cn.rongcapital.djob.dto.JobContext;
+import cn.rongcapital.mkt.job.service.impl.event.BrithDayDataSendMQ;
+import cn.rongcapital.mkt.job.service.impl.event.DataPartQueryTaskImpl;
+import cn.rongcapital.mkt.job.service.impl.event.SendBrithDayToEventCenter;
+import cn.rongcapital.mkt.po.mongodb.DataParty;
+
 @Service
-public class BrithDayEventTaskImpl implements TaskService {
+public class BrithDayEventService implements JobExecutor {
     
-    
- private Logger logger = LoggerFactory.getLogger(getClass()); 
+    private Logger logger = LoggerFactory.getLogger(getClass()); 
     
     
     @Autowired
@@ -42,14 +45,8 @@ public class BrithDayEventTaskImpl implements TaskService {
     
     Map<Integer,List<DataParty>> dataParty;
     
-
-    /* (non-Javadoc)
-     * @see cn.rongcapital.mkt.job.service.base.TaskService#task(java.lang.Integer)
-     */
-    @Override
-    public void task(Integer taskId) {
+    public void execute(JobContext arg0) {
         // TODO Auto-generated method stub
-    
         
         logger.info("生日关怀事Jop开始.....");
         dataParty=dataPartQueryTaskImpl.getDataBritDay();
@@ -64,10 +61,6 @@ public class BrithDayEventTaskImpl implements TaskService {
             
         logger.info("生日关怀事Jop结束.....");
         
-        
     }
     
-    
-    
-
 }

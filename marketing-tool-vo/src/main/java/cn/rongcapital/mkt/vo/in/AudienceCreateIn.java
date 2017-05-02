@@ -11,10 +11,17 @@ package cn.rongcapital.mkt.vo.in;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class AudienceCreateIn {
+
+    @NotNull
+    @JsonProperty("org_id")
+    private Integer orgId = 0;
 
     /**
      * 人群名称
@@ -35,6 +42,14 @@ public class AudienceCreateIn {
      */
     @NotEmpty
     private List<Integer> details;
+
+    public Integer getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(Integer orgId) {
+        this.orgId = orgId;
+    }
 
     public String getName() {
         return name;
@@ -62,7 +77,8 @@ public class AudienceCreateIn {
 
     @Override
     public String toString() {
-        return "AudienceCreateIn [name=" + name + ", source=" + source + ", details=" + details + "]";
+        return "AudienceCreateIn [orgId=" + orgId + ", name=" + name + ", source=" + source + ", details=" + details
+                + "]";
     }
 
 }
