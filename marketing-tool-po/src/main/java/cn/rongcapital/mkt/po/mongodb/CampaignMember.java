@@ -56,6 +56,13 @@ public class CampaignMember implements Serializable {
 		this.mid = mid;
 	}
 
+	public CampaignMember(Integer campaignId, String itemId, Integer mid, Integer memberId) {
+		this.campaignId = campaignId;
+		this.itemId = itemId;
+		this.mid = mid;
+		this.memberId = memberId;
+	}
+
 	public String getId() {
 		return id;
 	}
