@@ -31,6 +31,15 @@ public class Xv010 extends AbstractUnitTest {
 	private MongoTemplate mongoTemplate;
 
 	@Test
+	public void test010() {
+		Criteria criteria = Criteria.where("mid").is(34307);
+		Query query = new Query(criteria);
+		cn.rongcapital.mkt.po.mongodb.DataParty dp2 = mongoTemplate.findOne(query, cn.rongcapital.mkt.po.mongodb.DataParty.class,
+				"data_party");
+		System.out.println(dp2);
+	}
+
+	@Test
 	public void test() {
 		Criteria criteria = new Criteria();
 		Query query = new Query(criteria);
