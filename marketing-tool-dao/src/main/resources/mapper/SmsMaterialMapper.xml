@@ -116,8 +116,8 @@
 	<!-- 查询,通过主键IN(array) -->
 	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.SmsMaterial" resultType="cn.rongcapital.mkt.po.SmsMaterial">
 		<![CDATA[SELECT]]>
-		<include refid="QUERY_FROM_TABLE_BASE"/>
 		<include refid="QUERY_COLUMN_LIST_BASE"/>
+		<include refid="QUERY_FROM_TABLE_BASE"/>
 		<![CDATA[WHERE id IN]]>
 		<foreach collection="list" item="id" open="(" separator="," close=")">
 			<![CDATA[#{id}]]>
