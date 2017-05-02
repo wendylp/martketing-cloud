@@ -3,8 +3,13 @@
 <mapper namespace="cn.rongcapital.mkt.dao.SmsMaterialDao">
 
 	<!-- 所有查询列 -->
-	<sql id="QUERY_COLUMN_LIST">
+	<sql id="QUERY_COLUMN_LIST_BASE">
 		<![CDATA[ id as id,code as code,name as name,channel_type as channelType,sms_type as smsType,sms_templet_id as smsTempletId,sms_templet_content as smsTempletContent,sms_sign_id as smsSignId,sms_sign_name as smsSignName,status as status,creator as creator,create_time as createTime,update_user as updateUser,update_time as updateTime,use_status as useStatus]]>
+	</sql>
+	
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<include refid="QUERY_COLUMN_LIST_BASE"/>
 		<include refid="QUERY_DATA_COLUMN_LIST"/>
 	</sql>
 	<!-- 所有数据权限列 -->
@@ -21,9 +26,15 @@
    		</if>
 	</sql>
 	<!-- 查询列来源表-->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM sms_material]]>
+	<sql id="QUERY_FROM_TABLE">
+		<include refid="QUERY_FROM_TABLE_BASE"/>
 		<include refid="QUERY_ORGANIZATION"/>
 	</sql>
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE_BASE">
+		<![CDATA[FROM sms_material]]>
+	</sql>
+	
 	
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
@@ -105,8 +116,8 @@
 	<!-- 查询,通过主键IN(array) -->
 	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.SmsMaterial" resultType="cn.rongcapital.mkt.po.SmsMaterial">
 		<![CDATA[SELECT]]>
-		<include refid="QUERY_COLUMN_LIST"/>
-		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_FROM_TABLE_BASE"/>
+		<include refid="QUERY_COLUMN_LIST_BASE"/>
 		<![CDATA[WHERE id IN]]>
 		<foreach collection="list" item="id" open="(" separator="," close=")">
 			<![CDATA[#{id}]]>
