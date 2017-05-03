@@ -148,10 +148,11 @@ public class AudienceListServiceImpl implements AudienceListService {
     }
 
 	@Override
-	public BaseOutput audienceCount(String userToken, Integer orgId) {
+	public BaseOutput audienceCount(String userToken, Integer orgId, Boolean firsthand) {
 		AudienceList param = new AudienceList();
 		param.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		param.setOrgId(orgId);
+		param.setFirsthand(firsthand);
         AudienceCount audienceCount = audienceListDao.selectAudienceCount(param);
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                                                   ApiConstant.INT_ZERO, null);

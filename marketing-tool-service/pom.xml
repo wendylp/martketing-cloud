@@ -42,7 +42,7 @@
         <dependency>
             <groupId>cn.rongcapital.mc.datatag</groupId>
             <artifactId>mc-data-tag-agent-temp</artifactId>
-            <version>1.9.5-SNAPSHOT</version>
+            <version>1.9.6</version>
         </dependency>
 	</dependencies>
 

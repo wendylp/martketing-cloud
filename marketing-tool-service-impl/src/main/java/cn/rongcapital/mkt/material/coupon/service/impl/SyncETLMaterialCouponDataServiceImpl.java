@@ -11,9 +11,7 @@
 package cn.rongcapital.mkt.material.coupon.service.impl;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,7 +19,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -33,16 +30,12 @@ import com.alibaba.fastjson.JSONObject;
 
 import cn.rongcapital.mkt.common.enums.CouponCodeType;
 import cn.rongcapital.mkt.common.enums.MaterialCouponChannelCodeEnum;
-import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
-import cn.rongcapital.mkt.common.enums.MaterialCouponCodeVerifyStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponReadyStatusType;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponTypeEnum;
-import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao;
 import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
-import cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode;
 import cn.rongcapital.mkt.material.coupon.service.SyncETLMaterialCouponDataService;
 import cn.rongcapital.mkt.po.mongodb.Coupon;
 
