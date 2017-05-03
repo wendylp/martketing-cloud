@@ -157,11 +157,11 @@
 	</insert>
 	
 	<select id="selectCampaignSmsItemByCouponId" parameterType="long" resultType="map">
-		SELECT cass.campaign_head_id as campaignHeadId,cass.item_id as itemId 
-			FROM material_coupon mc 
+		SELECT cass.campaign_head_id AS campaignHeadId,cass.item_id AS itemId
+		FROM material_coupon mc
 			INNER JOIN sms_material_materiel_map smmm ON mc.id = smmm.sms_materiel_id
-			INNER JOIN campaign_action_send_sms cass ON cass.sms_material_id = smmm.id
-		WHERE smmm.sms_materiel_type = 0 AND mc.id = #{couponId}
+			INNER JOIN campaign_action_send_sms cass ON cass.sms_material_id = smmm.sms_material_id
+		WHERE smmm.sms_materiel_type = 0 AND smmm.sms_materiel_id= #{couponId}
 	</select>
 
 	<select id="selectListByMinId" resultType="cn.rongcapital.mkt.bbx.po.BbxCouponCodeAdd">
