@@ -470,7 +470,7 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 	}
 
 	@Override
-	public void updateCampaignMemberCouponId(Integer campaignId, String itemId, Integer mid, Integer isBuy) {
+	public void updateCampaignMemberCouponStatus(Integer campaignId, String itemId, Integer mid, Integer isBuy) {
 		if (!isValidForInteger(campaignId, mid, isBuy) || !isValidForString(itemId)) {
 			logger.error("无效的参数：campaignId={}, itemId={}, mid={}, isBuy={}", campaignId, itemId, mid, isBuy);
 			return;

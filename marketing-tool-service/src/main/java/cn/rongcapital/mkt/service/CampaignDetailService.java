@@ -84,7 +84,7 @@ public interface CampaignDetailService {
 	 * @param mid
 	 * @param isBuy
 	 */
-	default public void updateCampaignMemberCouponId(Integer campaignId, String itemId, Integer mid, Integer isBuy) {
+	default public void updateCampaignMemberCouponStatus(Integer campaignId, String itemId, Integer mid, Integer isBuy) {
 	}
 	
 }
