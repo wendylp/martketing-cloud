@@ -87,7 +87,7 @@ public class CreateTargetAudienceGroupTaskTest {
 
         Mockito.when(materialCouponCodeDao.getCouponCodeVerifyUserInfoList(any())).thenReturn(mobileList);
         Mockito.when(materialCouponDao.selectListByIdList(any())).thenReturn(mc);
-        Mockito.when(audienceListService.saveAudienceByMobile(any(), any(), any())).thenReturn(true);
+        Mockito.when(audienceListService.saveAudienceByMobile(any(), any(), any(),any())).thenReturn(true);
 
         ctagTask.task(jsonString);
         
@@ -100,7 +100,7 @@ public class CreateTargetAudienceGroupTaskTest {
 
         Mockito.when(materialCouponCodeDao.getCouponCodeVerifyUserInfoList(any())).thenReturn(null);
         Mockito.when(materialCouponDao.selectListByIdList(any())).thenReturn(mc);
-        Mockito.when(audienceListService.saveAudienceByMobile(any(), any(), any())).thenReturn(false);
+        Mockito.when(audienceListService.saveAudienceByMobile(any(), any(), any(),any())).thenReturn(false);
 
         ctagTask.task(jsonString);
         
@@ -113,7 +113,7 @@ public class CreateTargetAudienceGroupTaskTest {
 
         Mockito.when(materialCouponCodeDao.getCouponCodeVerifyUserInfoList(any())).thenReturn(new ArrayList<>());
         Mockito.when(materialCouponDao.selectListByIdList(any())).thenReturn(null);
-        Mockito.when(audienceListService.saveAudienceByMobile(any(), any(), any())).thenReturn(true);
+        Mockito.when(audienceListService.saveAudienceByMobile(any(), any(), any(),any())).thenReturn(true);
 
         ctagTask.task(jsonString);
         
@@ -126,7 +126,7 @@ public class CreateTargetAudienceGroupTaskTest {
 
         Mockito.when(materialCouponCodeDao.getCouponCodeVerifyUserInfoList(any())).thenReturn(new ArrayList<>());
         Mockito.when(materialCouponDao.selectListByIdList(any())).thenReturn(new ArrayList<MaterialCoupon>());
-        Mockito.when(audienceListService.saveAudienceByMobile(any(), any(), any())).thenReturn(true);
+        Mockito.when(audienceListService.saveAudienceByMobile(any(), any(), any(),any())).thenReturn(true);
 
         ctagTask.task(jsonString);
         
@@ -143,7 +143,7 @@ public class CreateTargetAudienceGroupTaskTest {
         
         Mockito.when(materialCouponCodeDao.getCouponCodeVerifyUserInfoList(any())).thenReturn(new ArrayList<>());
         Mockito.when(materialCouponDao.selectListByIdList(any())).thenReturn(mc);
-        Mockito.when(audienceListService.saveAudienceByMobile(any(), any(), any())).thenReturn(true);
+        Mockito.when(audienceListService.saveAudienceByMobile(any(), any(), any(),any())).thenReturn(true);
 
         parmVO = new MaterialCouponCreateAudienceVO(282l,"test","137","received","verified","expired");
         jsonString = JSONObject.toJSONString(parmVO);

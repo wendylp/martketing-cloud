@@ -24,6 +24,6 @@ public interface AudienceListService {
 
     BaseOutput audienceCount(String userToken, Integer orgId, Boolean firsthand);
     
-    boolean saveAudienceByMobile(Long taskHeadId, List<String> mobileList, String audienceName );
+    boolean saveAudienceByMobile(Long taskHeadId, List<String> mobileList, String audienceName ,Long orgId);
 
 }
