@@ -67,7 +67,8 @@ public class AudienceCreateServiceImpl implements AudienceCreateService {
         audienceCondition.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         int count = audienceListDao.selectListCount(audienceCondition);
         if (count > 0) {
-            return new BaseOutput(ApiErrorCode.VALIDATE_ERROR.getCode(), "目标人群名称重复", ApiConstant.INT_ZERO, null);
+            return new BaseOutput(ApiErrorCode.FIX_AUDIENCE_NAME_DUPLICATE.getCode(),
+                    ApiErrorCode.FIX_AUDIENCE_NAME_DUPLICATE.getMsg(), ApiConstant.INT_ZERO, null);
         }
         // 保存人群
         int detailSize = in.getDetails().size();
@@ -114,6 +115,7 @@ public class AudienceCreateServiceImpl implements AudienceCreateService {
                         null);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("id", audienceSave.getId());
+        map.put("audience_count", finalSize);
         output.getData().add(map);
         output.setTotal(output.getData().size());
         return output;
