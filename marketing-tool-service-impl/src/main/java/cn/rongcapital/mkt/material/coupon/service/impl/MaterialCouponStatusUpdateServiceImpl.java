@@ -47,7 +47,7 @@ public class MaterialCouponStatusUpdateServiceImpl implements MaterialCouponStat
     @Override
     @ReadWrite(type = ReadWriteType.WRITE)
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void updateMaterialCouponStatus(MaterialCouponStatusUpdateVO vo) {
+    public void  updateMaterialCouponStatus(MaterialCouponStatusUpdateVO vo) {
         if (vo.getId() == null) {
             throw new IllegalArgumentException("param id can not be null");
         }

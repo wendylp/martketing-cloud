@@ -206,7 +206,7 @@ public class SmsMaterialGetServiceImpl implements SmsMaterialGetService {
 				smsMaterialMaterielOut.setMaterielType(smsMaterialMaterielMap.getSmsMaterielType());
 				smsMaterialMaterielOut.setMaterielName(tempMaterialCoupon.getTitle());
 				smsMaterialMaterielOut.setMaterielAmount(tempMaterialCoupon.getAmount().doubleValue());
-				smsMaterialMaterielOut.setMaterielStockTotal(tempMaterialCoupon.getStockTotal());
+				smsMaterialMaterielOut.setMaterielStockTotal(tempMaterialCoupon.getStockRest());
 				smsMaterialMaterielOutList.add(smsMaterialMaterielOut);
 			}
 			smsMaterialOut.setSmsMaterialMaterielOutList(smsMaterialMaterielOutList);

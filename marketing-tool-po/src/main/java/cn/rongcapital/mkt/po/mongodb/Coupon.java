@@ -28,10 +28,10 @@ public class Coupon {
     private Double couponValue;
 
     @Field("couponbegintime")
-    private String beginTime;
+    private Date beginTime;
 
     @Field("couponendtime")
-    private String endTime;
+    private Date endTime;
 
     private String remark;
     public String getId() {
@@ -82,19 +82,19 @@ public class Coupon {
         this.couponValue = couponValue;
     }
 
-	public String getBeginTime() {
+	public Date getBeginTime() {
 		return beginTime;
 	}
 
-	public void setBeginTime(String beginTime) {
+	public void setBeginTime(Date beginTime) {
 		this.beginTime = beginTime;
 	}
 
-    public String getEndTime() {
+	public Date getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(String endTime) {
+	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
 

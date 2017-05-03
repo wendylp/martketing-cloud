@@ -83,13 +83,13 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             MaterialCouponCode couponCode = this.getCouponIdByCodeId(vo.getId());
             MaterialCoupon coupon = this.getCouponById(couponCode.getCouponId());
             
-            Map<String,Object> campasignMap = this.bbxCouponCodeAddDao.selectCampaignSmsItemByCouponId(vo.getId());
+            Map<String,Object> campasignMap = this.bbxCouponCodeAddDao.selectCampaignSmsItemByCouponId(coupon.getId());
 
-            Long campsignId = null;
-            Long itemId = null;
+            Integer campsignId = null;
+            String itemId = null;
             if(campasignMap !=null) {
-                 campsignId = (Long) campasignMap.get("campaignHeadId");
-                 itemId = (Long) campasignMap.get("itemId");
+                 campsignId = (Integer) campasignMap.get("campaignHeadId");
+                 itemId = (String) campasignMap.get("itemId");
             }
 
             //为贝贝熊同步一份优惠码的数据

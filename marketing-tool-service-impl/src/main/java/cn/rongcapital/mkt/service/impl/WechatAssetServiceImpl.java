@@ -189,7 +189,7 @@ public class WechatAssetServiceImpl implements WechatAssetService {
 		//更新资产组
 		WechatAssetGroup wechatAssetGroup = new WechatAssetGroup();
 		wechatAssetGroup.setWxAcct(wechatMember.getPubId());
-		if(StringUtils.isNotEmpty(wechatMember.getWxGroupId())){
+		if(StringUtils.isNotEmpty(wechatMember.getWxGroupId()) && !wechatMember.getWxGroupId().contains(",")){
 			wechatAssetGroup.setImportGroupId(Long.parseLong(wechatMember.getWxGroupId()));
 		}else{
 			wechatAssetGroup.setImportGroupId(Long.parseLong(ApiConstant.WECHAT_GROUP));
@@ -236,6 +236,9 @@ public class WechatAssetServiceImpl implements WechatAssetService {
 //            sb.deleteCharAt(sb.length() - 1);
         }
         if(StringUtils.isNotEmpty(sb.toString())){
+            
+            logger.info("微信用户所属组:{}",sb.toString());
+            
         	wechatMember.setWxGroupId(sb.toString());
         }else{
         	wechatMember.setWxGroupId(ApiConstant.WECHAT_GROUP_M);

@@ -725,8 +725,9 @@ public class MktDataApi {
      */
     @GET
     @Path("/mkt.audience.count.get")
-    public BaseOutput audienceCount(@NotEmpty @QueryParam("user_token") String userToken, @NotNull @QueryParam("org_id") Integer orgId) {
-        return audienceListService.audienceCount(userToken, orgId);
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+    public BaseOutput audienceCount(@NotEmpty @QueryParam("user_token") String userToken, @NotNull @QueryParam("org_id") Integer orgId, @QueryParam("firsthand") Boolean firsthand) {
+        return audienceListService.audienceCount(userToken, orgId, firsthand);
     }
 
     /**
