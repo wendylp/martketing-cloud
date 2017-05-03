@@ -131,7 +131,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             for (BbxCouponCodeAdd bbxCouponCodeAdd : item) {
                 //仅同步以活动发送出去的优惠券信息，短信任务发送的不进行同步
                 if(bbxCouponCodeAdd.getCampsignId() != null){
-                    this.campaignDetailService.updateCampaignMemberCouponId(bbxCouponCodeAdd.getCampsignId().intValue(),String.valueOf( bbxCouponCodeAdd.getItemId()),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 0, bbxCouponCodeAdd.getCouponId());
+                    this.campaignDetailService.updateCampaignMemberCouponId(bbxCouponCodeAdd.getCampsignId(), bbxCouponCodeAdd.getItemId(),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 1, bbxCouponCodeAdd.getCouponId());
                 }
             }
         }
@@ -203,7 +203,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
                         
                       //仅同步以活动发送出去的优惠券信息，短信任务发送的不进行同步
                         if(bbxCouponCodeAdd.getCampsignId() != null){
-                            this.campaignDetailService.updateCampaignMemberCouponId(bbxCouponCodeAdd.getCampsignId().intValue(),String.valueOf( bbxCouponCodeAdd.getItemId()),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 1, bbxCouponCodeAdd.getCouponId());
+                            this.campaignDetailService.updateCampaignMemberCouponStatus(bbxCouponCodeAdd.getCampsignId(),bbxCouponCodeAdd.getItemId(),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 1);
                         }
                     }
                 }
