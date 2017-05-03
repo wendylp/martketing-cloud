@@ -33,7 +33,7 @@ public class AudienceCalcSmsTargetAudienceStrategy extends AbstractCalcSmsTarget
         int totalAudienceListPartyMapPage = (totalCount+PAGE_SIZE)/PAGE_SIZE;
         List<AudienceListPartyMap> audienceListPartyMapList =new ArrayList<>();
         for(int index = 0; index < totalAudienceListPartyMapPage; index++){
-            paramAudienceListPartyMap.setStartIndex(index * PAGE_SIZE + 1);
+            paramAudienceListPartyMap.setStartIndex(index * PAGE_SIZE);
             paramAudienceListPartyMap.setPageSize(PAGE_SIZE);
             List<AudienceListPartyMap> subAudienceListPartyMapList = audienceListPartyMapDao.selectList(paramAudienceListPartyMap);
             audienceListPartyMapList.addAll(subAudienceListPartyMapList);
