@@ -52,7 +52,7 @@ public class AudienceCreateServiceImpl implements AudienceCreateService {
 
     @Autowired
     private DataPartyRepository dataPartyRepository;
-    
+
     @Override
     @ReadWrite(type = ReadWriteType.WRITE)
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -70,9 +70,10 @@ public class AudienceCreateServiceImpl implements AudienceCreateService {
             return new BaseOutput(ApiErrorCode.VALIDATE_ERROR.getCode(), "目标人群名称重复", ApiConstant.INT_ZERO, null);
         }
         // 保存人群
+        int detailSize = in.getDetails().size();
         AudienceList audienceSave = new AudienceList();
         audienceSave.setAudienceName(in.getName());
-        audienceSave.setAudienceRows(in.getDetails().size());
+        audienceSave.setAudienceRows(detailSize);
         audienceSave.setSource(in.getSource());
         audienceSave.setCreateTime(now);
         audienceListDao.insert(audienceSave);
@@ -99,13 +100,14 @@ public class AudienceCreateServiceImpl implements AudienceCreateService {
             audienceListPartyMapDao.batchInsert(paramInsertLists);
 
         }
-        if (paramInsertLists.size() != in.getDetails().size()) {
+        int finalSize = paramInsertLists.size();
+        if (finalSize != detailSize) {
             AudienceList audienceUpdate = new AudienceList();
             audienceUpdate.setId(audienceSave.getId());
-            audienceUpdate.setAudienceRows(paramInsertLists.size());
+            audienceUpdate.setAudienceRows(finalSize);
             audienceListDao.updateById(audienceUpdate);
         }
-        logger.info("target audience {} is created.", in.getName());
+        logger.info("target audience {} is created, target audience count {}.", in.getName(), finalSize);
 
         BaseOutput output =
                 new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO,
