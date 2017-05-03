@@ -44,6 +44,11 @@ public class MaterialCouponCreateAudienceVO extends BaseInput{
 	@NotEmpty
     @JsonProperty("user_token")
     private String userToken = null;
+	
+    @NotNull
+    @JsonProperty("org_id")
+    private Long orgid;
+	
     public MaterialCouponCreateAudienceVO(Long id, String name, String blurSearch, String releaseStatus,
             String verifyStatus, String expireStatus) {
         super();
@@ -113,6 +118,14 @@ public class MaterialCouponCreateAudienceVO extends BaseInput{
 
 	public void setUserToken(String userToken) {
 		this.userToken = userToken;
+	}
+
+	public Long getOrgid() {
+		return orgid;
+	}
+
+	public void setOrgid(Long orgid) {
+		this.orgid = orgid;
 	}
     
 }

@@ -70,7 +70,7 @@ public class CreateTargetAudienceGroupTask implements TaskService {
                 (!CollectionUtils.isEmpty(mc) && mc.get(0).getTaskId() != null) ? mc.get(0).getTaskId() : null;
         if (taskHeadId != null) {
             // 目前只针对短信渠道 2016-12-14
-            boolean flag = audienceListService.saveAudienceByMobile(taskHeadId, mobileList, parmVO.getName());
+            boolean flag = audienceListService.saveAudienceByMobile(taskHeadId, mobileList, parmVO.getName(), parmVO.getOrgid());
             if (flag) {
                 // 成功
             } else {

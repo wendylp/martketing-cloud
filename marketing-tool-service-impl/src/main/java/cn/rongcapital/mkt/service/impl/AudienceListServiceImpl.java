@@ -37,6 +37,7 @@ import cn.rongcapital.mkt.dao.AudienceColumnsDao;
 import cn.rongcapital.mkt.dao.AudienceListDao;
 import cn.rongcapital.mkt.dao.AudienceListPartyMapDao;
 import cn.rongcapital.mkt.dao.SmsTaskTargetAudienceCacheDao;
+import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.AudienceColumns;
 import cn.rongcapital.mkt.po.AudienceCount;
 import cn.rongcapital.mkt.po.AudienceList;
@@ -60,6 +61,9 @@ public class AudienceListServiceImpl implements AudienceListService {
 	
 	@Autowired
 	AudienceListPartyMapDao audienceListPartyMapDao;
+	
+	@Autowired
+	private DataAuthService dataAuthService;
 	
 	private static final String ORDER_BY_FIELD_NAME = "field_order";//排序的字段名
 	
@@ -164,7 +168,7 @@ public class AudienceListServiceImpl implements AudienceListService {
 
     @Override
     public boolean saveAudienceByMobile(Long taskHeadId, List<String> mobileList,
-                    String audienceName) {
+                    String audienceName, Long orgId) {
         if(taskHeadId == null || CollectionUtils.isEmpty(mobileList) || StringUtils.isEmpty(audienceName)){
             logger.error("parameter is not valid!");
             return false;
@@ -221,6 +225,8 @@ public class AudienceListServiceImpl implements AudienceListService {
         audience.setSource("优惠码");
         audience.setCreateTime(new Date());
         audienceListDao.insert(audience);
+        dataAuthService.put(orgId, "audience_list", audience.getId()); //数据权限插入语句
+    	
         //保存到map
         List<Map<String,Object>> paramInsertLists = new ArrayList<>();
         for(Long Keyid : dataIdlistAll){
