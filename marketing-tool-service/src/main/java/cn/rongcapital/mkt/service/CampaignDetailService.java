@@ -75,4 +75,16 @@ public interface CampaignDetailService {
 	 */
 	default public void updateCampaignMemberCouponId(Integer campaignId, String itemId, Integer mid, Integer isTouch, Integer couponId) {
 	}
+	
+	/**
+	 * 更新核销状态
+	 * 
+	 * @param campaignId
+	 * @param itemId
+	 * @param mid
+	 * @param isBuy
+	 */
+	default public void updateCampaignMemberCouponStatus(Integer campaignId, String itemId, Integer mid, Integer isBuy) {
+	}
+	
 }
