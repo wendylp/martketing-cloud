@@ -105,6 +105,7 @@ public enum ApiErrorCode {
 	CECLASS_ERROR(7006,"分类错误"),
 	ID_NOTFOUND_ERROR(7007,"file_id不存在"),
 	USERSOURCE_CLASSIFICATION_IMP_ERROR(7008,"用户来源或分类已创建或导入过"),
+	FIX_AUDIENCE_NAME_DUPLICATE(7009, "目标人群名称重复"),
 	SYSTEM_ERROR(9001,"system error");//9001-9999,系统错误码
 	
     private int code;

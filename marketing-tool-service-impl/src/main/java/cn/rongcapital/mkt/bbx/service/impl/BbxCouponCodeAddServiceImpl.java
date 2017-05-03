@@ -83,13 +83,13 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             MaterialCouponCode couponCode = this.getCouponIdByCodeId(vo.getId());
             MaterialCoupon coupon = this.getCouponById(couponCode.getCouponId());
             
-            Map<String,Object> campasignMap = this.bbxCouponCodeAddDao.selectCampaignSmsItemByCouponId(vo.getId());
+            Map<String,Object> campasignMap = this.bbxCouponCodeAddDao.selectCampaignSmsItemByCouponId(coupon.getId());
 
-            Long campsignId = null;
-            Long itemId = null;
+            Integer campsignId = null;
+            String itemId = null;
             if(campasignMap !=null) {
-                 campsignId = (Long) campasignMap.get("campaignHeadId");
-                 itemId = (Long) campasignMap.get("itemId");
+                 campsignId = (Integer) campasignMap.get("campaignHeadId");
+                 itemId = (String) campasignMap.get("itemId");
             }
 
             //为贝贝熊同步一份优惠码的数据
@@ -131,7 +131,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             for (BbxCouponCodeAdd bbxCouponCodeAdd : item) {
                 //仅同步以活动发送出去的优惠券信息，短信任务发送的不进行同步
                 if(bbxCouponCodeAdd.getCampsignId() != null){
-                    this.campaignDetailService.updateCampaignMemberCouponId(bbxCouponCodeAdd.getCampsignId().intValue(),String.valueOf( bbxCouponCodeAdd.getItemId()),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 0, bbxCouponCodeAdd.getCouponId());
+                    this.campaignDetailService.updateCampaignMemberCouponId(bbxCouponCodeAdd.getCampsignId(), bbxCouponCodeAdd.getItemId(),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 1, bbxCouponCodeAdd.getCouponId());
                 }
             }
         }
@@ -203,7 +203,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
                         
                       //仅同步以活动发送出去的优惠券信息，短信任务发送的不进行同步
                         if(bbxCouponCodeAdd.getCampsignId() != null){
-                            this.campaignDetailService.updateCampaignMemberCouponId(bbxCouponCodeAdd.getCampsignId().intValue(),String.valueOf( bbxCouponCodeAdd.getItemId()),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 1, bbxCouponCodeAdd.getCouponId());
+                            this.campaignDetailService.updateCampaignMemberCouponStatus(bbxCouponCodeAdd.getCampsignId(),bbxCouponCodeAdd.getItemId(),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 1);
                         }
                     }
                 }
