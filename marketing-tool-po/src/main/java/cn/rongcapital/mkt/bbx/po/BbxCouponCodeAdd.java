@@ -42,9 +42,9 @@ public class BbxCouponCodeAdd extends BaseQuery{
 
     private String mainId;
 
-    private Long campsignId;
+    private Integer campsignId;
 
-    private Long itemId;
+    private String itemId;
 
     private String errorMsg;
 
@@ -176,19 +176,19 @@ public class BbxCouponCodeAdd extends BaseQuery{
         this.mainId = mainId == null ? null : mainId.trim();
     }
 
-    public Long getCampsignId() {
+    public Integer getCampsignId() {
         return campsignId;
     }
 
-    public void setCampsignId(Long campsignId) {
+    public void setCampsignId(Integer campsignId) {
         this.campsignId = campsignId;
     }
 
-    public Long getItemId() {
+    public String getItemId() {
         return itemId;
     }
 
-    public void setItemId(Long itemId) {
+    public void setItemId(String itemId) {
         this.itemId = itemId;
     }
 
