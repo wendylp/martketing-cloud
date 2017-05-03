@@ -70,8 +70,8 @@ public class AudienceCreateServiceImplTest {
         details.add(14);
         in.setDetails(details);
         BaseOutput output = audienceCreateService.createAudience(in);
-        Assert.assertEquals(output.getCode(), ApiErrorCode.VALIDATE_ERROR.getCode());
-        Assert.assertEquals(output.getMsg(), "目标人群名称重复");
+        Assert.assertEquals(output.getCode(), ApiErrorCode.FIX_AUDIENCE_NAME_DUPLICATE.getCode());
+        Assert.assertEquals(output.getMsg(), ApiErrorCode.FIX_AUDIENCE_NAME_DUPLICATE.getMsg());
     }
 
     /**
@@ -121,9 +121,14 @@ public class AudienceCreateServiceImplTest {
                 return null;
             }
         }).when(audienceListPartyMapDao).batchInsert(Mockito.any());
-        
+
         BaseOutput output = audienceCreateService.createAudience(in);
         Mockito.verify(audienceListDao, Mockito.times(0)).updateById(Mockito.any());
+        Assert.assertTrue(output.getData().size() == 1);
+        Assert.assertTrue(output.getData().get(0) instanceof Map);
+        Map data = (Map) output.getData().get(0);
+        Assert.assertEquals(data.get("id"), 999);
+        Assert.assertEquals(data.get("audience_count"), 2);
         Assert.assertEquals(output.getCode(), ApiErrorCode.SUCCESS.getCode());
         Assert.assertEquals(output.getMsg(), ApiErrorCode.SUCCESS.getMsg());
     }
@@ -206,6 +211,11 @@ public class AudienceCreateServiceImplTest {
         }).when(audienceListDao).updateById(Mockito.any());
         BaseOutput output = audienceCreateService.createAudience(in);
         Mockito.verify(audienceListDao, Mockito.times(1)).updateById(Mockito.any());
+        Assert.assertTrue(output.getData().size() == 1);
+        Assert.assertTrue(output.getData().get(0) instanceof Map);
+        Map data = (Map) output.getData().get(0);
+        Assert.assertEquals(data.get("id"), 999);
+        Assert.assertEquals(data.get("audience_count"), 2);
         Assert.assertEquals(output.getCode(), ApiErrorCode.SUCCESS.getCode());
         Assert.assertEquals(output.getMsg(), ApiErrorCode.SUCCESS.getMsg());
     }
