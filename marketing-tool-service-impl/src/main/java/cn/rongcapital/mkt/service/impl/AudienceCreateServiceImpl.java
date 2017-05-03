@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,9 @@ import cn.rongcapital.mkt.dao.AudienceListDao;
 import cn.rongcapital.mkt.dao.AudienceListPartyMapDao;
 import cn.rongcapital.mkt.dataauth.interceptor.DataAuthPut;
 import cn.rongcapital.mkt.dataauth.interceptor.ParamType;
+import cn.rongcapital.mkt.mongodb.DataPartyRepository;
 import cn.rongcapital.mkt.po.AudienceList;
+import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.service.AudienceCreateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.AudienceCreateIn;
@@ -47,6 +50,9 @@ public class AudienceCreateServiceImpl implements AudienceCreateService {
     @Autowired
     private AudienceListPartyMapDao audienceListPartyMapDao;
 
+    @Autowired
+    private DataPartyRepository dataPartyRepository;
+    
     @Override
     @ReadWrite(type = ReadWriteType.WRITE)
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -74,16 +80,31 @@ public class AudienceCreateServiceImpl implements AudienceCreateService {
         // 保存人群明细
         Map<String, Object> paramMap = null;
         List<Map<String, Object>> paramInsertLists = new ArrayList<>();
-        for (Integer mid : in.getDetails()) {
-            if (mid != null) {
+        DataParty member = null;
+        for (Integer memberId : in.getDetails()) {
+            if (memberId != null) {
+                member = dataPartyRepository.findFirstByMemberId(memberId);
+                if (member == null) {
+                    logger.warn("Member Id {} can`t map to MC mid.", memberId);
+                    continue;
+                }
                 paramMap = new HashMap<>();
                 paramMap.put("audience_list_id", audienceSave.getId());
-                paramMap.put("party_id", mid);
+                paramMap.put("party_id", member.getMid());
                 paramMap.put("create_time", now);
                 paramInsertLists.add(paramMap);
             }
         }
-        audienceListPartyMapDao.batchInsert(paramInsertLists);
+        if (CollectionUtils.isNotEmpty(paramInsertLists)) {
+            audienceListPartyMapDao.batchInsert(paramInsertLists);
+
+        }
+        if (paramInsertLists.size() != in.getDetails().size()) {
+            AudienceList audienceUpdate = new AudienceList();
+            audienceUpdate.setId(audienceSave.getId());
+            audienceUpdate.setAudienceRows(paramInsertLists.size());
+            audienceListDao.updateById(audienceUpdate);
+        }
         logger.info("target audience {} is created.", in.getName());
 
         BaseOutput output =
