@@ -53,11 +53,12 @@ public class BrithDayEventTaskImpl implements TaskService {
         
         logger.info("生日关怀事Jop开始.....");
         dataParty=dataPartQueryTaskImpl.getDataBritDay();
+        
         if(dataParty!=null && dataParty.size()>0)
         {
             
             brithDayDataSendMQ.sendMQ(dataParty);
-            sendBrithDayToEventCenter.SendBrithEventCenter(dataParty);
+            //sendBrithDayToEventCenter.SendBrithEventCenter(dataParty);
             
             
         }

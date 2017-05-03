@@ -54,7 +54,7 @@ public class BrithDayEventService implements JobExecutor {
         {
             
             brithDayDataSendMQ.sendMQ(dataParty);
-            sendBrithDayToEventCenter.SendBrithEventCenter(dataParty);
+            //sendBrithDayToEventCenter.SendBrithEventCenter(dataParty);
             
             
         }

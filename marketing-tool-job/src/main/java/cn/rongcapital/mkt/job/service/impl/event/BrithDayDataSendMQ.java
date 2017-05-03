@@ -20,6 +20,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsOperations;
 import org.springframework.stereotype.Component;
 
@@ -36,10 +37,11 @@ public class BrithDayDataSendMQ {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private ExecutorService executor = Executors.newCachedThreadPool();
+    private ExecutorService executor = Executors.newFixedThreadPool(20);
 
     private final String eventCode = "customer_birthday_care";
 
+    @Value("${brithday.tomq.pageSize}")
     int pageSizeCnt = 3;
 
     @Autowired
@@ -69,7 +71,7 @@ public class BrithDayDataSendMQ {
         executor.shutdown();
 
         try {
-            executor.awaitTermination(1, TimeUnit.HOURS);
+            executor.awaitTermination(3, TimeUnit.HOURS);
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -88,13 +90,15 @@ public class BrithDayDataSendMQ {
         List<Segment> sg = new ArrayList<Segment>();
         if (CollectionUtils.isNotEmpty(dpy)) {
             for (DataParty dpt : dpy) {
-           logger.info("提前生日天数:{},生日日期是:{},主MID:{}",time,
-         dpt.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), dpt.getMid());
+           /*logger.info("提前生日天数:{},生日日期是:{},主MID:{}",time,
+         dpt.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), dpt.getMid());*/
                 Segment sgt = new Segment();
                 sgt.setDataId(dpt.getMid());
                 sgt.setName(dpt.getName());
                 sg.add(sgt);
             }
+            
+            logger.info("提前生日天数:{},总数{}",time,dpy.size());
         }
         return sg;
 
