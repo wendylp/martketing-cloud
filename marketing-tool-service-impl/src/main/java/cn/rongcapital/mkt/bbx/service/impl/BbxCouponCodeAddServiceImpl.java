@@ -83,7 +83,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             MaterialCouponCode couponCode = this.getCouponIdByCodeId(vo.getId());
             MaterialCoupon coupon = this.getCouponById(couponCode.getCouponId());
             
-            Map<String,Object> campasignMap = this.bbxCouponCodeAddDao.selectCampaignSmsItemByCouponId(vo.getId());
+            Map<String,Object> campasignMap = this.bbxCouponCodeAddDao.selectCampaignSmsItemByCouponId(coupon.getId());
 
             Long campsignId = null;
             Long itemId = null;
