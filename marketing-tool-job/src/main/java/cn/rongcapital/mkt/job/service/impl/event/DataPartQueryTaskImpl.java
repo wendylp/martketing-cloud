@@ -75,7 +75,7 @@ public class DataPartQueryTaskImpl {
         logger.info("生日提醒数据准备开始....");
         long begin=System.currentTimeMillis();
         Map<Integer, List<DataParty>> mapdata = new HashMap<Integer, List<DataParty>>();
-        Query query = new Query(Criteria.where("birthday").exists(true));
+        Query query = new Query(Criteria.where("birthday").ne(null));
         long count = mongoTemplate.count(query, DataParty.class);
         int pageSize = (int) Math.ceil(count / (float) pageSizeCnt);
         List<Future<Map<Integer,List<DataParty>>>> resultList = new ArrayList<>();
