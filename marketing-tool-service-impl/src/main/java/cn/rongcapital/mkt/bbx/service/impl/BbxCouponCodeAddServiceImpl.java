@@ -226,8 +226,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
                     //发送短信后修改表中的数据sms_sended标识
                     bbxCouponCodeAddList.forEach(p -> {
                         p.setSmsSended(Boolean.TRUE);
-                    this.bbxCouponCodeAddDao.updateById(p);
-                        System.out.println(p.getId());
+                        this.bbxCouponCodeAddDao.updateById(p);
                     });
                 }
             }
