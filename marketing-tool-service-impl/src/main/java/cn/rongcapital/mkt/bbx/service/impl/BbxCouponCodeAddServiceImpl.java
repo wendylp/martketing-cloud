@@ -303,18 +303,12 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         Query query = new Query();
         //查询所有未核销的数据，进行相应的核销操作
         Criteria payCriteria = new Criteria();
-        payCriteria.orOperator(Criteria.where("checked").exists(false), Criteria.where("checked").is(false));
 
-        List<Sort.Order> orders = new ArrayList<Sort.Order>();
-        orders.add(new Sort.Order(Sort.Direction.DESC, "_id"));
-        Sort sort = new Sort(orders);
-        if (null != sort) {
-            query.with(sort);
-        }
+        Criteria orCriteria = new Criteria();
+        orCriteria.orOperator(Criteria.where("checked").exists(false), Criteria.where("checked").is(false));
+        payCriteria.andOperator(Criteria.where("couponid").exists(true),orCriteria);
         query.addCriteria(payCriteria);
-        SpringDataPageable pageable = new SpringDataPageable();
-        //排序
-        pageable.setSort(sort);
+
         //查询出一共的条数
         long count = this.mongoTemplate.count(query, TBBXOrderPayDetail.class);
         int pageSize = 100;
@@ -322,7 +316,12 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         if(count % 100 >0){
             pageCount++;
         }
-
+        List<Sort.Order> orders = new ArrayList<Sort.Order>();
+        orders.add(new Sort.Order(Sort.Direction.DESC, "_id"));
+        Sort sort = new Sort(orders);
+        SpringDataPageable pageable = new SpringDataPageable();
+        //排序
+        pageable.setSort(sort);
         for (int i = 0; i <pageCount; i++) {
             //开始页
             pageable.setPagenumber(i*pageSize);

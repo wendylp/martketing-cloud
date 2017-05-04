@@ -63,6 +63,7 @@ import cn.rongcapital.mkt.po.SmsTaskDetail;
 import cn.rongcapital.mkt.po.SmsTaskDetailState;
 import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.service.MQTopicService;
+import cn.rongcapital.mkt.service.SmsSyncCouponService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 /**
@@ -143,6 +144,8 @@ public class GenerateSmsDetailTask implements TaskService {
     private MaterialCouponDao materialCouponDao;
 	@Autowired
 	private BbxCouponCodeAddService couponCodeAddService;
+	@Autowired
+	private SmsSyncCouponService smsSyncCouponService;
 
     private Map<Integer,AbstractCalcSmsTargetAudienceStrategy> strategyMap = new HashMap<>();
     private final int PAGE_SIZE = 10000;
@@ -231,35 +234,7 @@ public class GenerateSmsDetailTask implements TaskService {
         //4检测TaskHead的发送状态
 		if (currentTaskHead.getSmsTaskStatus() == SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode()) {
 			// mqTopicService.sendSmsByTaskId(taskHeadIdStr);
-
-			// @since 1.9.0
-			SmsMaterial paramSmsMaterial = new SmsMaterial();
-			paramSmsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-			paramSmsMaterial.setId(targetHead.getSmsTaskMaterialId().intValue());
-			List<SmsMaterial> targetSmsMaterialList = smsMaterialDao.selectList(paramSmsMaterial);
-			if (CollectionUtils.isEmpty(targetSmsMaterialList)) {
-				mqTopicService.sendSmsByTaskId(taskHeadIdStr);
-			}
-			Integer smsType = targetSmsMaterialList.get(0).getSmsType().intValue(); // 短信类型：0:固定短信,1:变量短信
-			if (smsType.equals(FIXED.getStatusCode())) {
-				mqTopicService.sendSmsByTaskId(taskHeadIdStr);
-			} else {
-				Integer campaignHeadId = targetHead.getCampaignHeadId();
-				Long smsSendHeadId = Long.valueOf(taskHeadIdStr);
-				String campaignItemId = targetHead.getSmsTaskCode();
-				if(StringUtils.isNotBlank(campaignItemId)){
-					campaignItemId = campaignItemId.substring(campaignItemId.indexOf("-") + 1);
-				}
-				SmsTaskDetail smsDetail = new SmsTaskDetail();
-				smsDetail.setSmsTaskHeadId(Long.valueOf(taskHeadIdStr));
-				smsDetail.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-				smsDetail.setPageSize(null);
-				smsDetail.setStartIndex(null);
-				smsDetail.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_WRITING);
-				List<SmsTaskDetail> smsDetailList = smsTaskDetailDao.selectList(smsDetail);
-				// 同步优惠券
-				couponCodeAddService.addCouponCodeToBBX(smsDetailList, campaignHeadId, smsSendHeadId, campaignItemId);
-			}
+			smsSyncCouponService.beforeProcessSmsStatus(taskHeadIdStr); // @since 1.9.0
         }
         
     }

@@ -21,4 +21,12 @@ public interface SmsSyncCouponService {
 	default public boolean processSmsStatus(Integer campaignHeadId, Long smsTaskHeadId, List<Long> smsTaskDetailIds) {
 		return false;
 	}
+
+	/**
+	 * @since 1.9.0
+	 * @param smsSendTaskId
+	 */
+	default public void beforeProcessSmsStatus(String smsSendTaskId) {
+
+	}
 }
