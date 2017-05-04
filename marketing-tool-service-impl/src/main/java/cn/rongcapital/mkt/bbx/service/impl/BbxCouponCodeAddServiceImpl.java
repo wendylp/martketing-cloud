@@ -148,8 +148,8 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
     public void addCouponCodeToBBX(List<SmsTaskDetail> list, Integer campaignHeadId, Long smsTaskHeadId,String campaignItemId) {
         List<BbxCouponCodeAdd> resultList = new ArrayList<>();
         for (SmsTaskDetail smsTaskDetail : list) {
-            MaterialCoupon coupon = this.getCouponById(campaignHeadId);
-
+            MaterialCouponCode couponCode = this.getCouponIdByCodeId(smsTaskDetail.getMaterielCouponCodeId());
+            MaterialCoupon coupon = this.getCouponById(Math.toIntExact(couponCode.getCouponId()));
             //为贝贝熊同步一份优惠码的数据
             BbxCouponCodeAdd bbxCouponCode = new BbxCouponCodeAdd();
             bbxCouponCode.setActionId(ApiConstant.INT_ZERO);
