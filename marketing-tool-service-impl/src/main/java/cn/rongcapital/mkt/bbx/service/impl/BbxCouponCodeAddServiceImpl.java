@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.rongcapital.mkt.po.SmsTaskDetail;
+import cn.rongcapital.mkt.service.SmsSyncCouponService;
 import cn.rongcapital.mkt.webservice.BBXCrmWSUtils;
 import cn.rongcapital.mkt.webservice.UpdateCouponResult;
 import org.apache.commons.collections4.CollectionUtils;
@@ -70,6 +71,9 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
     
     @Autowired
     private CampaignDetailService campaignDetailService;
+
+    @Autowired
+    private SmsSyncCouponService smsSyncCouponService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -216,14 +220,16 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
                     smsDetailIds.add(p.getSmsTaskDetailId());
                 });
 
-                //TODO 同步数据
-
-                //发送短信后修改表中的数据sms_sended标识
-                bbxCouponCodeAddList.forEach(p ->{
-                    p.setSmsSended(Boolean.TRUE);
-//                    this.bbxCouponCodeAddDao.updateById(p);
-                    System.out.println(p.getId());
-                });
+                //开始发短信
+                boolean sendResult = this.smsSyncCouponService.processSmsStatus(item.getCampsignId(), item.getSmsTaskHeadId(), smsDetailIds);
+                if(sendResult) {
+                    //发送短信后修改表中的数据sms_sended标识
+                    bbxCouponCodeAddList.forEach(p -> {
+                        p.setSmsSended(Boolean.TRUE);
+                    this.bbxCouponCodeAddDao.updateById(p);
+                        System.out.println(p.getId());
+                    });
+                }
             }
         }
     }
