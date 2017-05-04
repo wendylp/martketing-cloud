@@ -265,8 +265,6 @@ public class SmsSendTaskServiceImpl implements TaskService {
 		if (CollectionUtils.isNotEmpty(smsMaterialLists) && SMS_TYPE_DYNAMICS.equals(smsMaterialLists.get(0).getSmsType())) {
 			// 修改一批优惠码的状态---v1.6
 			materialCouponCodeStatusUpdateService.updateMaterialCouponCodeStatus(voList);
-
-			this.bbxCouponCodeAddService.addCouponCodeToBBX(voList);
 		}
 		// 计算每批的成功和失败的个数
 		Integer smsSuccessCount = smsHead.getSendingSuccessNum();

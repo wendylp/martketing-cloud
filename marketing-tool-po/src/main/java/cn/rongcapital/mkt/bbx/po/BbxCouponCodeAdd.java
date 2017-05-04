@@ -46,6 +46,12 @@ public class BbxCouponCodeAdd extends BaseQuery{
 
     private String itemId;
 
+    private Long smsTaskHeadId;
+
+    private Boolean smsSended;
+
+    private Long smsTaskDetailId;
+
     private String errorMsg;
 
     public Integer getId() {
@@ -189,7 +195,31 @@ public class BbxCouponCodeAdd extends BaseQuery{
     }
 
     public void setItemId(String itemId) {
-        this.itemId = itemId;
+        this.itemId = itemId == null ? null : itemId.trim();
+    }
+
+    public Long getSmsTaskHeadId() {
+        return smsTaskHeadId;
+    }
+
+    public void setSmsTaskHeadId(Long smsTaskHeadId) {
+        this.smsTaskHeadId = smsTaskHeadId;
+    }
+
+    public Boolean getSmsSended() {
+        return smsSended;
+    }
+
+    public void setSmsSended(Boolean smsSended) {
+        this.smsSended = smsSended;
+    }
+
+    public Long getSmsTaskDetailId() {
+        return smsTaskDetailId;
+    }
+
+    public void setSmsTaskDetailId(Long smsTaskDetailId) {
+        this.smsTaskDetailId = smsTaskDetailId;
     }
 
     public String getErrorMsg() {
