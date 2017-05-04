@@ -227,7 +227,32 @@ public class GenerateSmsDetailTask implements TaskService {
         SmsTaskHead currentTaskHead = smsTaskHeads.get(0);
         //4检测TaskHead的发送状态
 		if (currentTaskHead.getSmsTaskStatus() == SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode()) {
-            mqTopicService.sendSmsByTaskId(taskHeadIdStr);
+			// mqTopicService.sendSmsByTaskId(taskHeadIdStr);
+
+			// @since 1.9.0
+			SmsMaterial paramSmsMaterial = new SmsMaterial();
+			paramSmsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+			paramSmsMaterial.setId(targetHead.getSmsTaskMaterialId().intValue());
+			List<SmsMaterial> targetSmsMaterialList = smsMaterialDao.selectList(paramSmsMaterial);
+			if (CollectionUtils.isEmpty(targetSmsMaterialList)) {
+				mqTopicService.sendSmsByTaskId(taskHeadIdStr);
+			}
+			Integer smsType = targetSmsMaterialList.get(0).getSmsType().intValue(); // 短信类型：0:固定短信,1:变量短信
+			if (smsType.equals(FIXED.getStatusCode())) {
+				mqTopicService.sendSmsByTaskId(taskHeadIdStr);
+			} else {
+				Integer campaignHeadId = targetHead.getCampaignHeadId();
+				Long smsSendHeadId = Long.valueOf(taskHeadIdStr);
+
+				SmsTaskDetail smsDetail = new SmsTaskDetail();
+				smsDetail.setSmsTaskHeadId(Long.valueOf(taskHeadIdStr));
+				smsDetail.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+				smsDetail.setPageSize(null);
+				smsDetail.setStartIndex(null);
+				smsDetail.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_WRITING);
+				List<SmsTaskDetail> smsDetailList = smsTaskDetailDao.selectList(smsDetail);
+				// TODO 调接口
+			}
         }
         
     }
