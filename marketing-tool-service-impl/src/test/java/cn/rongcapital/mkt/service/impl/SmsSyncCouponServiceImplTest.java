@@ -73,6 +73,14 @@ public class SmsSyncCouponServiceImplTest {
 		Assert.assertArrayEquals("List转换失败", new Integer[] { 1, 2, 3, 4, 4 }, integers.toArray());
 	}
 
+	@Test
+	public void testSplit() {
+		String str = "121493800460434";
+		int index = str.indexOf("-");
+		System.out.println(index);
+		System.out.println(str.substring(index + 1));
+	}
+
     @After
     public void tearDown() {
 

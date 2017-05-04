@@ -247,6 +247,9 @@ public class GenerateSmsDetailTask implements TaskService {
 				Integer campaignHeadId = targetHead.getCampaignHeadId();
 				Long smsSendHeadId = Long.valueOf(taskHeadIdStr);
 				String campaignItemId = targetHead.getSmsTaskCode();
+				if(StringUtils.isNotBlank(campaignItemId)){
+					campaignItemId = campaignItemId.substring(campaignItemId.indexOf("-"));
+				}
 				SmsTaskDetail smsDetail = new SmsTaskDetail();
 				smsDetail.setSmsTaskHeadId(Long.valueOf(taskHeadIdStr));
 				smsDetail.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
