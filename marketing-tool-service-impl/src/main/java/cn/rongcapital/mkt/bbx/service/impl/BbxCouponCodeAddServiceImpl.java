@@ -209,7 +209,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         for (BbxCouponCodeAdd item: smsHeadIdList) {
             param.setSmsTaskHeadId(item.getSmsTaskHeadId());
             param.setSynchronizeable(Boolean.TRUE);//已经同步的数据
-            param.setSynchSuccess(Boolean.TRUE);//同步成功的数据
+            param.setSynchSuccess(Boolean.FALSE);//同步成功的数据
             param.setSmsSended(Boolean.FALSE);//未发送短信的数据
             param.setPageSize(Integer.MAX_VALUE);
             List<BbxCouponCodeAdd> bbxCouponCodeAddList = this.bbxCouponCodeAddDao.selectList(param);
