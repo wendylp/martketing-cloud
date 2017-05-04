@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import cn.rongcapital.mkt.bbx.service.BbxCouponCodeAddService;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.SmsDetailSendStateEnum;
 import cn.rongcapital.mkt.common.enums.SmsMaterialVariableEnum;
@@ -140,6 +141,8 @@ public class GenerateSmsDetailTask implements TaskService {
     
     @Autowired
     private MaterialCouponDao materialCouponDao;
+	@Autowired
+	private BbxCouponCodeAddService couponCodeAddService;
 
     private Map<Integer,AbstractCalcSmsTargetAudienceStrategy> strategyMap = new HashMap<>();
     private final int PAGE_SIZE = 10000;
@@ -243,7 +246,7 @@ public class GenerateSmsDetailTask implements TaskService {
 			} else {
 				Integer campaignHeadId = targetHead.getCampaignHeadId();
 				Long smsSendHeadId = Long.valueOf(taskHeadIdStr);
-
+				String campaignItemId = targetHead.getSmsTaskCode();
 				SmsTaskDetail smsDetail = new SmsTaskDetail();
 				smsDetail.setSmsTaskHeadId(Long.valueOf(taskHeadIdStr));
 				smsDetail.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
@@ -251,7 +254,8 @@ public class GenerateSmsDetailTask implements TaskService {
 				smsDetail.setStartIndex(null);
 				smsDetail.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_WRITING);
 				List<SmsTaskDetail> smsDetailList = smsTaskDetailDao.selectList(smsDetail);
-				// TODO 调接口
+				// 同步优惠券
+				couponCodeAddService.addCouponCodeToBBX(smsDetailList, campaignHeadId, smsSendHeadId, campaignItemId);
 			}
         }
         
