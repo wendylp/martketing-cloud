@@ -141,28 +141,31 @@
 
 	<!-- 其它SQL语句 -->
 	<insert id="batchInsert" parameterType="cn.rongcapital.mkt.bbx.po.BbxCouponCodeAdd" useGeneratedKeys="false">
-		INSERT INTO bbx_coupon_code_add (vip_id,coupon_id,action_id,coupon_money,can_use_begin_date,can_user_end_date,store_code,create_time,synchronizeable,synch_success,synchronized_time,phone,coupon_code_id,checked,main_id,campsign_id,item_id,error_msg)
+		INSERT INTO bbx_coupon_code_add (vip_id,coupon_id,action_id,coupon_money,can_use_begin_date,can_user_end_date,store_code,create_time,synchronizeable,synch_success,synchronized_time,phone,coupon_code_id,checked,main_id,campsign_id,item_id,sms_task_head_id,sms_sended,sms_task_detail_id,error_msg)
 		VALUES
 			<foreach collection="list" item="model" separator=",">
 				(
-				  #{model.vipId},
-				  #{model.couponId},
-				  #{model.actionId},
-				  #{model.couponMoney},
-				  #{model.canUseBeginDate},
-				  #{model.canUserEndDate},
-				  #{model.storeCode},
-				  #{model.createTime},
-				  #{model.synchronizeable},
-				  #{model.synchSuccess},
-				  #{model.synchronizedTime},
-				  #{model.phone},
-				  #{model.couponCodeId},
-				  #{model.checked},
-				  #{model.mainId},
-				  #{model.campsignId},
-				  #{model.itemId},
-				  #{model.errorMsg}
+				#{model.vipId},
+				#{model.couponId},
+				#{model.actionId},
+				#{model.couponMoney},
+				#{model.canUseBeginDate},
+				#{model.canUserEndDate},
+				#{model.storeCode},
+				  now(),
+				#{model.synchronizeable},
+				#{model.synchSuccess},
+				#{model.synchronizedTime},
+				#{model.phone},
+				#{model.couponCodeId},
+				#{model.checked},
+				#{model.mainId},
+				#{model.campsignId},
+				#{model.itemId},
+				#{model.smsTaskHeadId},
+				#{model.smsSended},
+				#{model.smsTaskDetailId},
+				#{model.errorMsg}
 				)
 			</foreach>
 	</insert>
