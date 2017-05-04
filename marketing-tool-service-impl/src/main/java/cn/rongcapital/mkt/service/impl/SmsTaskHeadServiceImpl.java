@@ -275,7 +275,7 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 							couponCodeAddService.addCouponCodeToBBX(smsDetailList, campaignHeadId, smsSendHeadId, campaignItemId);
 						}
 						
-						mqTopicService.sendSmsByTaskId(String.valueOf(id));
+						// mqTopicService.sendSmsByTaskId(String.valueOf(id));
 					}
 				}
 			}
