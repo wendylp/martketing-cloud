@@ -262,7 +262,7 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 							Long smsSendHeadId = Long.valueOf(taskHeadIdStr);
 							String campaignItemId = targetHead.getSmsTaskCode();
 							if(StringUtils.isNotBlank(campaignItemId)){
-								campaignItemId = campaignItemId.substring(campaignItemId.indexOf("-"));
+								campaignItemId = campaignItemId.substring(campaignItemId.indexOf("-") + 1);
 							}
 							SmsTaskDetail smsDetail = new SmsTaskDetail();
 							smsDetail.setSmsTaskHeadId(Long.valueOf(taskHeadIdStr));

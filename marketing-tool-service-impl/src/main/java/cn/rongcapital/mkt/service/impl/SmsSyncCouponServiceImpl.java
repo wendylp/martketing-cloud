@@ -71,7 +71,10 @@ public class SmsSyncCouponServiceImpl implements SmsSyncCouponService {
 			logger.error("没有找到对应的唯一短信任务头信息：sms_task_head_id={}", smsTaskHeadId);
 			return false;
 		}
-		smsTaskHead.setSendingFailNum(smsTaskHeads.get(0).getSendingFailNum() + len);
+		int fail = smsTaskHeads.get(0).getSendingFailNum() + len; // 失败数
+		int wait = smsTaskHeads.get(0).getWaitingNum() - len; // 等待数
+		smsTaskHead.setSendingFailNum(fail > 0 ? fail : 0);
+		smsTaskHead.setWaitingNum(wait > 0 ? wait : 0);
 		smsTaskHeadDao.updateById(smsTaskHead);
 		return true;
 	}
