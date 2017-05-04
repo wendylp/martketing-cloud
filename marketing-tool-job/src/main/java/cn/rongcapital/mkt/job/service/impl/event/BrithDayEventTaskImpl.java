@@ -13,6 +13,7 @@
 package cn.rongcapital.mkt.job.service.impl.event;
 
 import cn.rongcapital.mkt.job.service.base.TaskService;
+import cn.rongcapital.mkt.job.service.vo.BrithDayData;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,7 +33,7 @@ public class BrithDayEventTaskImpl implements TaskService {
     
     
     @Autowired
-    DataPartQueryTaskImpl  dataPartQueryTaskImpl;
+    DataPartToBrithDataAggregateImpl  dataPartToBrithDataAggregateImpl;
     
     @Autowired
     BrithDayDataSendMQ  brithDayDataSendMQ;
@@ -40,7 +42,7 @@ public class BrithDayEventTaskImpl implements TaskService {
     SendBrithDayToEventCenter sendBrithDayToEventCenter;
     
     
-    Map<Integer,List<DataParty>> dataParty;
+    Map<Integer,AggregationResults<BrithDayData>> dataParty;
     
 
     /* (non-Javadoc)
@@ -50,10 +52,8 @@ public class BrithDayEventTaskImpl implements TaskService {
     public void task(Integer taskId) {
         // TODO Auto-generated method stub
     
-        
         logger.info("生日关怀事Jop开始.....");
-        dataParty=dataPartQueryTaskImpl.getDataBritDay();
-        
+        dataParty=dataPartToBrithDataAggregateImpl.getBrithMap();
         if(dataParty!=null && dataParty.size()>0)
         {
             
@@ -61,8 +61,7 @@ public class BrithDayEventTaskImpl implements TaskService {
             //sendBrithDayToEventCenter.SendBrithEventCenter(dataParty);
             
             
-        }
-            
+        }    
         logger.info("生日关怀事Jop结束.....");
         
         
