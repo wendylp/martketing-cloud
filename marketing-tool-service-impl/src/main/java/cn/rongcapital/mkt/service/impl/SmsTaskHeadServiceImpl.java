@@ -1,7 +1,5 @@
 package cn.rongcapital.mkt.service.impl;
 
-import static cn.rongcapital.mkt.common.enums.SmsTempletTypeEnum.FIXED;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -11,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cn.rongcapital.mkt.bbx.service.BbxCouponCodeAddService;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.SmsTaskAppEnum;
@@ -19,14 +16,11 @@ import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
 import cn.rongcapital.mkt.common.enums.StatusEnum;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.NumUtil;
-import cn.rongcapital.mkt.dao.SmsMaterialDao;
-import cn.rongcapital.mkt.dao.SmsTaskDetailDao;
 import cn.rongcapital.mkt.dao.SmsTaskHeadDao;
-import cn.rongcapital.mkt.po.SmsMaterial;
 import cn.rongcapital.mkt.po.SmsTaskBody;
-import cn.rongcapital.mkt.po.SmsTaskDetail;
 import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.service.MQTopicService;
+import cn.rongcapital.mkt.service.SmsSyncCouponService;
 import cn.rongcapital.mkt.service.SmsTaskHeadService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.ColumnsOut;
@@ -56,13 +50,8 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 	private final int SMS_DETAIL_SEND_SUCCESS = 1;
 	// 发送失败
 	private final int SMS_DETAIL_SEND_FAILURE = 2;
-
 	@Autowired
-	private SmsTaskDetailDao smsTaskDetailDao;
-	@Autowired
-	private SmsMaterialDao smsMaterialDao;
-	@Autowired
-	private BbxCouponCodeAddService couponCodeAddService;
+	private SmsSyncCouponService smsSyncCouponService;
 
 	@Override
 	public BaseOutput smsTaskHeadList(String userId, Integer index, Integer size, String smsTaskAppType,
@@ -243,39 +232,8 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 					if (audienceGenerateStatus != null && audienceGenerateStatus != 1
 							&& smsTaskHeadBack.getTotalCoverNum() > 0) {
 						
-						
-						// @since 1.9.0
-						String taskHeadIdStr = smsTaskHeadBack.getId().toString();
-						SmsTaskHead targetHead = smsTaskHeadBack;
-						SmsMaterial paramSmsMaterial = new SmsMaterial();
-						paramSmsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-						paramSmsMaterial.setId(targetHead.getSmsTaskMaterialId().intValue());
-						List<SmsMaterial> targetSmsMaterialList = smsMaterialDao.selectList(paramSmsMaterial);
-						if (CollectionUtils.isEmpty(targetSmsMaterialList)) {
-							mqTopicService.sendSmsByTaskId(taskHeadIdStr);
-						}
-						Integer smsType = targetSmsMaterialList.get(0).getSmsType().intValue(); // 短信类型：0:固定短信,1:变量短信
-						if (smsType.equals(FIXED.getStatusCode())) {
-							mqTopicService.sendSmsByTaskId(taskHeadIdStr);
-						} else {
-							Integer campaignHeadId = targetHead.getCampaignHeadId();
-							Long smsSendHeadId = Long.valueOf(taskHeadIdStr);
-							String campaignItemId = targetHead.getSmsTaskCode();
-							if(StringUtils.isNotBlank(campaignItemId)){
-								campaignItemId = campaignItemId.substring(campaignItemId.indexOf("-") + 1);
-							}
-							SmsTaskDetail smsDetail = new SmsTaskDetail();
-							smsDetail.setSmsTaskHeadId(Long.valueOf(taskHeadIdStr));
-							smsDetail.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
-							smsDetail.setPageSize(null);
-							smsDetail.setStartIndex(null);
-							smsDetail.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_WRITING);
-							List<SmsTaskDetail> smsDetailList = smsTaskDetailDao.selectList(smsDetail);
-							// 同步优惠券
-							couponCodeAddService.addCouponCodeToBBX(smsDetailList, campaignHeadId, smsSendHeadId, campaignItemId);
-						}
-						
 						// mqTopicService.sendSmsByTaskId(String.valueOf(id));
+						smsSyncCouponService.beforeProcessSmsStatus(String.valueOf(id)); // @since 1.9.0
 					}
 				}
 			}
