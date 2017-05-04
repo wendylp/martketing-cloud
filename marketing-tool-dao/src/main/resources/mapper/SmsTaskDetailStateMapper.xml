@@ -65,6 +65,15 @@
 		<![CDATA[UPDATE sms_task_detail_state set sms_task_send_status = #{smsTaskSendStatus} 
 		where sms_task_detail_id = #{smsTaskDetailId}]]>
 	</update>
+  
+    <!-- 批量更新短信有效状态  -->
+    <update id="batchUpdateByDetailId" parameterType="java.util.List">
+      <![CDATA[UPDATE sms_task_detail_state SET sms_task_send_status = 2]]>
+          <![CDATA[WHERE sms_task_detail_id IN]]>
+          <foreach collection="list" item="id" open="(" separator="," close=")">
+            <![CDATA[#{id}]]>
+          </foreach>
+    </update>
 
 	<!-- 查询,通过主键IN(array) -->
 	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.SmsTaskDetailState" resultType="cn.rongcapital.mkt.po.SmsTaskDetailState">

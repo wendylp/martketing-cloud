@@ -2,6 +2,11 @@ package cn.rongcapital.mkt.service;
 
 import java.util.List;
 
+/**
+ * @since 1.9.0
+ * @author LiuQ
+ * @email Liuqi@rongcapital.cn
+ */
 public interface SmsSyncCouponService {
 	
 	/**
