@@ -14,7 +14,7 @@ package cn.rongcapital.mkt.job.test.eventjop;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -35,7 +35,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.CommandResult;
 
 import cn.rongcapital.mkt.job.service.base.PatchAggregationOperation;
 import cn.rongcapital.mkt.job.service.vo.BrithDayData;
@@ -45,6 +44,30 @@ import cn.rongcapital.mkt.testbase.AbstractUnitTest;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class NewBrithDay extends AbstractUnitTest {
 
+    enum Brithday
+    {
+       one("1天",0), three("3天",2),seven("7天",6),tNine("30天",29);
+       private String day;
+       private int datas;
+       private Brithday(String day,int datas)
+       {
+           this.day=day;
+           this.datas=datas;
+       }
+    public String getDay() {
+        return day;
+    }
+    public void setDay(String day) {
+        this.day = day;
+    }
+    public int getDatas() {
+        return datas;
+    }
+    public void setDatas(int datas) {
+        this.datas = datas;
+    }
+       
+    }
     
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -58,12 +81,12 @@ public class NewBrithDay extends AbstractUnitTest {
     @Test
    public void test()
     {
+        EnumMap<Brithday,AggregationResults<BrithDayData>> eMap=new EnumMap<Brithday, AggregationResults<BrithDayData>>(
+                Brithday.class);
          
-        Map<Integer,AggregationResults<BrithDayData>> brimap= new HashMap<Integer,AggregationResults<BrithDayData>>();
-        for(Integer i : brithdays)
-        {     
+        for (Brithday emItem : Brithday.values()) {
             LocalDate currdate =LocalDate.now();  
-            LocalDate tempdata =currdate.plusDays(i); 
+            LocalDate tempdata =currdate.plusDays(emItem.datas); 
             executor.execute(new Runnable(){
                 @Override
                 public void run() {
@@ -84,13 +107,15 @@ public class NewBrithDay extends AbstractUnitTest {
                    AggregationResults<BrithDayData> aggrResult =mongoTemplate.aggregate(aggregation, DataParty.class, BrithDayData.class);
                       if(aggrResult!=null && aggrResult.getMappedResults().size()>0)
                       {
-                                brimap.put(i,aggrResult); 
-                   logger.info("当前线程{},耗时{},生日提前天数{},数量{}",Thread.currentThread().getName(),System.currentTimeMillis()-begin,i+1,aggrResult.getMappedResults().size()); 
+                            eMap.put(emItem, aggrResult);
+                   logger.info("当前线程{},耗时{},生日提前{},数量{}",Thread.currentThread().getName(),System.currentTimeMillis()-begin,emItem.day,aggrResult.getMappedResults().size()); 
                       }
                     
                 }}
-            );     
+            );
         }
+        
+      
        
         //Aggregation aggregation = Aggregation.newAggregation(matchOps,projectOps,matchOps2,Aggregation.skip(2),Aggregation.limit(1)); //可以添加分页
       /* String jsonCommand="{\"aggregate\":\"data_party\",\"pipeline\":[{\"$match\":{\"birthday\":{$ne:null }}},"+
@@ -99,16 +124,15 @@ public class NewBrithDay extends AbstractUnitTest {
        CommandResult commandResult =mongoTemplate.executeCommand(jsonCommand);
        String jsonResult = commandResult.getString("result");
        System.out.println(jsonResult);*/
+        executor.shutdown();
         try {
             executor.awaitTermination(1, TimeUnit.HOURS);
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        for (Map.Entry<Integer, AggregationResults<BrithDayData>> entry : brimap.entrySet()) {
-            
+        for (Map.Entry<Brithday, AggregationResults<BrithDayData>> entry : eMap.entrySet()) {
+            System.out.println("提前"+entry.getKey().day);
             List<BrithDayData>  aggregationResults =entry.getValue().getMappedResults();
-            System.out.println("提前:"+String.valueOf(entry.getKey()+1)+"过生日");
             for(BrithDayData bdd:aggregationResults)
             {
                 System.out.println("mid:"+bdd.getMid()+"生日日期为："+bdd.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
