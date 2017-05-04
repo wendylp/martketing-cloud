@@ -207,6 +207,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         List<BbxCouponCodeAdd> smsHeadIdList = this.bbxCouponCodeAddDao.selectSynchedUnSendSMS();
         BbxCouponCodeAdd param = new BbxCouponCodeAdd();
         for (BbxCouponCodeAdd item: smsHeadIdList) {
+            param = new BbxCouponCodeAdd();
             param.setSmsTaskHeadId(item.getSmsTaskHeadId());
             param.setSynchronizeable(Boolean.TRUE);//已经同步的数据
             param.setSynchSuccess(Boolean.FALSE);//同步失败的数据
@@ -224,10 +225,10 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
                 boolean sendResult = this.smsSyncCouponService.processSmsStatus(item.getCampsignId(), item.getSmsTaskHeadId(), smsDetailIds);
                 if(sendResult) {
                     //发送短信后修改表中的数据sms_sended标识
-                    bbxCouponCodeAddList.forEach(p -> {
-                        p.setSmsSended(Boolean.TRUE);
-                    this.bbxCouponCodeAddDao.updateById(p);
-                    });
+                    param = new BbxCouponCodeAdd();
+                    param.setSmsTaskHeadId(item.getSmsTaskHeadId());
+                    param.setSmsSended(Boolean.TRUE);
+                    this.bbxCouponCodeAddDao.updateBySmsTaskHeadId(param);
                 }
             }
         }

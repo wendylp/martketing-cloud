@@ -60,4 +60,6 @@ public interface BbxCouponCodeAddDao extends BaseDao<BbxCouponCodeAdd>{
 	 * @return
 	 */
 	List<BbxCouponCodeAdd> selectSynchedUnSendSMS();
+
+	int updateBySmsTaskHeadId(BbxCouponCodeAdd item);
 }

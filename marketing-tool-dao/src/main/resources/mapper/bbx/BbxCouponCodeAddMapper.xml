@@ -224,7 +224,12 @@
 		synchronizeable = FALSE
 		GROUP BY sms_task_head_id)
 	</select>
-
+	<!-- 修改记录标记已发送短信的状态 -->
+	<update id="updateBySmsTaskHeadId" parameterType="cn.rongcapital.mkt.bbx.po.BbxCouponCodeAdd">
+		<![CDATA[UPDATE bbx_coupon_code_add]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE sms_task_head_id = #{smsTaskHeadId}]]>
+	</update>
 
 
 </mapper>
