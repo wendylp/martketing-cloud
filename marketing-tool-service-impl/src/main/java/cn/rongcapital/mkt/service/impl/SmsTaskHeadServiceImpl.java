@@ -20,6 +20,7 @@ import cn.rongcapital.mkt.dao.SmsTaskHeadDao;
 import cn.rongcapital.mkt.po.SmsTaskBody;
 import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.service.MQTopicService;
+import cn.rongcapital.mkt.service.SmsSyncCouponService;
 import cn.rongcapital.mkt.service.SmsTaskHeadService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.ColumnsOut;
@@ -49,6 +50,8 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 	private final int SMS_DETAIL_SEND_SUCCESS = 1;
 	// 发送失败
 	private final int SMS_DETAIL_SEND_FAILURE = 2;
+	@Autowired
+	private SmsSyncCouponService smsSyncCouponService;
 
 	@Override
 	public BaseOutput smsTaskHeadList(String userId, Integer index, Integer size, String smsTaskAppType,
@@ -228,7 +231,9 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 					Integer audienceGenerateStatus = smsTaskHeadBack.getAudienceGenerateStatus();
 					if (audienceGenerateStatus != null && audienceGenerateStatus != 1
 							&& smsTaskHeadBack.getTotalCoverNum() > 0) {
-						mqTopicService.sendSmsByTaskId(String.valueOf(id));
+						
+						// mqTopicService.sendSmsByTaskId(String.valueOf(id));
+						smsSyncCouponService.beforeProcessSmsStatus(String.valueOf(id)); // @since 1.9.0
 					}
 				}
 			}

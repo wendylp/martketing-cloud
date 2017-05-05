@@ -12,6 +12,7 @@
 package cn.rongcapital.mkt.bbx.service;
 
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCodeStatusUpdateVO;
+import cn.rongcapital.mkt.po.SmsTaskDetail;
 
 import java.util.List;
 
@@ -19,6 +20,19 @@ public interface BbxCouponCodeAddService {
 
     void addCouponCodeToBBX(List<MaterialCouponCodeStatusUpdateVO> voList);
 
+    /**
+     * 完成优惠券绑定关系入到中间关系表的操作，为同步绑定优惠券webservice做准备
+     * @param list
+     * @param campaignHeadId
+     * @param smsTaskHeadId
+     * @param campaignItemId
+     */
+    void addCouponCodeToBBX(List<SmsTaskDetail> list, Integer campaignHeadId, Long smsTaskHeadId,String campaignItemId);
+
+    /**
+     * 对已经完成优惠券绑定同步的信息，进行发送短信
+     */
+    public void synchSuccessCouponSendMsg();
 
     void verifyCouponCode();
 

@@ -12,11 +12,11 @@ package cn.rongcapital.mkt.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.SmsTaskDetail;
 import cn.rongcapital.mkt.vo.out.MessageSendRecordGetOut;
-
-import org.apache.ibatis.annotations.Param;
 
 public interface SmsTaskDetailDao extends BaseDao<SmsTaskDetail>{
 	
@@ -49,4 +49,12 @@ public interface SmsTaskDetailDao extends BaseDao<SmsTaskDetail>{
     List<MessageSendRecordGetOut> messageSendRecordGet(SmsTaskDetail smsTaskDetail);
 
     void batchInsert(@Param("list") List<SmsTaskDetail> smsTaskDetails);
+
+	/**
+	 * 批量更新短信状态
+	 * 
+	 * @since 1.9.0
+	 * @param ids
+	 */
+	void batchUpdateById(@Param("list") List<Integer> ids);
 }

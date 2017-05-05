@@ -10,11 +10,12 @@
 
 package cn.rongcapital.mkt.dao;
 
-import cn.rongcapital.mkt.dao.base.BaseDao;
-import cn.rongcapital.mkt.po.SmsTaskDetailState;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
+import cn.rongcapital.mkt.dao.base.BaseDao;
+import cn.rongcapital.mkt.po.SmsTaskDetailState;
 
 public interface SmsTaskDetailStateDao extends BaseDao<SmsTaskDetailState>{
 	
@@ -46,4 +47,12 @@ public interface SmsTaskDetailStateDao extends BaseDao<SmsTaskDetailState>{
 	void updateDetailState(SmsTaskDetailState smsTaskDetailState);
 
     void batchInsert(@Param("list") List<SmsTaskDetailState> smsTaskDetailStates);
+
+	/**
+	 * 批量更新短信状态
+	 * 
+	 * @since 1.9.0
+	 * @param ids
+	 */
+	void batchUpdateByDetailId(@Param("list") List<Integer> ids);
 }

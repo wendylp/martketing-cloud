@@ -54,4 +54,12 @@ public interface BbxCouponCodeAddDao extends BaseDao<BbxCouponCodeAdd>{
 	int batchInsert(List<BbxCouponCodeAdd> list);
 	
 	Map<String,Object> selectCampaignSmsItemByCouponId(long couponCodeId);
+
+	/**
+	 * 查询所有已经完成贝贝熊绑定优惠券同步操作，还没有发送短信的短信HeadId
+	 * @return
+	 */
+	List<BbxCouponCodeAdd> selectSynchedUnSendSMS();
+
+	int updateBySmsTaskHeadId(BbxCouponCodeAdd item);
 }

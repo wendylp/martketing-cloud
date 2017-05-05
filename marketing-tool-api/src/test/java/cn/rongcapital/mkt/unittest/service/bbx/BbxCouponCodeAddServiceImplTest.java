@@ -122,6 +122,12 @@ public class BbxCouponCodeAddServiceImplTest extends AbstractUnitTest {
         }
     }
 
+    @Test
+    public void testSynchSuccessCouponSendMsg(){
+       service.synchSuccessCouponSendMsg();
+    }
+
+
     private String getServiceName(String serviceName) {
         char serviceNameChar[] = serviceName.toCharArray();
         serviceNameChar[0] = Character.toLowerCase(serviceNameChar[0]);
