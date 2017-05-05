@@ -283,7 +283,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             this.bbxCouponCodeAddDao.updateById(item);
 
             //如果同步优惠券到CRM成功，则将活动的短信任务是已经触达
-            if(item.getCampsignId() != null){
+            if(item.getCampsignId() != null && item.getSynchronizeable()){
                 int isTouch = 0;
                 if(item.getSynchSuccess()) {
                     isTouch = 1;
