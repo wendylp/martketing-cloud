@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import cn.rongcapital.mkt.bbx.service.BbxCouponCodeAddService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
@@ -18,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import cn.rongcapital.mkt.bbx.service.BbxCouponCodeAddService;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
@@ -128,7 +128,7 @@ public class SmsSendTaskServiceImpl implements TaskService {
 			List<SmsTaskDetail> smsDetailList = smsTaskDetailDao.selectList(smsDetail);
 			if (CollectionUtils.isEmpty(smsDetailList)) {
 				logger.warn("no send message,taskId is: {}", jsonMessage);
-				return;
+				// return;
 			}
 
 			Integer smsCount = smsDetailList.size();
