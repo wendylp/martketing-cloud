@@ -134,13 +134,6 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         List<List<BbxCouponCodeAdd>> partitionList = Lists.partition(list, pageSize);
         for (List<BbxCouponCodeAdd> item : partitionList) {
             bbxCouponCodeAddDao.batchInsert(item);
-            
-            for (BbxCouponCodeAdd bbxCouponCodeAdd : item) {
-                //仅同步以活动发送出去的优惠券信息，短信任务发送的不进行同步
-                if(bbxCouponCodeAdd.getCampsignId() != null){
-                    this.campaignDetailService.updateCampaignMemberCouponId(bbxCouponCodeAdd.getCampsignId(), bbxCouponCodeAdd.getItemId(),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 1, bbxCouponCodeAdd.getCouponId());
-                }
-            }
         }
     }
     @Override
@@ -189,12 +182,8 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         for (List<BbxCouponCodeAdd> item : partitionList) {
             bbxCouponCodeAddDao.batchInsert(item);
 
-            for (BbxCouponCodeAdd bbxCouponCodeAdd : item) {
-                //仅同步以活动发送出去的优惠券信息，短信任务发送的不进行同步
-                if(bbxCouponCodeAdd.getCampsignId() != null){
-                    this.campaignDetailService.updateCampaignMemberCouponId(bbxCouponCodeAdd.getCampsignId(), bbxCouponCodeAdd.getItemId(),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 0, bbxCouponCodeAdd.getCouponId());
-                }
-            }
+
+
         }
     }
 
@@ -292,6 +281,15 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         }finally {
             //不管是否成功，都要记录结果
             this.bbxCouponCodeAddDao.updateById(item);
+
+            //如果同步优惠券到CRM成功，则将活动的短信任务是已经触达
+            if(item.getCampsignId() != null && item.getSynchronizeable()){
+                int isTouch = 0;
+                if(item.getSynchSuccess()) {
+                    isTouch = 1;
+                }
+                this.campaignDetailService.updateCampaignMemberCouponId(item.getCampsignId(), item.getItemId(), Integer.valueOf(item.getMainId()), isTouch, item.getCouponId());
+            }
         }
     }
 
