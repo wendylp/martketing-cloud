@@ -20,10 +20,13 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.jms.core.JmsOperations;
 import org.springframework.stereotype.Component;
 
 import cn.rongcapital.mkt.dao.CampaignEventMapDao;
+import cn.rongcapital.mkt.job.service.vo.BrithDayData;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.vo.CampaignNode;
@@ -36,16 +39,17 @@ public class BrithDayDataSendMQ {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private ExecutorService executor = Executors.newCachedThreadPool();
+    private ExecutorService executor = Executors.newFixedThreadPool(20);
 
     private final String eventCode = "customer_birthday_care";
 
-    int pageSizeCnt = 3;
+    @Value("${brithday.tomq.pageSize}")
+    int pageSizeCnt;
 
     @Autowired
     private JmsOperations jmsOperations;
 
-    public void sendMQ(final Map<Integer, List<DataParty>> datamap) {
+    public void sendMQ(final Map<Integer,AggregationResults<BrithDayData>> datamap) {
         logger.info("生日队列发送开始...");
         long begin = System.currentTimeMillis();
         int campainCount = getFirstMQNodeByEventCodeCnt(eventCode);
@@ -83,18 +87,19 @@ public class BrithDayDataSendMQ {
     }
 
 
-    private List<Segment> changeDataPartTOSegment(Map<Integer, List<DataParty>> map, Integer time) {
-        List<DataParty> dpy = map.get(time);
+    private List<Segment> changeDataPartTOSegment(Map<Integer,AggregationResults<BrithDayData>> map, Integer time) {
+        AggregationResults<BrithDayData> dpy = map.get(time-1);
         List<Segment> sg = new ArrayList<Segment>();
-        if (CollectionUtils.isNotEmpty(dpy)) {
-            for (DataParty dpt : dpy) {
-           logger.info("提前生日天数:{},生日日期是:{},主MID:{}",time,
-         dpt.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), dpt.getMid());
+        if (dpy!=null && CollectionUtils.isNotEmpty(dpy.getMappedResults())) { 
+            for (BrithDayData dpt : dpy.getMappedResults()) {
+          /* logger.info("提前生日天数:{},生日日期是:{},主MID:{}",time,
+         dpt.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), dpt.getMid());*/
                 Segment sgt = new Segment();
                 sgt.setDataId(dpt.getMid());
                 sgt.setName(dpt.getName());
                 sg.add(sgt);
             }
+            
         }
         return sg;
 

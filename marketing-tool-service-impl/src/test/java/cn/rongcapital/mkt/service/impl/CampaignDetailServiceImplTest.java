@@ -280,6 +280,14 @@ public class CampaignDetailServiceImplTest extends AbstractUnitTest {
 	}
 
 	@Test
+	public void updateCampaignMemberCouponStatusTest() {
+		serviceImpl.updateCampaignMemberCouponStatus(campaignId, itemId, mid, 1);
+		serviceImpl.updateCampaignMemberCouponStatus(campaignId, itemId, null, 1);
+		serviceImpl.updateCampaignMemberCouponStatus(campaignId, "", mid, 1);
+		serviceImpl.updateCampaignMemberCouponStatus(null, "", mid, 1);
+	}
+
+	@Test
 	public void testCreateKey() {
 		Assert.assertEquals("创建key测试失败", serviceImpl.createKey(campaignId, itemId), "key:" + campaignId + ":" + itemId);
 		Assert.assertNull("创建key测试失败", serviceImpl.createKey(campaignId, ""));

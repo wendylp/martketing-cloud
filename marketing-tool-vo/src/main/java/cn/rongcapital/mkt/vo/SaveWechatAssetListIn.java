@@ -5,6 +5,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.util.ArrayList;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by Yunfeng on 2016-6-1.
  */
@@ -13,8 +15,18 @@ public class SaveWechatAssetListIn extends BaseInput {
 
     private ArrayList<Long> groupIds;
     private String peopleGroupName;
+    @NotNull
+    @JsonProperty("org_id")
+    private Long orgid;
+    public Long getOrgid() {
+		return orgid;
+	}
 
-    @JsonProperty("group_ids")
+	public void setOrgid(Long orgid) {
+		this.orgid = orgid;
+	}
+
+	@JsonProperty("group_ids")
     public ArrayList<Long> getGroupIds() {
         return groupIds;
     }

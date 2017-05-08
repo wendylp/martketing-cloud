@@ -31,6 +31,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -49,10 +51,11 @@ public class DataPartQueryTaskImpl {
     
     private  LocalDate currdate =LocalDate.now();
     
-    private final int pageSizeCnt=100;
+    @Value("${brithday.mg.pageSize}")
+    private  int pageSizeCnt;
     
     
-    private ExecutorService executor = Executors.newCachedThreadPool();
+    private ExecutorService executor = Executors.newFixedThreadPool(20);
     
     
     private int getBritdayIndex(MonthDay monday) {
@@ -72,7 +75,7 @@ public class DataPartQueryTaskImpl {
         logger.info("生日提醒数据准备开始....");
         long begin=System.currentTimeMillis();
         Map<Integer, List<DataParty>> mapdata = new HashMap<Integer, List<DataParty>>();
-        Query query = new Query(Criteria.where("birthday").exists(true));
+        Query query = new Query(Criteria.where("birthday").ne(null));
         long count = mongoTemplate.count(query, DataParty.class);
         int pageSize = (int) Math.ceil(count / (float) pageSizeCnt);
         List<Future<Map<Integer,List<DataParty>>>> resultList = new ArrayList<>();
@@ -82,6 +85,7 @@ public class DataPartQueryTaskImpl {
                 @Override
                 public Map<Integer,List<DataParty>> call() throws Exception {
                     Query query = new Query(Criteria.where("birthday").exists(true));
+                    query.with(new Sort(Sort.Direction.ASC, "mid"));
                     query.skip((index - 1) * pageSizeCnt).limit(pageSizeCnt);
                     List<DataParty> dataPartys = mongoTemplate.find(query, DataParty.class);
                     Map<Integer,List<DataParty>> mapdata=getBritDays(dataPartys);
@@ -93,14 +97,14 @@ public class DataPartQueryTaskImpl {
         }
         executor.shutdown();
         try {
-            executor.awaitTermination(3, TimeUnit.HOURS);
+            executor.awaitTermination(5, TimeUnit.HOURS);
         } catch (InterruptedException e1) {
             // TODO Auto-generated catch block
             logger.error("DataPartQueryTaskImpl is error");
             executor.shutdownNow();
             e1.printStackTrace();
         }
-        
+       
         if (CollectionUtils.isNotEmpty(resultList)) {
             for (Future<Map<Integer,List<DataParty>>> mapdp  : resultList) {
                 try {

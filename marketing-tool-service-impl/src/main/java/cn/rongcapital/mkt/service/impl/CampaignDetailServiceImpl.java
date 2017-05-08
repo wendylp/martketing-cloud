@@ -381,7 +381,6 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 
 		DataParty dp = dataParties.get(0);
 		CampaignMember member = new CampaignMember(campaignId, itemId, dp.getId(), dp2 == null ? null : dp2.getMemberId());
-		member.setMemberId(0);
 		member.setPhone(dp.getMobile());
 		member.setWxId(dp.getWxmpId());
 		member.setOpenId(dp.getWxCode());
@@ -467,6 +466,21 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 		update.set("coupon_id", couponId); // 优惠券ID
 		mongoTemplate.updateFirst(query, update, CampaignMember.class);
 		logger.debug("campaignId={}, itemId={}, mid={}, isTouch={}, couponId={}", campaignId, itemId, mid, isTouch, couponId);
+	}
+
+	@Override
+	public void updateCampaignMemberCouponStatus(Integer campaignId, String itemId, Integer mid, Integer isBuy) {
+		if (!isValidForInteger(campaignId, mid, isBuy) || !isValidForString(itemId)) {
+			logger.error("无效的参数：campaignId={}, itemId={}, mid={}, isBuy={}", campaignId, itemId, mid, isBuy);
+			return;
+		}
+		Criteria criteria = Criteria.where("campaign_id").is(campaignId).and("item_id").is(itemId).and("mid").is(mid);
+		Query query = new Query(criteria);
+
+		Update update = new Update();
+		update.set("is_buy", isBuy); // 是否核销
+		mongoTemplate.updateFirst(query, update, CampaignMember.class);
+		logger.debug("campaignId={}, itemId={}, mid={}, isBuy={}", campaignId, itemId, mid, isBuy);
 	}
 
 	public void setMongoTemplate(MongoTemplate mongoTemplate) {

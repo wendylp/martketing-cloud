@@ -16,6 +16,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import cn.rongcapital.mkt.po.SmsTaskDetail;
+import cn.rongcapital.mkt.service.SmsSyncCouponService;
+import cn.rongcapital.mkt.webservice.BBXCrmWSUtils;
+import cn.rongcapital.mkt.webservice.UpdateCouponResult;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +72,9 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
     @Autowired
     private CampaignDetailService campaignDetailService;
 
+    @Autowired
+    private SmsSyncCouponService smsSyncCouponService;
+
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -81,15 +88,15 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
                 continue;
             }
             MaterialCouponCode couponCode = this.getCouponIdByCodeId(vo.getId());
-            MaterialCoupon coupon = this.getCouponById(couponCode.getCouponId());
+            MaterialCoupon coupon = this.getCouponById(Math.toIntExact(couponCode.getCouponId()));
             
-            Map<String,Object> campasignMap = this.bbxCouponCodeAddDao.selectCampaignSmsItemByCouponId(vo.getId());
+            Map<String,Object> campasignMap = this.bbxCouponCodeAddDao.selectCampaignSmsItemByCouponId(coupon.getId());
 
-            Long campsignId = null;
-            Long itemId = null;
+            Integer campsignId = null;
+            String itemId = null;
             if(campasignMap !=null) {
-                 campsignId = (Long) campasignMap.get("campaignHeadId");
-                 itemId = (Long) campasignMap.get("itemId");
+                 campsignId = (Integer) campasignMap.get("campaignHeadId");
+                 itemId = (String) campasignMap.get("itemId");
             }
 
             //为贝贝熊同步一份优惠码的数据
@@ -127,15 +134,165 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         List<List<BbxCouponCodeAdd>> partitionList = Lists.partition(list, pageSize);
         for (List<BbxCouponCodeAdd> item : partitionList) {
             bbxCouponCodeAddDao.batchInsert(item);
-            
-            for (BbxCouponCodeAdd bbxCouponCodeAdd : item) {
-                //仅同步以活动发送出去的优惠券信息，短信任务发送的不进行同步
-                if(bbxCouponCodeAdd.getCampsignId() != null){
-                    this.campaignDetailService.updateCampaignMemberCouponId(bbxCouponCodeAdd.getCampsignId().intValue(),String.valueOf( bbxCouponCodeAdd.getItemId()),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 0, bbxCouponCodeAdd.getCouponId());
+        }
+    }
+    @Override
+    @Transactional
+    public void addCouponCodeToBBX(List<SmsTaskDetail> list, Integer campaignHeadId, Long smsTaskHeadId,String campaignItemId) {
+        List<BbxCouponCodeAdd> resultList = new ArrayList<>();
+        for (SmsTaskDetail smsTaskDetail : list) {
+            MaterialCouponCode couponCode = this.getCouponIdByCodeId(smsTaskDetail.getMaterielCouponCodeId());
+            MaterialCoupon coupon = this.getCouponById(Math.toIntExact(couponCode.getCouponId()));
+            //为贝贝熊同步一份优惠码的数据
+            BbxCouponCodeAdd bbxCouponCode = new BbxCouponCodeAdd();
+            bbxCouponCode.setActionId(ApiConstant.INT_ZERO);
+            // 需要根据电话号码将相应的会员号码找到
+            TBBXMember member = mongoTemplate.findOne(new Query(Criteria.where("phone").is(smsTaskDetail.getReceiveMobile())), TBBXMember.class);
+            if(member == null){
+                continue;
+            }
+            bbxCouponCode.setVipId(member.getMemberid());
+            //只有贝贝熊的数据是这么处理的，优惠券rule字段存储着贝贝熊crm系统中的couponId
+            String rule = coupon.getRule();
+            BbxCouponRule couponRule = JSON.parseObject(rule, BbxCouponRule.class);
+            bbxCouponCode.setCouponId((int) couponRule.getCouponid());
+            bbxCouponCode.setCouponMoney(coupon.getAmount().doubleValue());
+            bbxCouponCode.setCanUseBeginDate(DateUtil.getStringFromDate(coupon.getStartTime(),ApiConstant.DATE_FORMAT_yyyy_MM_dd) );
+            bbxCouponCode.setCanUserEndDate(DateUtil.getStringFromDate(coupon.getEndTime(),ApiConstant.DATE_FORMAT_yyyy_MM_dd));
+            bbxCouponCode.setStoreCode("");
+            bbxCouponCode.setCreateTime(new Date());
+            bbxCouponCode.setSynchronizeable(Boolean.FALSE);
+            bbxCouponCode.setSynchSuccess(Boolean.FALSE);
+            bbxCouponCode.setSynchronizedTime(null);
+            bbxCouponCode.setPhone(smsTaskDetail.getReceiveMobile());
+            bbxCouponCode.setMainId(String.valueOf( member.getMid()));
+            bbxCouponCode.setCampsignId(campaignHeadId);
+            bbxCouponCode.setItemId(campaignItemId);
+            bbxCouponCode.setCouponCodeId(smsTaskDetail.getMaterielCouponCodeId());
+            bbxCouponCode.setChecked(false);
+            bbxCouponCode.setSmsTaskHeadId(smsTaskHeadId);
+            bbxCouponCode.setSmsSended(Boolean.FALSE);
+            bbxCouponCode.setSmsTaskDetailId(smsTaskDetail.getId());
+            resultList.add(bbxCouponCode);
+        }
+
+        //分页后插入数据库，防止一次插入过多数据
+        int pageSize = 1000;
+        List<List<BbxCouponCodeAdd>> partitionList = Lists.partition(resultList, pageSize);
+        for (List<BbxCouponCodeAdd> item : partitionList) {
+            bbxCouponCodeAddDao.batchInsert(item);
+
+
+
+        }
+    }
+
+    /**
+     * 将完成同步的优惠券完成发短信
+     */
+    @Override
+    @Transactional
+    public void synchSuccessCouponSendMsg() {
+        List<BbxCouponCodeAdd> smsHeadIdList = this.bbxCouponCodeAddDao.selectSynchedUnSendSMS();
+        BbxCouponCodeAdd param = new BbxCouponCodeAdd();
+        for (BbxCouponCodeAdd item: smsHeadIdList) {
+            param = new BbxCouponCodeAdd();
+            param.setSmsTaskHeadId(item.getSmsTaskHeadId());
+            param.setSynchronizeable(Boolean.TRUE);//已经同步的数据
+            param.setSynchSuccess(Boolean.FALSE);//同步失败的数据
+            param.setSmsSended(Boolean.FALSE);//未发送短信的数据
+            param.setPageSize(Integer.MAX_VALUE);
+            List<BbxCouponCodeAdd> bbxCouponCodeAddList = this.bbxCouponCodeAddDao.selectList(param);
+
+            if(CollectionUtils.isNotEmpty(bbxCouponCodeAddList)){
+                List<Long> smsDetailIds = new ArrayList<>();
+                bbxCouponCodeAddList.forEach(p ->{
+                    smsDetailIds.add(p.getSmsTaskDetailId());
+                });
+
+                //开始发短信
+                boolean sendResult = this.smsSyncCouponService.processSmsStatus(item.getCampsignId(), item.getSmsTaskHeadId(), smsDetailIds);
+                if(sendResult) {
+                    //发送短信后修改表中的数据sms_sended标识
+                    param = new BbxCouponCodeAdd();
+                    param.setSmsTaskHeadId(item.getSmsTaskHeadId());
+                    param.setSmsSended(Boolean.TRUE);
+                    this.bbxCouponCodeAddDao.updateBySmsTaskHeadId(param);
                 }
             }
         }
     }
+
+    /**
+     * 同步优惠券数据
+     */
+    @Transactional
+    public void synchronizeCoupon() {
+        BbxCouponCodeAdd param = new BbxCouponCodeAdd();
+        param.setSynchronizeable(Boolean.FALSE);
+        int totalCount = this.bbxCouponCodeAddDao.selectListCount(param);
+        int pageSize = 100;
+        int pageCount = totalCount / pageSize;
+        if (totalCount % pageSize > 0) {
+            pageCount = pageCount + 1;
+        }
+        List<BbxCouponCodeAdd> bbxCouponCodeAdds = null;
+        for (int i = 0; i < pageCount; i++) {
+            param.setPageSize(pageSize);
+            param.setOrderField("id");
+            param.setOrderFieldType("ASC");
+            if(CollectionUtils.isNotEmpty(bbxCouponCodeAdds)){
+                //取上一次最后一条数据的ID作为下一次查询的起始位置
+                param.setId(bbxCouponCodeAdds.get(bbxCouponCodeAdds.size()-1).getId());
+            }
+            bbxCouponCodeAdds = this.bbxCouponCodeAddDao.selectListByMinId(param);
+            for (BbxCouponCodeAdd item : bbxCouponCodeAdds) {
+                sendMessageToBBX(item);
+            }
+        }
+    }
+
+    /**
+     * 发送消息
+     * @param item
+     */
+    private void sendMessageToBBX(BbxCouponCodeAdd item) {
+        try {
+            logger.info("Send message to bbx crm ,content is {}", JSON.toJSON(item));
+            UpdateCouponResult result = BBXCrmWSUtils.UpdateVipCoupon(item.getVipId(), item.getCouponId(), item.getActionId(), item.getCouponMoney(), item.getCanUseBeginDate(), item.getCanUserEndDate(), item.getStoreCode());
+            if(result.getSuccess()){
+                item.setSynchronizeable(Boolean.TRUE);
+                item.setSynchSuccess(Boolean.TRUE);
+                item.setSynchronizedTime(new Date());
+            }else{
+                item.setSynchronizeable(Boolean.TRUE);
+                item.setSynchSuccess(Boolean.FALSE);
+                item.setSynchronizedTime(new Date());
+                item.setErrorMsg(result.getMsg());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("Send coupone code is error,message is :{}",e.getMessage());
+            //将同步webservice调用时，异常的情况记录，以便于重新发起同步操作
+            item.setSynchronizeable(Boolean.FALSE);
+            item.setSynchSuccess(Boolean.FALSE);
+            item.setErrorMsg(e.getMessage());
+        }finally {
+            //不管是否成功，都要记录结果
+            this.bbxCouponCodeAddDao.updateById(item);
+
+            //如果同步优惠券到CRM成功，则将活动的短信任务是已经触达
+            if(item.getCampsignId() != null && item.getSynchronizeable()){
+                int isTouch = 0;
+                if(item.getSynchSuccess()) {
+                    isTouch = 1;
+                }
+                this.campaignDetailService.updateCampaignMemberCouponId(item.getCampsignId(), item.getItemId(), Integer.valueOf(item.getMainId()), isTouch, item.getCouponId());
+            }
+        }
+    }
+
 
     @Override
     @Transactional
@@ -144,18 +301,12 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         Query query = new Query();
         //查询所有未核销的数据，进行相应的核销操作
         Criteria payCriteria = new Criteria();
-        payCriteria.orOperator(Criteria.where("checked").exists(false), Criteria.where("checked").is(false));
 
-        List<Sort.Order> orders = new ArrayList<Sort.Order>();
-        orders.add(new Sort.Order(Sort.Direction.DESC, "_id"));
-        Sort sort = new Sort(orders);
-        if (null != sort) {
-            query.with(sort);
-        }
+        Criteria orCriteria = new Criteria();
+        orCriteria.orOperator(Criteria.where("checked").exists(false), Criteria.where("checked").is(false));
+        payCriteria.andOperator(Criteria.where("couponid").exists(true),orCriteria);
         query.addCriteria(payCriteria);
-        SpringDataPageable pageable = new SpringDataPageable();
-        //排序
-        pageable.setSort(sort);
+
         //查询出一共的条数
         long count = this.mongoTemplate.count(query, TBBXOrderPayDetail.class);
         int pageSize = 100;
@@ -163,7 +314,12 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         if(count % 100 >0){
             pageCount++;
         }
-
+        List<Sort.Order> orders = new ArrayList<Sort.Order>();
+        orders.add(new Sort.Order(Sort.Direction.DESC, "_id"));
+        Sort sort = new Sort(orders);
+        SpringDataPageable pageable = new SpringDataPageable();
+        //排序
+        pageable.setSort(sort);
         for (int i = 0; i <pageCount; i++) {
             //开始页
             pageable.setPagenumber(i*pageSize);
@@ -203,7 +359,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
                         
                       //仅同步以活动发送出去的优惠券信息，短信任务发送的不进行同步
                         if(bbxCouponCodeAdd.getCampsignId() != null){
-                            this.campaignDetailService.updateCampaignMemberCouponId(bbxCouponCodeAdd.getCampsignId().intValue(),String.valueOf( bbxCouponCodeAdd.getItemId()),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 1, bbxCouponCodeAdd.getCouponId());
+                            this.campaignDetailService.updateCampaignMemberCouponStatus(bbxCouponCodeAdd.getCampsignId(),bbxCouponCodeAdd.getItemId(),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 1);
                         }
                     }
                 }
@@ -240,11 +396,11 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
      * @param couponId
      * @return
      */
-    private MaterialCoupon getCouponById(Long couponId) {
+    private MaterialCoupon getCouponById(Integer couponId) {
         MaterialCoupon materialCoupon = null;
         if (couponId != null) {
             materialCoupon = new MaterialCoupon();
-            materialCoupon.setId(couponId);
+            materialCoupon.setId(Long.valueOf(couponId));
             List<MaterialCoupon> materialCoupons = materialCouponDao.selectList(materialCoupon);
             if (CollectionUtils.isNotEmpty(materialCoupons)) {
                 materialCoupon = materialCoupons.get(0);

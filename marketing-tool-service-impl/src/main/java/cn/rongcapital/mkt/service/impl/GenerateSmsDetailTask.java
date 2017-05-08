@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import cn.rongcapital.mkt.bbx.service.BbxCouponCodeAddService;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.SmsDetailSendStateEnum;
 import cn.rongcapital.mkt.common.enums.SmsMaterialVariableEnum;
@@ -62,6 +63,7 @@ import cn.rongcapital.mkt.po.SmsTaskDetail;
 import cn.rongcapital.mkt.po.SmsTaskDetailState;
 import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.service.MQTopicService;
+import cn.rongcapital.mkt.service.SmsSyncCouponService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 
 /**
@@ -140,6 +142,10 @@ public class GenerateSmsDetailTask implements TaskService {
     
     @Autowired
     private MaterialCouponDao materialCouponDao;
+	@Autowired
+	private BbxCouponCodeAddService couponCodeAddService;
+	@Autowired
+	private SmsSyncCouponService smsSyncCouponService;
 
     private Map<Integer,AbstractCalcSmsTargetAudienceStrategy> strategyMap = new HashMap<>();
     private final int PAGE_SIZE = 10000;
@@ -227,7 +233,8 @@ public class GenerateSmsDetailTask implements TaskService {
         SmsTaskHead currentTaskHead = smsTaskHeads.get(0);
         //4检测TaskHead的发送状态
 		if (currentTaskHead.getSmsTaskStatus() == SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode()) {
-            mqTopicService.sendSmsByTaskId(taskHeadIdStr);
+			// mqTopicService.sendSmsByTaskId(taskHeadIdStr);
+			smsSyncCouponService.beforeProcessSmsStatus(taskHeadIdStr); // @since 1.9.0
         }
         
     }

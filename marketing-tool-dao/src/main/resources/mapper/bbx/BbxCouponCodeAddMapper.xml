@@ -3,7 +3,7 @@
 <mapper namespace="cn.rongcapital.mkt.dao.bbx.BbxCouponCodeAddDao">
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,vip_id as vipId,coupon_id as couponId,action_id as actionId,coupon_money as couponMoney,can_use_begin_date as canUseBeginDate,can_user_end_date as canUserEndDate,store_code as storeCode,create_time as createTime,synchronizeable as synchronizeable,synch_success as synchSuccess,synchronized_time as synchronizedTime,phone as phone,coupon_code_id as couponCodeId,checked as checked,main_id as mainId,campsign_id as campsignId,item_id as itemId,error_msg as errorMsg]]>
+		<![CDATA[ id as id,vip_id as vipId,coupon_id as couponId,action_id as actionId,coupon_money as couponMoney,can_use_begin_date as canUseBeginDate,can_user_end_date as canUserEndDate,store_code as storeCode,create_time as createTime,synchronizeable as synchronizeable,synch_success as synchSuccess,synchronized_time as synchronizedTime,phone as phone,coupon_code_id as couponCodeId,checked as checked,main_id as mainId,campsign_id as campsignId,item_id as itemId,sms_task_head_id as smsTaskHeadId,sms_sended as smsSended,sms_task_detail_id as smsTaskDetailId,error_msg as errorMsg]]>
 	</sql>
 
 	<!-- 查询列来源表-->
@@ -30,6 +30,9 @@
 			<if test="mainId != null"><![CDATA[ AND main_id = #{mainId}]]></if>
 			<if test="campsignId != null"><![CDATA[ AND campsign_id = #{campsignId}]]></if>
 			<if test="itemId != null"><![CDATA[ AND item_id = #{itemId}]]></if>
+			<if test="smsTaskHeadId != null"><![CDATA[ AND sms_task_head_id = #{smsTaskHeadId}]]></if>
+			<if test="smsSended != null"><![CDATA[ AND sms_sended = #{smsSended}]]></if>
+			<if test="smsTaskDetailId != null"><![CDATA[ AND sms_task_detail_id = #{smsTaskDetailId}]]></if>
 			<if test="errorMsg != null"><![CDATA[ AND error_msg = #{errorMsg}]]></if>
 		</where>
 	</sql>
@@ -59,6 +62,9 @@
 			<if test="mainId != null"><![CDATA[main_id = #{mainId},]]></if>
 			<if test="campsignId != null"><![CDATA[campsign_id = #{campsignId},]]></if>
 			<if test="itemId != null"><![CDATA[item_id = #{itemId},]]></if>
+			<if test="smsTaskHeadId != null"><![CDATA[sms_task_head_id = #{smsTaskHeadId},]]></if>
+			<if test="smsSended != null"><![CDATA[sms_sended = #{smsSended},]]></if>
+			<if test="smsTaskDetailId != null"><![CDATA[sms_task_detail_id = #{smsTaskDetailId},]]></if>
 			<if test="errorMsg != null"><![CDATA[error_msg = #{errorMsg}]]></if>
 		</set>
 	</sql>
@@ -66,7 +72,7 @@
 	<!-- 插入action记录 -->
 	<insert id="insert" parameterType="cn.rongcapital.mkt.bbx.po.BbxCouponCodeAdd" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO bbx_coupon_code_add (vip_id,coupon_id,action_id,coupon_money,can_use_begin_date,can_user_end_date,store_code,create_time,synchronizeable,synch_success,synchronized_time,phone,coupon_code_id,checked,main_id,campsign_id,item_id,error_msg)
+			INSERT INTO bbx_coupon_code_add (vip_id,coupon_id,action_id,coupon_money,can_use_begin_date,can_user_end_date,store_code,create_time,synchronizeable,synch_success,synchronized_time,phone,coupon_code_id,checked,main_id,campsign_id,item_id,sms_task_head_id,sms_sended,sms_task_detail_id,error_msg)
 			VALUES
 			(
 			  #{vipId},
@@ -86,6 +92,9 @@
 			  #{mainId},
 			  #{campsignId},
 			  #{itemId},
+			  #{smsTaskHeadId},
+			  #{smsSended},
+			  #{smsTaskDetailId},
 			  #{errorMsg}
 			)
 		]]>
@@ -129,43 +138,49 @@
 	</select>
 
 	<!-- 其它SQL语句 -->
+
+	<!-- 其它SQL语句 -->
 	<insert id="batchInsert" parameterType="cn.rongcapital.mkt.bbx.po.BbxCouponCodeAdd" useGeneratedKeys="false">
-		INSERT INTO bbx_coupon_code_add (vip_id,coupon_id,action_id,coupon_money,can_use_begin_date,can_user_end_date,store_code,create_time,synchronizeable,synch_success,synchronized_time,phone,coupon_code_id,checked,main_id,campsign_id,item_id,error_msg)
+		INSERT INTO bbx_coupon_code_add (vip_id,coupon_id,action_id,coupon_money,can_use_begin_date,can_user_end_date,store_code,create_time,synchronizeable,synch_success,synchronized_time,phone,coupon_code_id,checked,main_id,campsign_id,item_id,sms_task_head_id,sms_sended,sms_task_detail_id,error_msg)
 		VALUES
 			<foreach collection="list" item="model" separator=",">
 				(
-				  #{model.vipId},
-				  #{model.couponId},
-				  #{model.actionId},
-				  #{model.couponMoney},
-				  #{model.canUseBeginDate},
-				  #{model.canUserEndDate},
-				  #{model.storeCode},
-				  #{model.createTime},
-				  #{model.synchronizeable},
-				  #{model.synchSuccess},
-				  #{model.synchronizedTime},
-				  #{model.phone},
-				  #{model.couponCodeId},
-				  #{model.checked},
-				  #{model.mainId},
-				  #{model.campsignId},
-				  #{model.itemId},
-				  #{model.errorMsg}
+				#{model.vipId},
+				#{model.couponId},
+				#{model.actionId},
+				#{model.couponMoney},
+				#{model.canUseBeginDate},
+				#{model.canUserEndDate},
+				#{model.storeCode},
+				  now(),
+				#{model.synchronizeable},
+				#{model.synchSuccess},
+				#{model.synchronizedTime},
+				#{model.phone},
+				#{model.couponCodeId},
+				#{model.checked},
+				#{model.mainId},
+				#{model.campsignId},
+				#{model.itemId},
+				#{model.smsTaskHeadId},
+				#{model.smsSended},
+				#{model.smsTaskDetailId},
+				#{model.errorMsg}
 				)
 			</foreach>
 	</insert>
 	
 	<select id="selectCampaignSmsItemByCouponId" parameterType="long" resultType="map">
-		SELECT cass.campaign_head_id as campaignHeadId,cass.item_id as itemId 
-			FROM material_coupon mc 
+		SELECT cass.campaign_head_id AS campaignHeadId,cass.item_id AS itemId
+		FROM material_coupon mc
 			INNER JOIN sms_material_materiel_map smmm ON mc.id = smmm.sms_materiel_id
-			INNER JOIN campaign_action_send_sms cass ON cass.sms_material_id = smmm.id
-		WHERE smmm.sms_materiel_type = 0 AND mc.id = #{couponId}
+			INNER JOIN campaign_action_send_sms cass ON cass.sms_material_id = smmm.sms_material_id
+		WHERE smmm.sms_materiel_type = 0 AND smmm.sms_materiel_id= #{couponId}
 	</select>
 
 	<select id="selectListByMinId" resultType="cn.rongcapital.mkt.bbx.po.BbxCouponCodeAdd">
-		SELECT id as id,vip_id as vipId,coupon_id as couponId,action_id as actionId,coupon_money as couponMoney,can_use_begin_date as canUseBeginDate,can_user_end_date as canUserEndDate,store_code as storeCode,create_time as createTime,synchronizeable as synchronizeable,synch_success as synchSuccess,synchronized_time as synchronizedTime,phone as phone,coupon_code_id as couponCodeId,checked as checked,main_id as mainId,campsign_id as campsignId,item_id as itemId,error_msg as errorMsg
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
 		FROM bbx_coupon_code_add
 		<where>
 			<if test="id != null"><![CDATA[ AND id > #{id}]]></if>
@@ -191,5 +206,31 @@
 		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
 		<if test="pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{pageSize}]]></if>
 	</select>
+
+	<select id="selectSynchedUnSendSMS" resultType="cn.rongcapital.mkt.bbx.po.BbxCouponCodeAdd">
+		SELECT
+		t1.sms_task_head_id as smsTaskHeadId,t1.campsign_id as campsignId
+		FROM
+		(SELECT
+		sms_task_head_id, campsign_id
+		FROM
+		bbx_coupon_code_add
+		GROUP BY sms_task_head_id) AS t1
+		WHERE
+		t1.sms_task_head_id NOT IN (SELECT
+		sms_task_head_id
+		FROM
+		bbx_coupon_code_add
+		WHERE
+		synchronizeable = FALSE
+		GROUP BY sms_task_head_id)
+	</select>
+	<!-- 修改记录标记已发送短信的状态 -->
+	<update id="updateBySmsTaskHeadId" parameterType="cn.rongcapital.mkt.bbx.po.BbxCouponCodeAdd">
+		<![CDATA[UPDATE bbx_coupon_code_add]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE sms_task_head_id = #{smsTaskHeadId}]]>
+	</update>
+
 
 </mapper>

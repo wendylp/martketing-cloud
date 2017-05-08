@@ -4,19 +4,19 @@
 package cn.rongcapital.mkt.dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.rongcapital.mkt.dao.testbase.AbstractUnitTest;
 import cn.rongcapital.mkt.po.SmsTaskDetail;
@@ -27,6 +27,7 @@ import cn.rongcapital.mkt.vo.out.MessageSendRecordGetOut;
  * @author shuiyangyang
  * @Date 2016.10.18
  */
+@Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SmsTaskDetailDaoTest extends AbstractUnitTest {
 
@@ -43,7 +44,7 @@ public class SmsTaskDetailDaoTest extends AbstractUnitTest {
     SmsTaskDetailState smsTaskDetailStateFirst;
     SmsTaskDetailState smsTaskDetailStateSecond;
 
-    @Before
+	// @Before
     public void setUp() throws Exception {
         // 设置参数
         long smsTaskHeadId = (long) 1000;
@@ -149,7 +150,35 @@ public class SmsTaskDetailDaoTest extends AbstractUnitTest {
         Assert.assertEquals(messageSendRecordGetOutTestFirst, messageSendRecordGetOutLists.get(0));
     }
 
-    @After
+	@Test
+	public void batchUpdateByIdTest() {
+		List<Integer> ids = Arrays.asList(1, 2, 3, 4, 5);
+		List<SmsTaskDetail> list = smsTaskDetailDao.selectListByIdList(ids);
+		for (SmsTaskDetail cur : list) {
+			System.out.println(cur.getId() + ":" + cur.getReceiveMobile() + ":" + cur.getStatus());
+		}
+		smsTaskDetailDao.batchUpdateById(ids);
+		list = smsTaskDetailDao.selectListByIdList(ids);
+		for (SmsTaskDetail cur : list) {
+			System.out.println(cur.getId() + ":" + cur.getReceiveMobile() + ":" + cur.getStatus());
+		}
+	}
+
+	@Test
+	public void batchUpdateByDetailIdTest() {
+		List<Integer> ids = Arrays.asList(1, 2, 3, 4, 5);
+		List<SmsTaskDetailState> list = smsTaskDetailStateDao.selectListByIdList(ids);
+		for (SmsTaskDetailState cur : list) {
+			System.out.println(cur.getSmsTaskDetailId() + ":" + cur.getSmsTaskSendStatus());
+		}
+		smsTaskDetailStateDao.batchUpdateByDetailId(ids);
+		list = smsTaskDetailStateDao.selectListByIdList(ids);
+		for (SmsTaskDetailState cur : list) {
+			System.out.println(cur.getSmsTaskDetailId() + ":" + cur.getSmsTaskSendStatus());
+		}
+	}
+
+	// @After
     public void tearDown() throws Exception {
         // 逻辑删除数据
         Byte statusDel = 1;

@@ -42,9 +42,15 @@ public class BbxCouponCodeAdd extends BaseQuery{
 
     private String mainId;
 
-    private Long campsignId;
+    private Integer campsignId;
 
-    private Long itemId;
+    private String itemId;
+
+    private Long smsTaskHeadId;
+
+    private Boolean smsSended;
+
+    private Long smsTaskDetailId;
 
     private String errorMsg;
 
@@ -176,20 +182,44 @@ public class BbxCouponCodeAdd extends BaseQuery{
         this.mainId = mainId == null ? null : mainId.trim();
     }
 
-    public Long getCampsignId() {
+    public Integer getCampsignId() {
         return campsignId;
     }
 
-    public void setCampsignId(Long campsignId) {
+    public void setCampsignId(Integer campsignId) {
         this.campsignId = campsignId;
     }
 
-    public Long getItemId() {
+    public String getItemId() {
         return itemId;
     }
 
-    public void setItemId(Long itemId) {
-        this.itemId = itemId;
+    public void setItemId(String itemId) {
+        this.itemId = itemId == null ? null : itemId.trim();
+    }
+
+    public Long getSmsTaskHeadId() {
+        return smsTaskHeadId;
+    }
+
+    public void setSmsTaskHeadId(Long smsTaskHeadId) {
+        this.smsTaskHeadId = smsTaskHeadId;
+    }
+
+    public Boolean getSmsSended() {
+        return smsSended;
+    }
+
+    public void setSmsSended(Boolean smsSended) {
+        this.smsSended = smsSended;
+    }
+
+    public Long getSmsTaskDetailId() {
+        return smsTaskDetailId;
+    }
+
+    public void setSmsTaskDetailId(Long smsTaskDetailId) {
+        this.smsTaskDetailId = smsTaskDetailId;
     }
 
     public String getErrorMsg() {

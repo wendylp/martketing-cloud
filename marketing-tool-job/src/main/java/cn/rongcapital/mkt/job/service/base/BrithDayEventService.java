@@ -18,13 +18,15 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.stereotype.Service;
 
 import cn.rongcapital.djob.JobExecutor;
 import cn.rongcapital.djob.dto.JobContext;
 import cn.rongcapital.mkt.job.service.impl.event.BrithDayDataSendMQ;
-import cn.rongcapital.mkt.job.service.impl.event.DataPartQueryTaskImpl;
+import cn.rongcapital.mkt.job.service.impl.event.DataPartToBrithDataAggregateImpl;
 import cn.rongcapital.mkt.job.service.impl.event.SendBrithDayToEventCenter;
+import cn.rongcapital.mkt.job.service.vo.BrithDayData;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 
 @Service
@@ -34,7 +36,7 @@ public class BrithDayEventService implements JobExecutor {
     
     
     @Autowired
-    DataPartQueryTaskImpl  dataPartQueryTaskImpl;
+    DataPartToBrithDataAggregateImpl  dataPartToBrithDataAggregateImpl;
     
     @Autowired
     BrithDayDataSendMQ  brithDayDataSendMQ;
@@ -43,22 +45,21 @@ public class BrithDayEventService implements JobExecutor {
     SendBrithDayToEventCenter sendBrithDayToEventCenter;
     
     
-    Map<Integer,List<DataParty>> dataParty;
+    Map<Integer,AggregationResults<BrithDayData>> dataParty;
     
     public void execute(JobContext arg0) {
         // TODO Auto-generated method stub
         
         logger.info("生日关怀事Jop开始.....");
-        dataParty=dataPartQueryTaskImpl.getDataBritDay();
+        dataParty=dataPartToBrithDataAggregateImpl.getBrithMap();
         if(dataParty!=null && dataParty.size()>0)
         {
             
             brithDayDataSendMQ.sendMQ(dataParty);
-            sendBrithDayToEventCenter.SendBrithEventCenter(dataParty);
+           //sendBrithDayToEventCenter.SendBrithEventCenter(dataParty);  //发送事件中心
             
             
-        }
-            
+        }    
         logger.info("生日关怀事Jop结束.....");
         
     }

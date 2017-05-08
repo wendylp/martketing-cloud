@@ -3,6 +3,7 @@ package cn.rongcapital.mkt.service.impl;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.dao.*;
+import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.WechatAssetGroup;
 import cn.rongcapital.mkt.po.WechatMember;
 import cn.rongcapital.mkt.service.DataPopulationService;
@@ -44,6 +45,9 @@ public class SaveWechatAssetListServiceImpl implements SaveWechatAssetListServic
     @Autowired
     private DataPopulationService dataPopulationService;
     
+	@Autowired
+	private DataAuthService dataAuthService;
+    
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public Object saveWechatAssetList(SaveWechatAssetListIn saveWechatAssetListIn, SecurityContext securityContext) {
@@ -70,7 +74,9 @@ public class SaveWechatAssetListServiceImpl implements SaveWechatAssetListServic
         paramMap.put("source", ApiConstant.WEIXIN_AUDIENCE_SOURCE);        
         audienceListDao.insertWechatGroups(paramMap);
         id = audienceListDao.selectIdByAudienceName(paramMap);
-
+        dataAuthService.put(saveWechatAssetListIn.getOrgid(), "audience_list", id); //数据权限插入语句
+    	
+        
         //2.根据groupId选出import_groupId。
         List<WechatAssetGroup> wechatAssetGroups = wechatAssetGroupDao.selectImportGroupsByIds(saveWechatAssetListIn.getGroupIds());
 
