@@ -119,7 +119,7 @@ public class HomePageDataCountListServiceImpl implements HomePageDataCountListSe
 		// int tagCount = customTagCount + taggroupCount;
 
 		Query query = new Query();
-		Criteria criteria = Criteria.where("level").is(ApiConstant.TAG_LEVEL).and("status")
+		Criteria criteria = Criteria.where("bottom_classification").is(1).and("status")
 				.is((int) ApiConstant.TABLE_DATA_STATUS_VALID);
 		query.addCriteria(criteria);
 
