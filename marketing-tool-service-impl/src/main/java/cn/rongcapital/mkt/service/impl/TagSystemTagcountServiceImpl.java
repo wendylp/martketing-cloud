@@ -77,9 +77,10 @@ public class TagSystemTagcountServiceImpl implements TagSystemTagcountService {
 				ApiConstant.INT_ZERO, null);
 
 		Query query = new Query();
-		Criteria criteria = Criteria.where("level").is(ApiConstant.TAG_LEVEL).and("status")
-				.is((int) ApiConstant.TABLE_DATA_STATUS_VALID);
-		query.addCriteria(criteria);
+        Criteria criteria =
+                Criteria.where("bottom_classification").is(1).and("status")
+                        .is((int) ApiConstant.TABLE_DATA_STATUS_VALID);
+        query.addCriteria(criteria);
 		query.with(new Sort(Direction.DESC, "update_time"));
 		// 获取一级节点的所有子节点
 		List<TagTree> tagTreeList = mongoOperations.find(query, TagTree.class);
