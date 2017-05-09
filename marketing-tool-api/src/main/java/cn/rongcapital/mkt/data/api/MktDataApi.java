@@ -356,11 +356,13 @@ public class MktDataApi {
     public Object getUnqualifiedCount(@NotEmpty @QueryParam("method") String method,
             @NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver) {
         DataTotal dataTotal = dataTagAgent.statistic();
+        logger.info("Got statistic result {}", dataTotal);
         DataGetMainCountOut result = new DataGetMainCountOut(ApiErrorCode.SUCCESS.getCode(),
                 ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
         result.setDataSourceCount(dataTotal.getData_source_count());
         result.getData().addAll(dataTotal.getData());
         result.setTotal(result.getData().size());
+        logger.info("End statistic");
         return Response.ok().entity(result).build();
         //return dataGetMainCountService.getMainCount(method, userToken, ver);
     }
