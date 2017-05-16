@@ -375,6 +375,17 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 			logger.error("没有找到对应的主数据： mid={}", mid);
 			return;
 		}
+
+		String key = this.createKey(campaignId, itemId);
+		CampaignDetail detail = cache.get(key);
+		if (detail == null) {
+			detail = this.selectCampaignDetail(campaignId, itemId);
+			cache.put(key, detail);
+		} else if (detail.getIsHaveSubTable().intValue() != HAVE_SUB_DATA) {
+			detail.setIsHaveSubTable(HAVE_SUB_DATA);
+			this.updateCampaignDetailSubTableStatus(campaignId, itemId, HAVE_SUB_DATA);
+		}
+
 		Criteria criteria = Criteria.where("mid").is(mid);
 		Query query = new Query(criteria);
 		cn.rongcapital.mkt.po.mongodb.DataParty dp2 = mongoTemplate.findOne(query, cn.rongcapital.mkt.po.mongodb.DataParty.class, "data_party");
@@ -384,14 +395,9 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 		member.setPhone(dp.getMobile());
 		member.setWxId(dp.getWxmpId());
 		member.setOpenId(dp.getWxCode());
+		member.setItemType(detail.getItemType());
 		mongoTemplate.save(member);
 
-		String key = this.createKey(campaignId, itemId);
-		CampaignDetail detail = cache.get(key);
-		if (detail != null && detail.getIsHaveSubTable().intValue() != HAVE_SUB_DATA) {
-			detail.setIsHaveSubTable(HAVE_SUB_DATA);
-			this.updateCampaignDetailSubTableStatus(campaignId, itemId, HAVE_SUB_DATA);
-		}
 		logger.debug("campaignId={}, itemId={}, member={}", campaignId, itemId, member);
 
 	}
@@ -526,10 +532,6 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 	}
 
 	public String createKey(Integer campaignId, String itemId) {
-		if (campaignId == null || campaignId.intValue() == 0) {
-			logger.error("无效的参数, campaignId={}", campaignId);
-			return null;
-		}
 		if (StringUtils.isBlank(itemId)) {
 			return "key:" + campaignId + ":";
 		}
