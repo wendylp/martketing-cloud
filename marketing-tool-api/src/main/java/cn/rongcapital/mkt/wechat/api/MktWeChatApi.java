@@ -55,6 +55,7 @@ import org.springframework.stereotype.Component;
 import com.tagsin.wechat_sdk.App;
 import com.tagsin.wechat_sdk.msg.WxMsgHandler;
 
+import cn.rongcapital.caas.agent.spring.CaasAuth;
 import cn.rongcapital.mkt.biz.ImgTextAssetBiz;
 import cn.rongcapital.mkt.biz.MessageSendBiz;
 import cn.rongcapital.mkt.biz.WechatGroupBiz;
@@ -876,6 +877,7 @@ public class MktWeChatApi {
 	@POST
 	@Path("/mkt.asset.wechat.list.save")
 	@Consumes({ MediaType.APPLICATION_JSON })
+	@CaasAuth(res = "#saveWechatAssetListIn.orgid", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
 	public Object saveWechatAssetList(@Valid SaveWechatAssetListIn saveWechatAssetListIn,
 			@Context SecurityContext securityContext) {
 		return saveWechatAssetListService.saveWechatAssetList(saveWechatAssetListIn, securityContext);

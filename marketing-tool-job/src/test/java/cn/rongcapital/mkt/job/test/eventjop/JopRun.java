@@ -12,8 +12,6 @@
 
 package cn.rongcapital.mkt.job.test.eventjop;
 
-import java.time.ZoneId;
-import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
@@ -21,13 +19,12 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import cn.rongcapital.mkt.job.service.impl.event.BrithDayDataSendMQ;
-import cn.rongcapital.mkt.job.service.impl.event.DataPartQueryTaskImpl;
-import cn.rongcapital.mkt.job.service.impl.event.SendBrithDayToEventCenter;
-import cn.rongcapital.mkt.po.mongodb.DataParty;
+import cn.rongcapital.mkt.job.service.impl.event.DataPartToBrithDataAggregateImpl;
+import cn.rongcapital.mkt.job.service.vo.BrithDayData;
 import cn.rongcapital.mkt.testbase.AbstractUnitTest;
 
 
@@ -37,41 +34,29 @@ import cn.rongcapital.mkt.testbase.AbstractUnitTest;
 public class JopRun extends AbstractUnitTest {
     
     @Autowired
-    private DataPartQueryTaskImpl dataPartQueryTaskImpl;
+    private DataPartToBrithDataAggregateImpl dataPartToBrithDataAggregateImpl;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
     
     @Autowired
     private BrithDayDataSendMQ  brithDayDataSendMQ;
     
-    @Autowired
-    private SendBrithDayToEventCenter  sendBrithDayToEventCenter;
-
+   
      
     @Test
     public void test() {
 
-        Map<Integer, List<DataParty>> dataParty = dataPartQueryTaskImpl.getDataBritDay();
-        
-        for (Map.Entry<Integer, List<DataParty>> entry : dataParty.entrySet()) {
-            List<DataParty> list = entry.getValue();
-            for (DataParty dp : list) {
-                logger.info("提前的天数{},生日日期是:{},主MID:{}", entry.getKey(),
-                        dp.getBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), dp.getMid());
-            }
-
-        }
+        Map<Integer,AggregationResults<BrithDayData>> dataParty = dataPartToBrithDataAggregateImpl.getBrithMap();
+       
 
         if(!dataParty.isEmpty()&&dataParty.size()>0)
         {
             
             brithDayDataSendMQ.sendMQ(dataParty);
-            sendBrithDayToEventCenter.SendBrithEventCenter(dataParty);
+            //sendBrithDayToEventCenter.SendBrithEventCenter(dataParty);
             
         }
-        
-  
-        logger.info("生日发送提醒任务结束...");
+       
         
     }
 

@@ -134,13 +134,6 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         List<List<BbxCouponCodeAdd>> partitionList = Lists.partition(list, pageSize);
         for (List<BbxCouponCodeAdd> item : partitionList) {
             bbxCouponCodeAddDao.batchInsert(item);
-            
-            for (BbxCouponCodeAdd bbxCouponCodeAdd : item) {
-                //仅同步以活动发送出去的优惠券信息，短信任务发送的不进行同步
-                if(bbxCouponCodeAdd.getCampsignId() != null){
-                    this.campaignDetailService.updateCampaignMemberCouponId(bbxCouponCodeAdd.getCampsignId(), bbxCouponCodeAdd.getItemId(),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 1, bbxCouponCodeAdd.getCouponId());
-                }
-            }
         }
     }
     @Override
@@ -189,12 +182,8 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         for (List<BbxCouponCodeAdd> item : partitionList) {
             bbxCouponCodeAddDao.batchInsert(item);
 
-            for (BbxCouponCodeAdd bbxCouponCodeAdd : item) {
-                //仅同步以活动发送出去的优惠券信息，短信任务发送的不进行同步
-                if(bbxCouponCodeAdd.getCampsignId() != null){
-                    this.campaignDetailService.updateCampaignMemberCouponId(bbxCouponCodeAdd.getCampsignId(), bbxCouponCodeAdd.getItemId(),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 0, bbxCouponCodeAdd.getCouponId());
-                }
-            }
+
+
         }
     }
 
@@ -292,6 +281,15 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         }finally {
             //不管是否成功，都要记录结果
             this.bbxCouponCodeAddDao.updateById(item);
+
+            //如果同步优惠券到CRM成功，则将活动的短信任务是已经触达
+            if(item.getCampsignId() != null && item.getSynchronizeable()){
+                int isTouch = 0;
+                if(item.getSynchSuccess()) {
+                    isTouch = 1;
+                }
+                this.campaignDetailService.updateCampaignMemberCouponId(item.getCampsignId(), item.getItemId(), Integer.valueOf(item.getMainId()), isTouch, item.getCouponId());
+            }
         }
     }
 
@@ -303,18 +301,12 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         Query query = new Query();
         //查询所有未核销的数据，进行相应的核销操作
         Criteria payCriteria = new Criteria();
-        payCriteria.orOperator(Criteria.where("checked").exists(false), Criteria.where("checked").is(false));
 
-        List<Sort.Order> orders = new ArrayList<Sort.Order>();
-        orders.add(new Sort.Order(Sort.Direction.DESC, "_id"));
-        Sort sort = new Sort(orders);
-        if (null != sort) {
-            query.with(sort);
-        }
+        Criteria orCriteria = new Criteria();
+        orCriteria.orOperator(Criteria.where("checked").exists(false), Criteria.where("checked").is(false));
+        payCriteria.andOperator(Criteria.where("couponid").exists(true),orCriteria);
         query.addCriteria(payCriteria);
-        SpringDataPageable pageable = new SpringDataPageable();
-        //排序
-        pageable.setSort(sort);
+
         //查询出一共的条数
         long count = this.mongoTemplate.count(query, TBBXOrderPayDetail.class);
         int pageSize = 100;
@@ -322,7 +314,12 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         if(count % 100 >0){
             pageCount++;
         }
-
+        List<Sort.Order> orders = new ArrayList<Sort.Order>();
+        orders.add(new Sort.Order(Sort.Direction.DESC, "_id"));
+        Sort sort = new Sort(orders);
+        SpringDataPageable pageable = new SpringDataPageable();
+        //排序
+        pageable.setSort(sort);
         for (int i = 0; i <pageCount; i++) {
             //开始页
             pageable.setPagenumber(i*pageSize);

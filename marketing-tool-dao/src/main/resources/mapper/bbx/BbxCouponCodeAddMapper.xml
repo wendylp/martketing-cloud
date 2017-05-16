@@ -179,7 +179,8 @@
 	</select>
 
 	<select id="selectListByMinId" resultType="cn.rongcapital.mkt.bbx.po.BbxCouponCodeAdd">
-		SELECT id as id,vip_id as vipId,coupon_id as couponId,action_id as actionId,coupon_money as couponMoney,can_use_begin_date as canUseBeginDate,can_user_end_date as canUserEndDate,store_code as storeCode,create_time as createTime,synchronizeable as synchronizeable,synch_success as synchSuccess,synchronized_time as synchronizedTime,phone as phone,coupon_code_id as couponCodeId,checked as checked,main_id as mainId,campsign_id as campsignId,item_id as itemId,error_msg as errorMsg
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
 		FROM bbx_coupon_code_add
 		<where>
 			<if test="id != null"><![CDATA[ AND id > #{id}]]></if>
