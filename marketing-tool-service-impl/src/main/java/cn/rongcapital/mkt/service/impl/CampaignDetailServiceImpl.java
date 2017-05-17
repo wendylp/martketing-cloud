@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -396,6 +397,9 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 		member.setWxId(dp.getWxmpId());
 		member.setOpenId(dp.getWxCode());
 		member.setItemType(detail.getItemType());
+		if (detail.getItemType() != null && detail.getItemType().intValue() == WX_TYPE) {
+			member.setIsTouch(1);// 微信默认是触达
+		}
 		mongoTemplate.save(member);
 
 		logger.debug("campaignId={}, itemId={}, member={}", campaignId, itemId, member);
@@ -467,6 +471,7 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 		Query query = new Query(criteria);
 
 		Update update = new Update();
+		update.set("update_time", new Date()); // 更新时间
 		update.set("is_touch", isTouch); // 是否触达
 		update.set("is_respond", isTouch); // 是否相应
 		update.set("coupon_id", couponId); // 优惠券ID
