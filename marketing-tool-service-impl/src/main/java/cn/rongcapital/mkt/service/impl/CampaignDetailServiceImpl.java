@@ -397,6 +397,9 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 		member.setWxId(dp.getWxmpId());
 		member.setOpenId(dp.getWxCode());
 		member.setItemType(detail.getItemType());
+		if (detail.getItemType() != null && detail.getItemType().intValue() == WX_TYPE) {
+			member.setIsTouch(1);// 微信默认是触达
+		}
 		mongoTemplate.save(member);
 
 		logger.debug("campaignId={}, itemId={}, member={}", campaignId, itemId, member);
