@@ -46,6 +46,8 @@ public class CampaignMember implements Serializable {
 	private Long orderId;
 	@Field("update_time")
 	private Date updateTime = new Date();
+	@Field("item_type")
+	private Integer itemType;
 
 	public CampaignMember() {
 	}
@@ -183,12 +185,20 @@ public class CampaignMember implements Serializable {
 		this.updateTime = updateTime;
 	}
 
+	public Integer getItemType() {
+		return itemType;
+	}
+
+	public void setItemType(Integer itemType) {
+		this.itemType = itemType;
+	}
+
 	@Override
 	public String toString() {
-		return "CampaignMember [campaignId=" + campaignId + ", itemId=" + itemId + ", mid=" + mid + ", memberId=" + memberId
-				+ ", phone=" + phone + ", wxId=" + wxId + ", openId=" + openId + ", isTouch=" + isTouch + ", isRespond="
-				+ isRespond + ", isBuy=" + isBuy + ", dealSum=" + dealSum + ", couponId=" + couponId + ", orderId=" + orderId
-				+ ", updateTime=" + updateTime + "]";
+		return "CampaignMember [id=" + id + ", campaignId=" + campaignId + ", itemId=" + itemId + ", mid=" + mid + ", memberId=" + memberId
+				+ ", phone=" + phone + ", wxId=" + wxId + ", openId=" + openId + ", isTouch=" + isTouch + ", isRespond=" + isRespond
+				+ ", isBuy=" + isBuy + ", dealSum=" + dealSum + ", couponId=" + couponId + ", orderId=" + orderId + ", updateTime="
+				+ updateTime + ", itemType=" + itemType + "]";
 	}
 
 }
