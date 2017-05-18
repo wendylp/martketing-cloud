@@ -48,8 +48,7 @@ public class TagSystemCommonUtilServiceImpl implements TagSystemCommonUtilServic
         } else {
             return tagCover;
         }
-        
-        
+        tagValueCount.setIsTag("1");
         List<TagValueCount> tagValueCountLists = tagValueCountDao.selectList(tagValueCount);
         
         if(CollectionUtils.isNotEmpty(tagValueCountLists)) {
