@@ -122,7 +122,7 @@ public class SystemTagServiceImpl implements SystemTagService {
 		BaseOutput output = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
 				ApiConstant.INT_ZERO, null);
 		// 可编辑状态初始化
-		initUpdateStatus();
+//		initUpdateStatus();
 		List<Object> data = output.getData();
 		try {
 
