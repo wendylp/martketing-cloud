@@ -94,6 +94,7 @@ public class BbxSynchronizeCouponServiceImpl implements TaskService {
             item.setErrorMsg(e.getMessage());
         }finally {
             //不管是否成功，都要记录结果
+            logger.info("update item is  {}", JSON.toJSON(item));
             this.bbxCouponCodeAddDao.updateById(item);
         }
     }
