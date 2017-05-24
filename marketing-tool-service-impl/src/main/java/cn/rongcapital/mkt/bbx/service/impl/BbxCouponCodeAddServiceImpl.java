@@ -194,6 +194,10 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
     @Transactional
     public void synchSuccessCouponSendMsg() {
         List<BbxCouponCodeAdd> smsHeadIdList = this.bbxCouponCodeAddDao.selectSynchedUnSendSMS();
+        //没有任何数据需要处理，直接跳出
+        if(CollectionUtils.isEmpty(smsHeadIdList)){
+            return;
+        }
         BbxCouponCodeAdd param = new BbxCouponCodeAdd();
         for (BbxCouponCodeAdd item: smsHeadIdList) {
             param = new BbxCouponCodeAdd();
