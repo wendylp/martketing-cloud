@@ -260,6 +260,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         try {
             logger.info("Send message to bbx crm ,content is {}", JSON.toJSON(item));
             UpdateCouponResult result = BBXCrmWSUtils.UpdateVipCoupon(item.getVipId(), item.getCouponId(), item.getActionId(), item.getCouponMoney(), item.getCanUseBeginDate(), item.getCanUserEndDate(), item.getStoreCode());
+            result.setSuccess(Boolean.TRUE);
             if(result.getSuccess()){
                 item.setSynchronizeable(Boolean.TRUE);
                 item.setSynchSuccess(Boolean.TRUE);
