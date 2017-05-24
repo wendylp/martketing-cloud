@@ -73,6 +73,7 @@ public class BbxSynchronizeCouponServiceImpl implements TaskService {
         try {
             logger.info("Send message to bbx crm ,content is {}", JSON.toJSON(item));
             UpdateCouponResult result = BBXCrmWSUtils.UpdateVipCoupon(item.getVipId(), item.getCouponId(), item.getActionId(), item.getCouponMoney(), item.getCanUseBeginDate(), item.getCanUserEndDate(), item.getStoreCode());
+            result.setSuccess(Boolean.TRUE);
             if(result.getSuccess()){
                 item.setSynchronizeable(Boolean.TRUE);
                 item.setSynchSuccess(Boolean.TRUE);
@@ -93,6 +94,7 @@ public class BbxSynchronizeCouponServiceImpl implements TaskService {
             item.setErrorMsg(e.getMessage());
         }finally {
             //不管是否成功，都要记录结果
+            logger.info("update item is  {}", JSON.toJSON(item));
             this.bbxCouponCodeAddDao.updateById(item);
         }
     }

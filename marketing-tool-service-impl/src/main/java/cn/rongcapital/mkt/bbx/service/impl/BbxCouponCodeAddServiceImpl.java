@@ -203,22 +203,20 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             param.setSmsSended(Boolean.FALSE);//未发送短信的数据
             param.setPageSize(Integer.MAX_VALUE);
             List<BbxCouponCodeAdd> bbxCouponCodeAddList = this.bbxCouponCodeAddDao.selectList(param);
-
+            List<Long> smsDetailIds = new ArrayList<>();
             if(CollectionUtils.isNotEmpty(bbxCouponCodeAddList)){
-                List<Long> smsDetailIds = new ArrayList<>();
                 bbxCouponCodeAddList.forEach(p ->{
                     smsDetailIds.add(p.getSmsTaskDetailId());
                 });
-
-                //开始发短信
-                boolean sendResult = this.smsSyncCouponService.processSmsStatus(item.getCampsignId(), item.getSmsTaskHeadId(), smsDetailIds);
-                if(sendResult) {
-                    //发送短信后修改表中的数据sms_sended标识
-                    param = new BbxCouponCodeAdd();
-                    param.setSmsTaskHeadId(item.getSmsTaskHeadId());
-                    param.setSmsSended(Boolean.TRUE);
-                    this.bbxCouponCodeAddDao.updateBySmsTaskHeadId(param);
-                }
+            }
+            //开始发短信
+            boolean sendResult = this.smsSyncCouponService.processSmsStatus(item.getCampsignId(), item.getSmsTaskHeadId(), smsDetailIds);
+            if(sendResult) {
+                //发送短信后修改表中的数据sms_sended标识
+                param = new BbxCouponCodeAdd();
+                param.setSmsTaskHeadId(item.getSmsTaskHeadId());
+                param.setSmsSended(Boolean.TRUE);
+                this.bbxCouponCodeAddDao.updateBySmsTaskHeadId(param);
             }
         }
     }
