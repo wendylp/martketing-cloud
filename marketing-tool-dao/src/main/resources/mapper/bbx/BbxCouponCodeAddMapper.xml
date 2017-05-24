@@ -223,6 +223,8 @@
 		bbx_coupon_code_add
 		WHERE
 		synchronizeable = FALSE
+		or
+		sms_sended = TRUE
 		GROUP BY sms_task_head_id)
 	</select>
 	<!-- 修改记录标记已发送短信的状态 -->
