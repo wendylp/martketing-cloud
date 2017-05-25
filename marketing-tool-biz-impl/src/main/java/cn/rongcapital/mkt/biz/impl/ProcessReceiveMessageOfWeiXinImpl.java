@@ -362,7 +362,7 @@ public class ProcessReceiveMessageOfWeiXinImpl extends BaseBiz implements Proces
 					/**
 					 * 发送事件信息到事件中心
 					 */
-					sendEventToEventCenter(msgMap);
+					//sendEventToEventCenter(msgMap);
 				//}
 				
 			}
