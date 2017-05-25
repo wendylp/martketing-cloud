@@ -104,6 +104,7 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 	public BaseOutput authWechatPublicCodeAccount(String authorizationCode) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
 		App app = this.getApp();
+		logger.info("app is {}",app.getId()+"_"+app.getSecret()+"_"+app.tokenManager.getToken(TokenType.COMPONENT_ACCESS_TOKEN));
 		logger.info("Get authorizationCode is {}",authorizationCode);
 		AuthInfo authInfo = WxComponentServerApi.queryAuthByAuthCode(app, authorizationCode);
     	/**
