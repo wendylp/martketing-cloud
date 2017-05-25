@@ -144,7 +144,7 @@ public class WechatMemberBizImpl extends BaseBiz implements WechatMemberBiz {
                 /**
                  * 转成用户对象
                  */
-                  logger.info("粉丝处理过后的详情:{}",userInfoesStr);
+                  //logger.info("粉丝处理过后的详情:{}",userInfoesStr);
     			List<UserInfo> userInfoes = this.getUserInfoesByStr(userInfoesStr);
                 /**
                  * 记入获取微信公众号的粉丝日志
