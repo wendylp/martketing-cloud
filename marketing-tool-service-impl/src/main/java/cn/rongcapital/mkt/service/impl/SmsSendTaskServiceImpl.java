@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
@@ -77,7 +78,10 @@ public class SmsSendTaskServiceImpl implements TaskService {
 	@Autowired
 	private BbxCouponCodeAddService bbxCouponCodeAddService;
 
-	private ResteasyClient client = new ResteasyClientBuilder().build();
+	private ResteasyClient client = new ResteasyClientBuilder()//
+			.connectionPoolSize(1000)//
+			.maxPooledPerRoute(1000)//
+			.socketTimeout(30000, TimeUnit.MILLISECONDS).build();
 
 	@Value("${sms.url.service}")
 	private String smsUrlService;
@@ -190,6 +194,8 @@ public class SmsSendTaskServiceImpl implements TaskService {
 					response = new SmsStatusResponse("-1", "短信服务器连接失败");
 				}
 			}
+
+			logger.info("短信返回状态码：{}，消息内容：{}，response：{} ", response.getErrorCode(), response.getErrorMsg(), response);
 
 			// 处理不满一批的短信
 			updateSmsDetailState(response, SmsBatchMap, smsHead);
