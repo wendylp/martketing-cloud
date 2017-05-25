@@ -194,6 +194,10 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
     @Transactional
     public void synchSuccessCouponSendMsg() {
         List<BbxCouponCodeAdd> smsHeadIdList = this.bbxCouponCodeAddDao.selectSynchedUnSendSMS();
+        //没有任何数据需要处理，直接跳出
+        if(CollectionUtils.isEmpty(smsHeadIdList)){
+            return;
+        }
         BbxCouponCodeAdd param = new BbxCouponCodeAdd();
         for (BbxCouponCodeAdd item: smsHeadIdList) {
             param = new BbxCouponCodeAdd();
@@ -203,22 +207,20 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             param.setSmsSended(Boolean.FALSE);//未发送短信的数据
             param.setPageSize(Integer.MAX_VALUE);
             List<BbxCouponCodeAdd> bbxCouponCodeAddList = this.bbxCouponCodeAddDao.selectList(param);
-
+            List<Long> smsDetailIds = new ArrayList<>();
             if(CollectionUtils.isNotEmpty(bbxCouponCodeAddList)){
-                List<Long> smsDetailIds = new ArrayList<>();
                 bbxCouponCodeAddList.forEach(p ->{
                     smsDetailIds.add(p.getSmsTaskDetailId());
                 });
-
-                //开始发短信
-                boolean sendResult = this.smsSyncCouponService.processSmsStatus(item.getCampsignId(), item.getSmsTaskHeadId(), smsDetailIds);
-                if(sendResult) {
-                    //发送短信后修改表中的数据sms_sended标识
-                    param = new BbxCouponCodeAdd();
-                    param.setSmsTaskHeadId(item.getSmsTaskHeadId());
-                    param.setSmsSended(Boolean.TRUE);
-                    this.bbxCouponCodeAddDao.updateBySmsTaskHeadId(param);
-                }
+            }
+            //开始发短信
+            boolean sendResult = this.smsSyncCouponService.processSmsStatus(item.getCampsignId(), item.getSmsTaskHeadId(), smsDetailIds);
+            if(sendResult) {
+                //发送短信后修改表中的数据sms_sended标识
+                param = new BbxCouponCodeAdd();
+                param.setSmsTaskHeadId(item.getSmsTaskHeadId());
+                param.setSmsSended(Boolean.TRUE);
+                this.bbxCouponCodeAddDao.updateBySmsTaskHeadId(param);
             }
         }
     }
@@ -260,6 +262,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         try {
             logger.info("Send message to bbx crm ,content is {}", JSON.toJSON(item));
             UpdateCouponResult result = BBXCrmWSUtils.UpdateVipCoupon(item.getVipId(), item.getCouponId(), item.getActionId(), item.getCouponMoney(), item.getCanUseBeginDate(), item.getCanUserEndDate(), item.getStoreCode());
+            result.setSuccess(Boolean.TRUE);
             if(result.getSuccess()){
                 item.setSynchronizeable(Boolean.TRUE);
                 item.setSynchSuccess(Boolean.TRUE);
