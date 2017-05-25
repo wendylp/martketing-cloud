@@ -25,6 +25,7 @@ import com.tagsin.wechat_sdk.WXServerApiException;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
 import com.tagsin.wechat_sdk.token.Token;
 import com.tagsin.wechat_sdk.vo.AuthInfo;
+import com.tagsin.wechat_sdk.token.TokenType;
 
 import cn.rongcapital.mkt.biz.WechatPublicAuthBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
