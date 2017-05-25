@@ -195,6 +195,8 @@ public class SmsSendTaskServiceImpl implements TaskService {
 				}
 			}
 
+			logger.info("短信返回状态码：{}，消息内容：{}，response：{} ", response.getErrorCode(), response.getErrorMsg(), response);
+
 			// 处理不满一批的短信
 			updateSmsDetailState(response, SmsBatchMap, smsHead);
 			// 最后把任务状态改为已完成,把等待的个数置为0
