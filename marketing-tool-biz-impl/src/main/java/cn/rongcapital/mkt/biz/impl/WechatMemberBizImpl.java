@@ -134,6 +134,9 @@ public class WechatMemberBizImpl extends BaseBiz implements WechatMemberBiz {
                 fromIndex = fromIndex + ApiConstant.WEIXIN_BATCH_GET_USER_INFO_SIZE;;
                 size= fromIndex+ApiConstant.WEIXIN_BATCH_GET_USER_INFO_SIZE;
                 String userInfoesStr = WxComponentServerApi.getBaseWxSdk().getBatchGetUserInfoResult(app, openidListTemps);
+                  //logger.info("粉丝详情:{},openid:{},原文:{}",app.getId()+"_",openidListTemps,userInfoesStr);
+                   if(!userInfoesStr.startsWith("{\"user_info_list\":"))
+                           continue;
 				/**
 				 * 去掉特殊字符 例如表情符等等
 				 */
@@ -141,6 +144,7 @@ public class WechatMemberBizImpl extends BaseBiz implements WechatMemberBiz {
                 /**
                  * 转成用户对象
                  */
+                  //logger.info("粉丝处理过后的详情:{}",userInfoesStr);
     			List<UserInfo> userInfoes = this.getUserInfoesByStr(userInfoesStr);
                 /**
                  * 记入获取微信公众号的粉丝日志
