@@ -312,6 +312,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
 
         //查询出一共的条数
         long count = this.mongoTemplate.count(query, TBBXOrderPayDetail.class);
+        logger.info("Need verify recode count is {}",count);
         int pageSize = 100;
         long pageCount = count/100;
         if(count % 100 >0){
@@ -328,7 +329,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             pageable.setPagenumber(i*pageSize);
             //每页条数
             pageable.setPagesize(pageSize);
-
+            logger.info("Select order pay detail,page number is {},page size is {}",pageable.getPageNumber(),pageable.getPageSize());
             List<TBBXOrderPayDetail> payDetails = this.mongoTemplate.find(query.with(pageable), TBBXOrderPayDetail.class);
 
             for (TBBXOrderPayDetail detail: payDetails) {
