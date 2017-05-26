@@ -14,6 +14,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tagsin.wechat_sdk.App;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
+import com.tagsin.wechat_sdk.token.TokenType;
 
 import cn.rongcapital.mkt.biz.ImgTextAssetBiz;
 import cn.rongcapital.mkt.common.util.NumUtil;
@@ -67,6 +68,8 @@ public class ImgTextAssetBizImpl extends BaseBiz implements ImgTextAssetBiz {
 		App app = this.getApp();
 		app.setAuthAppId(authAppId);
 		app.setAuthRefreshToken(authorizer_refresh_token);
+		
+		logger.info("微信authId:{},authorizer_refresh_token:{}",authAppId,authorizer_refresh_token);
 		
 		long materialCountAll = this.getMaterialCount(app);
 		if(materialCountAll <= 0) {
@@ -203,7 +206,11 @@ public class ImgTextAssetBizImpl extends BaseBiz implements ImgTextAssetBiz {
 	}
 	
 	public Long getMaterialCount(App app) {
+	
+	     String token=app.tokenManager.getAuthToken(TokenType.AUTHORIZER_ACCESS_TOKEN);
+	    logger.info("微信图文appid:{},AUTHORIZER_ACCESS_TOKEN:{}",app.getId(),token);
 		String materialCountStr = WxComponentServerApi.getBaseWxSdk().getMaterialCount(app);
+		logger.info("微信图文数量：{}",materialCountStr);
 		/**
 		 * 记入接口日志到数据库
 		 */
