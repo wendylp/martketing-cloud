@@ -20,6 +20,9 @@ import cn.rongcapital.mkt.po.SmsTaskDetail;
 import cn.rongcapital.mkt.service.SmsSyncCouponService;
 import cn.rongcapital.mkt.webservice.BBXCrmWSUtils;
 import cn.rongcapital.mkt.webservice.UpdateCouponResult;
+import com.mongodb.BulkWriteOperation;
+import com.mongodb.BulkWriteResult;
+import com.mongodb.DBCollection;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -331,7 +334,8 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             pageable.setPagesize(pageSize);
             logger.info("Select order pay detail,page number is {},page size is {}",pageable.getPageNumber(),pageable.getPageSize());
             List<TBBXOrderPayDetail> payDetails = this.mongoTemplate.find(query.with(pageable), TBBXOrderPayDetail.class);
-
+            DBCollection payDetailCollection = mongoTemplate.getCollection("TBBXOrderPayDetail");
+            BulkWriteOperation payDetailBulk = payDetailCollection.initializeOrderedBulkOperation();
             for (TBBXOrderPayDetail detail: payDetails) {
                 TBBXTransactionHeadAndDetail head = this.mongoTemplate.findOne(new Query(Criteria.where("orderid").is(detail.getOrderid())), TBBXTransactionHeadAndDetail.class);
                 if (head != null) {
@@ -371,8 +375,13 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
                 //不管是否已经核销完毕都要将checked置为true;
                 mongoTemplate.updateFirst(new Query(new Criteria("id").is(detail.getId())),
                         new Update().set("checked", true), TBBXOrderPayDetail.class);
+
+                payDetailBulk.find(new Query(new Criteria("id").is(detail.getId())).getQueryObject()).updateOne(new Update().set("checked", true).getUpdateObject());
             }
+            //批量更新数据
+            payDetailBulk.execute();
         }
+        logger.info("Finish verify recode .");
     }
 
     /**
