@@ -53,21 +53,16 @@ public class SmsSyncCouponServiceImpl implements SmsSyncCouponService {
 			logger.error("无效的参数：smsTaskHeadId={}", smsTaskHeadId);
 			return false;
 		}
-		if (smsTaskDetailIds == null) {
-			logger.error("无效的数据集：smsTaskDetailIds={}", smsTaskDetailIds);
-			return false;
-		}
-		if (smsTaskDetailIds.isEmpty()) {
+		if (smsTaskDetailIds == null || smsTaskDetailIds.isEmpty()) {
 			logger.info("空的数据集, 不需要调整短信任务：smsTaskDetailIds");
-			return true;
+		} else {
+			List<Integer> ids = convert(smsTaskDetailIds);
+			if (this.updateSmsTaskHead(smsTaskHeadId, ids.size())) {
+				logger.debug("参数列表：campaignHeadId={}, smsTaskHeadId={}, smsTaskDetailIds={}", campaignHeadId, smsTaskHeadId, ids);
+				smsTaskDetailDao.batchUpdateById(ids);
+				smsTaskDetailStateDao.batchUpdateByDetailId(ids);
+			}
 		}
-		List<Integer> ids = convert(smsTaskDetailIds);
-		if (!this.updateSmsTaskHead(smsTaskHeadId, ids.size())) {
-			return false;
-		}
-		logger.debug("参数列表：campaignHeadId={}, smsTaskHeadId={}, smsTaskDetailIds={}", campaignHeadId, smsTaskHeadId, ids);
-		smsTaskDetailDao.batchUpdateById(ids);
-		smsTaskDetailStateDao.batchUpdateByDetailId(ids);
 		new Thread() {
 			public void run() {
 				mqTopicService.sendSmsByTaskId(smsTaskHeadId.toString());

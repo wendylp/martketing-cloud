@@ -25,6 +25,7 @@ import com.tagsin.wechat_sdk.WXServerApiException;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
 import com.tagsin.wechat_sdk.token.Token;
 import com.tagsin.wechat_sdk.vo.AuthInfo;
+import com.tagsin.wechat_sdk.token.TokenType;
 
 import cn.rongcapital.mkt.biz.WechatPublicAuthBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -104,6 +105,7 @@ public class WechatPublicAuthBizImpl extends BaseBiz implements WechatPublicAuth
 	public BaseOutput authWechatPublicCodeAccount(String authorizationCode) {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.DB_ERROR.getCode(),ApiErrorCode.DB_ERROR.getMsg(), ApiConstant.INT_ZERO,null);
 		App app = this.getApp();
+		logger.info("app is {}",app.getId()+"_"+app.getSecret()+"_"+app.tokenManager.getToken(TokenType.COMPONENT_ACCESS_TOKEN));
 		logger.info("Get authorizationCode is {}",authorizationCode);
 		AuthInfo authInfo = WxComponentServerApi.queryAuthByAuthCode(app, authorizationCode);
     	/**

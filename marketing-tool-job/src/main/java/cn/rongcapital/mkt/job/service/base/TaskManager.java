@@ -183,7 +183,7 @@ public class TaskManager {
     private synchronized void startTask(TaskSchedule taskSchedulePo) {
         Runnable task = new Runnable() {
             public void run() {
-            	logger.info("startTask:" + JSON.toJSONString(taskSchedulePo));
+            	logger.debug("startTask:" + JSON.toJSONString(taskSchedulePo));
                 try {
                     String serviceName = getServiceName(taskSchedulePo.getServiceName());
                     Object serviceBean = cotext.getBean(serviceName);

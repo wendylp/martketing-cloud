@@ -63,6 +63,7 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
     }
     
     public void syncImgtextAsset(){
+         logger.info("图文信息任务start ....");
     	List<WebchatAuthInfo> selectListByIdList = webchatAuthInfoDao.selectList(new WebchatAuthInfo());
     	if (!CollectionUtils.isEmpty(selectListByIdList)) {
     		for (WebchatAuthInfo info : selectListByIdList) {
@@ -84,6 +85,7 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
     				/**
 					 * 更新微信公众号下图文信息为删除状态
 					 */
+					  logger.info("更新微信公众号下图文信息为删除状态..."); 
     				imgTextAssetDao.batchDeleteWechatStatusByPubId(wechatRegister.getWxAcct());
     				for(ImgTextAsset imgTextAsset : imgTextAssetLists) {   					
     					// 设置pub_id,pub_name,下载状态
@@ -110,6 +112,8 @@ public class ImgtextAssetSyncServiceImpl implements TaskService{
     			}
     		}
 		}
+		
+	    	logger.info("图文信息任务end ....");  
     }   
     
     private ImgTextAsset getFileByImgTextAsset(ImgTextAsset imgTextAsset) throws Exception{
