@@ -20,9 +20,6 @@ import cn.rongcapital.mkt.po.SmsTaskDetail;
 import cn.rongcapital.mkt.service.SmsSyncCouponService;
 import cn.rongcapital.mkt.webservice.BBXCrmWSUtils;
 import cn.rongcapital.mkt.webservice.UpdateCouponResult;
-import com.mongodb.BulkWriteOperation;
-import com.mongodb.BulkWriteResult;
-import com.mongodb.DBCollection;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +68,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
 
     @Autowired
     private MaterialCouponCodeDao couponCodeDao;
-    
+
     @Autowired
     private CampaignDetailService campaignDetailService;
 
@@ -92,7 +89,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             }
             MaterialCouponCode couponCode = this.getCouponIdByCodeId(vo.getId());
             MaterialCoupon coupon = this.getCouponById(Math.toIntExact(couponCode.getCouponId()));
-            
+
             Map<String,Object> campasignMap = this.bbxCouponCodeAddDao.selectCampaignSmsItemByCouponId(coupon.getId());
 
             Integer campsignId = null;
@@ -334,8 +331,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             pageable.setPagesize(pageSize);
             logger.info("Select order pay detail,page number is {},page size is {}",pageable.getPageNumber(),pageable.getPageSize());
             List<TBBXOrderPayDetail> payDetails = this.mongoTemplate.find(query.with(pageable), TBBXOrderPayDetail.class);
-            DBCollection payDetailCollection = mongoTemplate.getCollection("TBBXOrderPayDetail");
-            BulkWriteOperation payDetailBulk = payDetailCollection.initializeOrderedBulkOperation();
+
             for (TBBXOrderPayDetail detail: payDetails) {
                 TBBXTransactionHeadAndDetail head = this.mongoTemplate.findOne(new Query(Criteria.where("orderid").is(detail.getOrderid())), TBBXTransactionHeadAndDetail.class);
                 if (head != null) {
@@ -355,16 +351,16 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
                         BbxCouponCodeAdd bbxCouponCodeAdd = bbxCouponCodeAdds.get(0);
                         couponCodeId = bbxCouponCodeAdd.getCouponCodeId();
                         phone = bbxCouponCodeAdd.getPhone();
-                        
+
                         MaterialCouponCode code = new MaterialCouponCode();
-                       
+
                         code.setId(couponCodeId);
                         code.setUser(phone);
                         code.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.RECEIVED.getCode());
                         code.setVerifyStatus(MaterialCouponCodeVerifyStatusEnum.VERIFIED.getCode());
                         code.setVerifyTime(head.getSaletime() );
                         this.couponCodeDao.updateByIdAndStatus(code);
-                        
+
                       //仅同步以活动发送出去的优惠券信息，短信任务发送的不进行同步
                         if(bbxCouponCodeAdd.getCampsignId() != null){
                             this.campaignDetailService.updateCampaignMemberCouponStatus(bbxCouponCodeAdd.getCampsignId(),bbxCouponCodeAdd.getItemId(),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 1);
@@ -375,11 +371,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
                 //不管是否已经核销完毕都要将checked置为true;
                 mongoTemplate.updateFirst(new Query(new Criteria("id").is(detail.getId())),
                         new Update().set("checked", true), TBBXOrderPayDetail.class);
-
-                payDetailBulk.find(new Query(new Criteria("id").is(detail.getId())).getQueryObject()).updateOne(new Update().set("checked", true).getUpdateObject());
             }
-            //批量更新数据
-            payDetailBulk.execute();
         }
         logger.info("Finish verify recode .");
     }
