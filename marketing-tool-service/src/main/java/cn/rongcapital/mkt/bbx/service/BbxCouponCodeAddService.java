@@ -36,4 +36,6 @@ public interface BbxCouponCodeAddService {
 
     void verifyCouponCode();
 
+    void synchronizeCoupon();
+
 }
