@@ -86,7 +86,7 @@ public class ImgTextAssetBizImpl extends BaseBiz implements ImgTextAssetBiz {
 				materialCount = 20;
 			}
 			String materialListStr= WxComponentServerApi.getBaseWxSdk().getMaterialList(app,type,offset,materialCount);
-			logger.info("图文元内容:{}",materialListStr);
+			logger.debug("图文元内容:{}",materialListStr);
 			if(StringUtils.isNotEmpty(materialListStr)){
 				/**
 				 * 去掉特殊字符 例如表情符等等
