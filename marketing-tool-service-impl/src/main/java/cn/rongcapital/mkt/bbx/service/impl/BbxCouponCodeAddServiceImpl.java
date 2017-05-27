@@ -307,11 +307,12 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
 
         Criteria orCriteria = new Criteria();
         orCriteria.orOperator(Criteria.where("checked").exists(false), Criteria.where("checked").is(false));
-        payCriteria.andOperator(Criteria.where("couponid").exists(true),orCriteria);
+        payCriteria.andOperator(Criteria.where("couponid").exists(true).ne(null),orCriteria);
         query.addCriteria(payCriteria);
 
         //查询出一共的条数
         long count = this.mongoTemplate.count(query, TBBXOrderPayDetail.class);
+        logger.info("Need verify recode count is {}",count);
         int pageSize = 100;
         long pageCount = count/100;
         if(count % 100 >0){
@@ -323,12 +324,12 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         SpringDataPageable pageable = new SpringDataPageable();
         //排序
         pageable.setSort(sort);
-        for (int i = 0; i <pageCount; i++) {
+        for (int i = 1; i <pageCount; i++) {
             //开始页
             pageable.setPagenumber(i*pageSize);
             //每页条数
             pageable.setPagesize(pageSize);
-
+            logger.info("Select order pay detail,page number is {},page size is {}",pageable.getPageNumber(),pageable.getPageSize());
             List<TBBXOrderPayDetail> payDetails = this.mongoTemplate.find(query.with(pageable), TBBXOrderPayDetail.class);
 
             for (TBBXOrderPayDetail detail: payDetails) {

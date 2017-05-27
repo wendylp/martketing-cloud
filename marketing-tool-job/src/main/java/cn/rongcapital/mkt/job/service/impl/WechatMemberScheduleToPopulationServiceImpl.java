@@ -79,6 +79,7 @@ public class WechatMemberScheduleToPopulationServiceImpl implements TaskService{
             for(int pageNum = 1; pageNum <= (totalCount + BATCH_SIZE -1) / BATCH_SIZE; pageNum ++ ){
                 syncWechatMemberByBatchSize();
             }
+            dataTagAgent.proceedWithDataAccess(DataType.POPULATION);
         }
     }
 
@@ -133,7 +134,6 @@ public class WechatMemberScheduleToPopulationServiceImpl implements TaskService{
                     wechatMember.setKeyid(dataPopulation.getId());
                     updateKeyIdInWechatMember(wechatMember);
                 }
-                dataTagAgent.proceedWithDataAccess(DataType.POPULATION);
             }
         }
         return true;
