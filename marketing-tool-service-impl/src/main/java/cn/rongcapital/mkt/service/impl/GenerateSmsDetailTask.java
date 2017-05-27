@@ -173,7 +173,10 @@ public class GenerateSmsDetailTask implements TaskService {
         paramSmsTaskHead.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         paramSmsTaskHead.setId(taskHeadId);
         List<SmsTaskHead> smsTaskHeads = smsTaskHeadDao.selectList(paramSmsTaskHead);
-        if(CollectionUtils.isEmpty(smsTaskHeads)) return;
+		if (CollectionUtils.isEmpty(smsTaskHeads)) {
+			logger.info("sms head is null, head id is {}", taskHeadId);
+			return;
+		}
 
         SmsTaskHead targetHead = smsTaskHeads.get(0);
 
@@ -184,7 +187,11 @@ public class GenerateSmsDetailTask implements TaskService {
         paramSmsTaskBody.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
 		// paramSmsTaskBody.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_WRITING);
         List<SmsTaskBody> smsTaskBodies = smsTaskBodyDao.selectList(paramSmsTaskBody);
-        if(CollectionUtils.isEmpty(smsTaskBodies)) return;
+		if (CollectionUtils.isEmpty(smsTaskBodies)) {
+			logger.info("sms body is null, head id is {}", taskHeadId);
+			return;
+		}
+		logger.info("sms body size {}", smsTaskBodies.size());
         for(SmsTaskBody smsTaskBody : smsTaskBodies){
 			AbstractCalcSmsTargetAudienceStrategy strategy = strategyMap.get(smsTaskBody.getTargetType());
 			List<String> receiveMobileList = strategy.queryReceiveMobileList(smsTaskBody.getSmsTaskHeadId(), smsTaskBody.getTargetId());
