@@ -476,7 +476,7 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 		update.set("is_respond", isTouch); // 是否相应
 		update.set("coupon_id", couponId); // 优惠券ID
 		mongoTemplate.updateFirst(query, update, CampaignMember.class);
-		logger.debug("campaignId={}, itemId={}, mid={}, isTouch={}, couponId={}", campaignId, itemId, mid, isTouch, couponId);
+		logger.info("campaignId={}, itemId={}, mid={}, isTouch={}, couponId={}", campaignId, itemId, mid, isTouch, couponId);
 	}
 
 	@Override
