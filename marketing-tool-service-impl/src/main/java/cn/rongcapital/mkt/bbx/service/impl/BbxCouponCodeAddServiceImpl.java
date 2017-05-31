@@ -360,10 +360,19 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
                         code.setReleaseStatus(MaterialCouponCodeReleaseStatusEnum.RECEIVED.getCode());
                         code.setVerifyStatus(MaterialCouponCodeVerifyStatusEnum.VERIFIED.getCode());
                         code.setVerifyTime(head.getSaletime() );
+
+                        logger.info("verify coupon code id is {}",code.getId());
+
                         this.couponCodeDao.updateByIdAndStatus(code);
+
+                        //更新中间表中数据为已经checked=true,下次将不再使用这个优惠码
+                        bbxCouponCodeAdd.setChecked(Boolean.TRUE);
+                        this.bbxCouponCodeAddDao.updateById(bbxCouponCodeAdd);
 
                       //仅同步以活动发送出去的优惠券信息，短信任务发送的不进行同步
                         if(bbxCouponCodeAdd.getCampsignId() != null){
+
+                            logger.info("update campaign report detail coupon status,campsign id is {},item is is {}.",bbxCouponCodeAdd.getCampsignId(),bbxCouponCodeAdd.getItemId());
                             this.campaignDetailService.updateCampaignMemberCouponStatus(bbxCouponCodeAdd.getCampsignId(),bbxCouponCodeAdd.getItemId(),Integer.valueOf( bbxCouponCodeAdd.getMainId()), 1);
                         }
                     }
