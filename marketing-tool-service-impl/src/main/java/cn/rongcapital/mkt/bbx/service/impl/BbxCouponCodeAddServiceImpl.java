@@ -327,7 +327,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         pageable.setSort(sort);
         for (int i = 1; i <= pageCount; i++) {
             //开始页
-            pageable.setPagenumber(i*pageSize);
+            pageable.setPagenumber(i);
             //每页条数
             pageable.setPagesize(pageSize);
             logger.info("Select order pay detail,page number is {},page size is {}",pageable.getPageNumber(),pageable.getPageSize());
