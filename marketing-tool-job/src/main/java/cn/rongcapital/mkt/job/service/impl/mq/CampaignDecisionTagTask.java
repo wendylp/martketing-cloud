@@ -173,7 +173,7 @@ public class CampaignDecisionTagTask extends CampaignAutoCancelTaskService {
 							//tagId0Str="BrTJgfab_0";
 							String[] tagId0Strs = tagId0Str.split("_");							
 							criteria = criteria.and("tag_list")
-									.elemMatch(Criteria.where("tag_id").is(tagId0Strs[0]).and("tag_value").is(tagIdsStr[1]));
+									.elemMatch(Criteria.where("tagId").is(tagId0Strs[0]).and("value").is(tagIdsStr[1]));
 						
 						}else{
 							criteria = criteria.and("custom_tag_list")
@@ -210,7 +210,7 @@ public class CampaignDecisionTagTask extends CampaignAutoCancelTaskService {
 							//tagId0Str="BrTJgfab_0";
 							String[] tagId0Strs = tagId0Str.split("_");							
 							criteria = criteria.and("tag_list")
-									.elemMatch(Criteria.where("tag_id").is(tagId0Strs[0]).and("tag_value").is(tagIdsStr[1]));
+									.elemMatch(Criteria.where("tagId").is(tagId0Strs[0]).and("value").is(tagIdsStr[1]));
 						}else{
 							criteria = criteria.and("custom_tag_list")
 									.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
@@ -248,7 +248,7 @@ public class CampaignDecisionTagTask extends CampaignAutoCancelTaskService {
 							//tagId0Str="BrTJgfab_0";
 							String[] tagId0Strs = tagId0Str.split("_");							
 							criteria3 = criteria3.and("tag_list")
-									.elemMatch(Criteria.where("tag_id").is(tagId0Strs[0]).and("tag_value").is(tagIdsStr[1]));
+									.elemMatch(Criteria.where("tagId").is(tagId0Strs[0]).and("value").is(tagIdsStr[1]));
 
 						}else{
 							criteria3 = criteria3.and("custom_tag_list")
