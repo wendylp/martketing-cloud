@@ -308,7 +308,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
 
         Criteria orCriteria = new Criteria();
         orCriteria.orOperator(Criteria.where("checked").exists(false), Criteria.where("checked").is(false));
-        payCriteria.andOperator(Criteria.where("couponid").exists(true).ne(null).andOperator(Criteria.where("orderid")).andOperator(Criteria.where("status").ne(null)),orCriteria);
+        payCriteria.andOperator(Criteria.where("couponid").exists(true).ne(null).andOperator(Criteria.where("orderid").ne(null)).andOperator(Criteria.where("status").ne(null)),orCriteria);
         query.addCriteria(payCriteria);
 
         //查询出一共的条数
