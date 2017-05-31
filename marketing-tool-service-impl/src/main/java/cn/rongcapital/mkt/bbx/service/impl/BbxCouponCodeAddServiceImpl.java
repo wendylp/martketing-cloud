@@ -325,7 +325,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
         SpringDataPageable pageable = new SpringDataPageable();
         //排序
         pageable.setSort(sort);
-        for (int i = 1; i <pageCount; i++) {
+        for (int i = 1; i <= pageCount; i++) {
             //开始页
             pageable.setPagenumber(i*pageSize);
             //每页条数
