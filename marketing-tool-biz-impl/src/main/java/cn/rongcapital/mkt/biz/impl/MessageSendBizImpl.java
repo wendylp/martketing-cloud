@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tagsin.wechat_sdk.App;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
+import com.tagsin.wechat_sdk.token.TokenType;
 
 import cn.rongcapital.mkt.biz.MessageSendBiz;
 import cn.rongcapital.mkt.po.WechatInterfaceLog;
@@ -69,7 +70,8 @@ public class MessageSendBizImpl extends BaseBiz implements MessageSendBiz {
 		Boolean issended = false;
 		// 发送图片消息
 		if(media_id != null && media_id.length() > 0) {			
-			String msg = "{\"touser\":\""+touser+"\",\"msgtype\":\"mpnews\",\"mpnews\":{\"media_id\":\""+media_id+"\"}}";			
+			String msg = "{\"touser\":\""+touser+"\",\"msgtype\":\"mpnews\",\"mpnews\":{\"media_id\":\""+media_id+"\"}}";
+			logger.info("app_acctoken:{}",app.tokenManager.getAuthToken(TokenType.AUTHORIZER_ACCESS_TOKEN));
 			issended = WxComponentServerApi.getBaseWxSdk().send(app, msg);
 			/**
 			 * 记入接口日志到数据库
