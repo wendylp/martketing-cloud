@@ -100,7 +100,7 @@ public class ImgTextAssetBizImpl extends BaseBiz implements ImgTextAssetBiz {
 				/**
 				 * 组装图文资产
 				 */
-				 logger.info("图文处理后内容:{}",materialListStr);
+				 logger.debug("图文处理后内容:{}",materialListStr);
 				imgTextAssetes.addAll(this.getImgTextAssetes(materialListStr));
 			}
 			offset += materialCount;
