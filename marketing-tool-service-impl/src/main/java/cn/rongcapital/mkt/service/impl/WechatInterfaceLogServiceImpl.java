@@ -15,7 +15,8 @@ public class WechatInterfaceLogServiceImpl implements WechatInterfaceLogService 
 	
 	@Override
 	public void insert(WechatInterfaceLog wechatInterfaceLog) {
-		wechatInterfaceLogDao.insert(wechatInterfaceLog);		
+//		update by xiexiaoliang  2017-05-31,记录日志的数据量太大，不记录在数据库中
+//		wechatInterfaceLogDao.insert(wechatInterfaceLog);
 	}
 
 	
