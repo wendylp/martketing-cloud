@@ -207,7 +207,7 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 	 * 批量生成二维码
 	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackForClassName={"FileNotFoundException","IOException"})
 	public BaseOutput getQrcodes(int startSceneId, int endSceneId, String actionName) throws FileNotFoundException, IOException {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
@@ -233,7 +233,6 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 						endSceneId = startSceneId+pageSize;
 					}
 					for(int i=startSceneId;i<=endSceneId;i++){
-						try {
 							WechatQrcodeTicket  wechatQrcodeTicket = this.getWechatQrcodeTicketFromWeiXin(app, i, actionName,webchatAuthInfoTemp.getAuthorizerAppid());							
 							if(wechatQrcodeTicket!=null){
 								/**
@@ -257,11 +256,6 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 								data.add(mapBack);
 								totalSucc++;
 							}
-						} catch (Exception e) {
-							logger.info(e.getMessage());
-							e.printStackTrace();
-							continue;
-						}
 					}
 				}
 			}			
