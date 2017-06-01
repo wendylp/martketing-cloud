@@ -2,12 +2,17 @@ package cn.rongcapital.mkt.biz.impl;
 
 import java.util.Date;
 
+import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.tagsin.tutils.http.HttpResult;
+import com.tagsin.tutils.http.Requester;
+import com.tagsin.tutils.http.Requester.Method;
+import com.tagsin.tutils.json.JsonUtils;
 import com.tagsin.wechat_sdk.App;
 import com.tagsin.wechat_sdk.WxComponentServerApi;
 import com.tagsin.wechat_sdk.token.TokenType;
@@ -115,6 +120,29 @@ public class MessageSendBizImpl extends BaseBiz implements MessageSendBiz {
 		} 
 		return issended;
 	}
+
+  
+
+    /* (non-Javadoc)
+     * @see cn.rongcapital.mkt.biz.MessageSendBiz#sendGroup(java.lang.String, java.lang.String, java.lang.String)
+     */
+    @Override
+    public Boolean sendGroup(String authAppId, String authorizerRefreshToken, String message) {
+        App app = this.getApp();
+        app.setAuthAppId(authAppId);
+        app.setAuthRefreshToken(authorizerRefreshToken);
+        String accessToken=app.tokenManager.getAuthToken(TokenType.AUTHORIZER_ACCESS_TOKEN);
+        logger.info("app_acctoken:{}",accessToken);
+        HttpResult result = Requester.builder().setMethod(Method.POST)
+                .setUrl("https://api.weixin.qq.com/cgi-bin/message/mass/send")
+                .addUrlParm("access_token",accessToken).setBody(message).execute();
+        if(result.getCode() == 200){
+            ObjectNode objNode = JsonUtils.readJsonObject(result.getRespBody());
+            int code = objNode.get("errcode").asInt();
+            return code == 0;
+        }
+        return false;
+    }
 	
 	
 }
