@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
+import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.service.HomePageUserCountListService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -102,9 +103,20 @@ public class HomePageUserCountListServiceImpl implements HomePageUserCountListSe
     private Integer getCount(Date searchDate, Integer searchFlag) {
         Integer count = 0;
         try {
-            String sqlField = searchFlag == 0 ? "searchHours" : "searchDate";
+            String sqlField=null;
             Map<String, Object> paramMap = new HashMap<>();
-            paramMap.put(sqlField, searchDate);
+             if(searchFlag==0)
+             {
+                 sqlField="searchHours";
+                 paramMap.put("beginHour", DateUtil.getStringFromDate(searchDate,"yyyy-MM-dd H:00:00"));
+                 paramMap.put("endHour",   DateUtil.getStringFromDate(DateUtil.addHours(searchDate,1),"yyyy-MM-dd H:00:00"));               
+             }else
+             {
+                 sqlField="searchDate";
+                 paramMap.put("beginDate", DateUtil.getStringFromDate(searchDate,"yyyy-MM-dd 00:00:00"));
+                 paramMap.put("endDate", DateUtil.getStringFromDate(DateUtil.addDays(searchDate,1),"yyyy-MM-dd 00:00:00"));
+             }
+            paramMap.put(sqlField, 1);
             count = dataPartyDao.getPubUserCount(paramMap);
         } catch (Exception e) {
             e.printStackTrace();

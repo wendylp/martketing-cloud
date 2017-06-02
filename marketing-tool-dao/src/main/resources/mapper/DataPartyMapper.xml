@@ -717,10 +717,12 @@
 			data_party
 		<where>
 			<if test="searchDate != null ">
-				<![CDATA[ DATE_FORMAT(create_time,'%Y-%m-%d') = #{searchDate} ]]>
+				<!-- <![CDATA[ DATE_FORMAT(create_time,'%Y-%m-%d') = #{searchDate} ]]> -->
+				<![CDATA[ create_time >= #{beginDate} and create_time < #{endDate}]]>
 			</if>
 			<if test="searchHours != null ">
-				<![CDATA[ DATE_FORMAT(create_time,'%Y-%m-%d %H') = #{searchHours} ]]>
+				<!-- <![CDATA[ DATE_FORMAT(create_time,'%Y-%m-%d %H') = #{searchHours} ]]> -->
+				<![CDATA[ create_time >= #{beginHour} and create_time < #{endHour}]]>
 			</if>
 		</where>
 	</select>
