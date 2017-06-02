@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.CampaignTagTypeEnum;
 import cn.rongcapital.mkt.dao.CampaignDecisionTagDao;
+import cn.rongcapital.mkt.mongoconfig.SecondaryMongoConfig;
 import cn.rongcapital.mkt.po.CampaignDecisionTag;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
@@ -39,8 +41,9 @@ public class CampaignDecisionTagTask extends CampaignAutoCancelTaskService {
 			
 	@Autowired
 	private CampaignDecisionTagDao campaignDecisionTagDao;
-	@Autowired
-	private MongoTemplate mongoTemplate;
+	
+    @Resource(name = SecondaryMongoConfig.MONGO_TEMPLATE)
+    private MongoTemplate mongoTemplate;
 //	@Autowired
 //	private DataPartyDao dataPartyDao;
 	
@@ -170,7 +173,7 @@ public class CampaignDecisionTagTask extends CampaignAutoCancelTaskService {
 							//tagId0Str="BrTJgfab_0";
 							String[] tagId0Strs = tagId0Str.split("_");							
 							criteria = criteria.and("tag_list")
-									.elemMatch(Criteria.where("tag_id").is(tagId0Strs[0]).and("tag_value").is(tagIdsStr[1]));
+									.elemMatch(Criteria.where("tagId").is(tagId0Strs[0]).and("value").is(tagIdsStr[2]));
 						
 						}else{
 							criteria = criteria.and("custom_tag_list")
@@ -207,7 +210,7 @@ public class CampaignDecisionTagTask extends CampaignAutoCancelTaskService {
 							//tagId0Str="BrTJgfab_0";
 							String[] tagId0Strs = tagId0Str.split("_");							
 							criteria = criteria.and("tag_list")
-									.elemMatch(Criteria.where("tag_id").is(tagId0Strs[0]).and("tag_value").is(tagIdsStr[1]));
+									.elemMatch(Criteria.where("tagId").is(tagId0Strs[0]).and("value").is(tagIdsStr[2]));
 						}else{
 							criteria = criteria.and("custom_tag_list")
 									.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
@@ -245,7 +248,7 @@ public class CampaignDecisionTagTask extends CampaignAutoCancelTaskService {
 							//tagId0Str="BrTJgfab_0";
 							String[] tagId0Strs = tagId0Str.split("_");							
 							criteria3 = criteria3.and("tag_list")
-									.elemMatch(Criteria.where("tag_id").is(tagId0Strs[0]).and("tag_value").is(tagIdsStr[1]));
+									.elemMatch(Criteria.where("tagId").is(tagId0Strs[0]).and("value").is(tagIdsStr[2]));
 
 						}else{
 							criteria3 = criteria3.and("custom_tag_list")
