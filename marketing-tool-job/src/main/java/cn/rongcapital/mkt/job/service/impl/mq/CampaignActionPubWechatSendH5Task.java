@@ -149,16 +149,14 @@ public class CampaignActionPubWechatSendH5Task extends CampaignAutoCancelTaskSer
 				}
 			}
 		}
+		boolean isPubSent=false;
 		if(fansWeixinIds.size() > 0) {
-			//boolean isPubSent = sendPubWechatByH5Interface(pubId,materialId,fansWeixinIds,campaignHeadId,itemId);
-			for(String wxCode : fansWeixinIds){
-				
-				boolean isPubSent = false;
-				if(null != app){
-					isPubSent = messageSendBiz.sendMpnews(app.getAuthAppId(), app.getAuthRefreshToken(), wxCode, materialId);
-				}
-				logger.info("向受众人群粉丝发送微信图文成功标识------------------------------------>："+isPubSent);
-				
+     StringBuffer message =new StringBuffer("{\"touser\":");
+    message.append(JSON.toJSONString(fansWeixinIds)).append(",\"mpnews\":");
+    message.append("{\"media_id\":\"");
+    message.append(materialId).append("\"},\"msgtype\":\"mpnews\",\"send_ignore_reprint\":0}");
+    logger.info("群分消息内容为 :{}",message.toString());
+    isPubSent=messageSendBiz.sendGroup(app.getAuthAppId(), app.getAuthRefreshToken(), message.toString());		
 				if(!isPubSent) {//公众号执行发送动作失败
 					segmentListToNext = null;
 				} else {
@@ -167,11 +165,11 @@ public class CampaignActionPubWechatSendH5Task extends CampaignAutoCancelTaskSer
 	                if (!CollectionUtils.isEmpty(dataPartyIds)) {
 	                    Query query = new Query(Criteria.where("mid").in(dataPartyIds));
 	                    Update update = new Update();
+	                    //update.
 	                    update.inc("receiveCount", Integer.valueOf(1));
 	                    mongoTemplate.updateMulti(query, update, DataParty.class);
 	                }
 				}
-			}
 		}
 		if(CollectionUtils.isNotEmpty(campaignEndsList) && CollectionUtils.isNotEmpty(segmentListToNext)) {
 			for(CampaignSwitch cs:campaignEndsList) {
