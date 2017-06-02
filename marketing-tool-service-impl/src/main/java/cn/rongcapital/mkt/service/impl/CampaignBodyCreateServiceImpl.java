@@ -1149,6 +1149,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 			String tagType = tagIn.getTag_type();
 			if (TagIn.TAG_TYPE_SYS.equals(tagType)) {
 				id += ":" + tagIn.getTag_name();
+				id += ":" + tagIn.getTag_value();
 			}
 
 			tagIdList.add(id);

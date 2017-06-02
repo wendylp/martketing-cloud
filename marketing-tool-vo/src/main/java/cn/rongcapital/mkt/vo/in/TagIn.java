@@ -10,6 +10,8 @@ public class TagIn {
 	private String tag_id;
 
 	private String tag_type;
+	
+	private String tag_value;
 
 	public String getTag_name() {
 		return tag_name;
@@ -33,5 +35,13 @@ public class TagIn {
 
 	public void setTag_type(String tag_type) {
 		this.tag_type = tag_type;
-	}	
+	}
+
+    public String getTag_value() {
+        return tag_value;
+    }
+
+    public void setTag_value(String tag_value) {
+        this.tag_value = tag_value;
+    }	
 }
