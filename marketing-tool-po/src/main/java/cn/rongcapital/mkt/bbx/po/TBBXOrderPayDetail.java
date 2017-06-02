@@ -28,7 +28,6 @@ public class TBBXOrderPayDetail implements Serializable {
     private String bbxuploadtime;
     private String updateRMCmode;
     private Date updateRMCTime;
-    private long inxsub;
     private long status;
 
     private boolean checked;
@@ -95,14 +94,6 @@ public class TBBXOrderPayDetail implements Serializable {
 
     public void setUpdateRMCTime(Date updateRMCTime) {
         this.updateRMCTime = updateRMCTime;
-    }
-
-    public long getInxsub() {
-        return inxsub;
-    }
-
-    public void setInxsub(long inxsub) {
-        this.inxsub = inxsub;
     }
 
     public long getStatus() {

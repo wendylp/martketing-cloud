@@ -117,16 +117,28 @@ public class WechatAssetServiceImpl implements WechatAssetService {
 			WechatAssetGroup wechatAssetGroup = new WechatAssetGroup();
 			wechatAssetGroup.setWxAcct(wechatMember.getPubId());
 			if(StringUtils.isNotEmpty(wechatMember.getWxGroupId())){
-				wechatAssetGroup.setImportGroupId(Long.parseLong(wechatMember.getWxGroupId()));
+				 String[] groupids=wechatMember.getWxGroupId().split(",");
+			        for(String groupid:groupids)
+			        {
+				wechatAssetGroup.setImportGroupId(Long.parseLong(groupid));
+				List<WechatAssetGroup> wechatAssetGroupList = wechatAssetGroupDao.selectList(wechatAssetGroup);         
+	            if(wechatAssetGroupList != null && wechatAssetGroupList.size() > 0){                
+	                wechatAssetGroup = wechatAssetGroupList.get(0);
+	                wechatAssetGroup.setMembers(wechatAssetGroup.getMembers() - 1);
+	                wechatAssetGroupDao.updateById(wechatAssetGroup);
+	            }
+	              }
+				
 			}else{
 				wechatAssetGroup.setImportGroupId(Long.parseLong(ApiConstant.WECHAT_GROUP));
-			}
-			List<WechatAssetGroup> wechatAssetGroupList = wechatAssetGroupDao.selectList(wechatAssetGroup);			
+				List<WechatAssetGroup> wechatAssetGroupList = wechatAssetGroupDao.selectList(wechatAssetGroup);			
 			if(wechatAssetGroupList != null && wechatAssetGroupList.size() > 0){				
 				wechatAssetGroup = wechatAssetGroupList.get(0);
 				wechatAssetGroup.setMembers(wechatAssetGroup.getMembers() - 1);
 				wechatAssetGroupDao.updateById(wechatAssetGroup);
+			 }
 			}
+		
 			logger.info(ApiErrorCode.SUCCESS.getMsg()+ "wxCode:　+"+wxCode + "pubId:" + pubId);			
 		}else{
 			
