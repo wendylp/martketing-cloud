@@ -73,4 +73,12 @@ public class DateUtil {
     	 theCa.add(Calendar.DATE,days);
     	 return theCa.getTime();
     }
+    
+    public static Date addHours(Date date,int hours)
+    {
+        Calendar theCa = Calendar.getInstance();
+        theCa.setTime(date);
+        theCa.add(Calendar.HOUR_OF_DAY, hours);
+        return theCa.getTime();
+    }
 }
