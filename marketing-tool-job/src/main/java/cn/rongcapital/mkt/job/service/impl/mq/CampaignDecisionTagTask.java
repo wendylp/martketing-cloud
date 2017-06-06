@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.CampaignTagTypeEnum;
 import cn.rongcapital.mkt.dao.CampaignDecisionTagDao;
-import cn.rongcapital.mkt.mongoconfig.SecondaryMongoConfig;
 import cn.rongcapital.mkt.po.CampaignDecisionTag;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
@@ -42,7 +40,7 @@ public class CampaignDecisionTagTask extends CampaignAutoCancelTaskService {
 	@Autowired
 	private CampaignDecisionTagDao campaignDecisionTagDao;
 	
-    @Resource(name = SecondaryMongoConfig.MONGO_TEMPLATE)
+	@Autowired
     private MongoTemplate mongoTemplate;
 //	@Autowired
 //	private DataPartyDao dataPartyDao;
