@@ -22,24 +22,23 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
-import com.tagsin.wechat_sdk.App;
-
 import cn.rongcapital.mkt.biz.MessageSendBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignActionSendPubDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
 import cn.rongcapital.mkt.dao.WechatRegisterDao;
-import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CampaignActionSendPub;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
-
 import cn.rongcapital.mkt.po.WechatRegister;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
+import cn.rongcapital.mkt.service.CampaignDetailService;
+
+import com.alibaba.fastjson.JSON;
+import com.tagsin.wechat_sdk.App;
 
 @Service
 public class CampaignActionPubWechatSendH5Task extends CampaignAutoCancelTaskService {
@@ -60,6 +59,8 @@ public class CampaignActionPubWechatSendH5Task extends CampaignAutoCancelTaskSer
 	
 	@Autowired
 	private MessageSendBiz messageSendBiz;
+	@Autowired
+	private CampaignDetailService campaignDetailService; // 活动统计
 	
 	public void task(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
@@ -147,6 +148,7 @@ public class CampaignActionPubWechatSendH5Task extends CampaignAutoCancelTaskSer
 						logger.info("不是公众号粉丝,无法发送,"+JSON.toJSONString(segment));
 					}
 				}
+				campaignDetailService.saveCampaignMember(campaignHeadId, itemId, segment.getDataId()); // @since 1.9 记录活动统计数据
 			}
 		}
 		boolean isPubSent=false;
