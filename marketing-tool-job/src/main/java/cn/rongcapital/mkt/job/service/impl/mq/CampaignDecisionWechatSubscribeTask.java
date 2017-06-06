@@ -85,7 +85,7 @@ public class CampaignDecisionWechatSubscribeTask extends CampaignAutoCancelTaskS
 					if (!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {// @since 1.9
 						logger.debug("保存流过节点的数据，活动id：{}， 节点id：{}", campaignHeadId, itemId);
 						insertNodeAudience(campaignHeadId, itemId, segment);
-						campaignDetailService.saveCampaignMember(campaignHeadId, itemId, segment.getDataId()); // @since 1.9 记录活动统计数据
+						// campaignDetailService.saveCampaignMember(campaignHeadId, itemId, segment.getDataId()); // @since 1.9 记录活动统计数据
 					}
 				} else {
 					logger.error("无效是数据，活动id：{}， 节点id：{}", campaignHeadId, itemId);
