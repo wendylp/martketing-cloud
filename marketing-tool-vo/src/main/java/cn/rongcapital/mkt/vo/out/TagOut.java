@@ -11,6 +11,8 @@ public class TagOut {
 	private String tagId;
 
 	private String tagType;
+	
+	private String tagValue;
 
 	@JsonProperty("tag_name")
 	public String getTagName() {
@@ -38,5 +40,14 @@ public class TagOut {
 	public void setTagType(String tagType) {
 		this.tagType = tagType;
 	}
+
+	@JsonProperty("tag_value")
+    public String getTagValue() {
+        return tagValue;
+    }
+
+    public void setTagValue(String tagValue) {
+        this.tagValue = tagValue;
+    }
 	
 }

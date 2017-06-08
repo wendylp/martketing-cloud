@@ -207,13 +207,21 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 	 * 批量生成二维码
 	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackForClassName={"FileNotFoundException","IOException"})
 	public BaseOutput getQrcodes(int startSceneId, int endSceneId, String actionName) throws FileNotFoundException, IOException {
 		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(),
 				ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
 			List<Object> data = new ArrayList<Object>();
+			WechatQrcodeTicket wqt = new WechatQrcodeTicket();
+			wqt.setState(0);
+			Integer wqtCount = wechatQrcodeTicketDao.selectListCount(wqt);
+			//by guozhenchao 限定有用二维码最多10000个
+			if(wqtCount > 10000){
+				return baseOutput;
+			}
 			int totalSucc=0;
-			WebchatAuthInfo webchatAuthInfo = new WebchatAuthInfo();		
+			WebchatAuthInfo webchatAuthInfo = new WebchatAuthInfo();
+			
 			List<WebchatAuthInfo> webchatAuthInfos = webchatAuthInfoDao.selectList(webchatAuthInfo);
 			if(webchatAuthInfos!=null&&webchatAuthInfos.size()>0){				
 				for(Iterator<WebchatAuthInfo> iter = webchatAuthInfos.iterator();iter.hasNext();){
@@ -233,7 +241,6 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 						endSceneId = startSceneId+pageSize;
 					}
 					for(int i=startSceneId;i<=endSceneId;i++){
-						try {
 							WechatQrcodeTicket  wechatQrcodeTicket = this.getWechatQrcodeTicketFromWeiXin(app, i, actionName,webchatAuthInfoTemp.getAuthorizerAppid());							
 							if(wechatQrcodeTicket!=null){
 								/**
@@ -257,11 +264,6 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 								data.add(mapBack);
 								totalSucc++;
 							}
-						} catch (Exception e) {
-							logger.info(e.getMessage());
-							e.printStackTrace();
-							continue;
-						}
 					}
 				}
 			}			

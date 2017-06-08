@@ -15,18 +15,16 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import redis.clients.jedis.Jedis;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.CampaignTagTypeEnum;
+import cn.rongcapital.mkt.common.jedis.JedisConnectionManager;
 import cn.rongcapital.mkt.dao.CampaignDecisionTagDao;
 import cn.rongcapital.mkt.po.CampaignDecisionTag;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
-import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 
 import com.alibaba.fastjson.JSON;
@@ -39,8 +37,9 @@ public class CampaignDecisionTagTask extends CampaignAutoCancelTaskService {
 			
 	@Autowired
 	private CampaignDecisionTagDao campaignDecisionTagDao;
-	@Autowired
-	private MongoTemplate mongoTemplate;
+	
+//	@Autowired
+//    private MongoTemplate mongoTemplate;
 //	@Autowired
 //	private DataPartyDao dataPartyDao;
 	
@@ -124,6 +123,9 @@ public class CampaignDecisionTagTask extends CampaignAutoCancelTaskService {
 		sendDynamicQueue(segmentListUnique, campaignHeadId + "-" + itemId);
 */	}
 	
+    /**
+     * 贝贝熊系统中关于自定义标签的处理逻辑被移除2017-06-06
+     */
 	//处理listener接收到的数据
 	private void processMqMessage(Message message,List<Segment> segmentList,
 								  List<String> tagIdList,
@@ -159,33 +161,51 @@ public class CampaignDecisionTagTask extends CampaignAutoCancelTaskService {
 			case ApiConstant.CAMPAIGN_DECISION_TAG_RULE_MATCH_ALL:
 				boolean isAllMatch = true;
 				for(int i=0;i<tagIdList.size();i++){
-					Integer dataId = s.getDataId();
-					Criteria criteria = Criteria.where("mid").is(dataId);
-					if(CollectionUtils.isNotEmpty(tagTypesStrList)){
-						String tagTypeStr = tagTypesStrList.get(i);
-						if(CampaignTagTypeEnum.CAMPAIGN_TAG_TYPE_SYSTEM.getCode().equals(Integer.parseInt(tagTypeStr))){
-							String tagIdStr = tagIdList.get(i);
-							String[] tagIdsStr = tagIdStr.split(":");
-							String tagId0Str = tagIdsStr[0];
-							//tagId0Str="BrTJgfab_0";
-							String[] tagId0Strs = tagId0Str.split("_");							
-							criteria = criteria.and("tag_list")
-									.elemMatch(Criteria.where("tag_id").is(tagId0Strs[0]).and("tag_value").is(tagIdsStr[1]));
-						
-						}else{
-							criteria = criteria.and("custom_tag_list")
-									.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
-						}
-					}else{
-						criteria = criteria.and("custom_tag_list")
-								.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
-					}					
-					List<DataParty> dpListM1 = mongoTemplate.find(new Query(criteria), DataParty.class);
-					if(CollectionUtils.isEmpty(dpListM1)) {
-						isAllMatch = false;
-						break;
-					}
-				}
+//					Integer dataId = s.getDataId();
+//					Criteria criteria = Criteria.where("mid").is(dataId);
+//					if(CollectionUtils.isNotEmpty(tagTypesStrList)){
+//						String tagTypeStr = tagTypesStrList.get(i);
+//						if(CampaignTagTypeEnum.CAMPAIGN_TAG_TYPE_SYSTEM.getCode().equals(Integer.parseInt(tagTypeStr))){
+//							String tagIdStr = tagIdList.get(i);
+//							String[] tagIdsStr = tagIdStr.split(":");
+//							String tagId0Str = tagIdsStr[0];
+//							//tagId0Str="BrTJgfab_0";
+//							String[] tagId0Strs = tagId0Str.split("_");							
+//							criteria = criteria.and("tag_list")
+//									.elemMatch(Criteria.where("tagId").is(tagId0Strs[0]).and("value").is(tagIdsStr[2]));
+//						
+//						}else{
+//							criteria = criteria.and("custom_tag_list")
+//									.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
+//						}
+//					}else{
+//						criteria = criteria.and("custom_tag_list")
+//								.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
+//					}					
+//					List<DataParty> dpListM1 = mongoTemplate.find(new Query(criteria), DataParty.class);
+//					if(CollectionUtils.isEmpty(dpListM1)) {
+//						isAllMatch = false;
+//						break;
+//					}
+                    Integer dataId = s.getDataId();
+                    if (CollectionUtils.isNotEmpty(tagTypesStrList)) {
+                        String tagTypeStr = tagTypesStrList.get(i);
+                        if (CampaignTagTypeEnum.CAMPAIGN_TAG_TYPE_SYSTEM.getCode().equals(
+                                Integer.parseInt(tagTypeStr))) {
+                            String tagIdStr = tagIdList.get(i);
+                            String[] tagIdsStr = tagIdStr.split(":");
+                            // tagId0Str="BrTJgfab_0";
+                            if (!isTagCovered(dataId, tagIdsStr[0])) {
+                                isAllMatch = false;
+                                break;
+                            }
+                        } else {
+                            //自定义标签的处理逻辑被移除
+                        }
+                    } else {
+                        //自定义标签的处理逻辑被移除
+                    }
+                }
 				if(isAllMatch) {
 					segmentListToMqYes.add(s);
 				}else{
@@ -196,32 +216,51 @@ public class CampaignDecisionTagTask extends CampaignAutoCancelTaskService {
 			case ApiConstant.CAMPAIGN_DECISION_TAG_RULE_MATCH_ONE:
 				boolean isMatchOne = false;
 				for(int i=0;i<tagIdList.size();i++){
-					Integer dataId = s.getDataId();
-					Criteria criteria = Criteria.where("mid").is(dataId);
-					if(CollectionUtils.isNotEmpty(tagTypesStrList)){
-						String tagTypeStr = tagTypesStrList.get(i);
-						if(CampaignTagTypeEnum.CAMPAIGN_TAG_TYPE_SYSTEM.getCode().equals(Integer.parseInt(tagTypeStr))){
-							String tagIdStr = tagIdList.get(i);
-							String[] tagIdsStr = tagIdStr.split(":");
-							String tagId0Str = tagIdsStr[0];
-							//tagId0Str="BrTJgfab_0";
-							String[] tagId0Strs = tagId0Str.split("_");							
-							criteria = criteria.and("tag_list")
-									.elemMatch(Criteria.where("tag_id").is(tagId0Strs[0]).and("tag_value").is(tagIdsStr[1]));
-						}else{
-							criteria = criteria.and("custom_tag_list")
-									.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
-						}
-					}else{
-						criteria = criteria.and("custom_tag_list")
-								.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
-
-					}					
-					List<DataParty> dpListM1 = mongoTemplate.find(new Query(criteria), DataParty.class);
-					if(CollectionUtils.isNotEmpty(dpListM1)) {
-						isMatchOne = true;
-						break;
-					}
+//					Integer dataId = s.getDataId();
+//					Criteria criteria = Criteria.where("mid").is(dataId);
+//					if(CollectionUtils.isNotEmpty(tagTypesStrList)){
+//						String tagTypeStr = tagTypesStrList.get(i);
+//						if(CampaignTagTypeEnum.CAMPAIGN_TAG_TYPE_SYSTEM.getCode().equals(Integer.parseInt(tagTypeStr))){
+//							String tagIdStr = tagIdList.get(i);
+//							String[] tagIdsStr = tagIdStr.split(":");
+//							String tagId0Str = tagIdsStr[0];
+//							//tagId0Str="BrTJgfab_0";
+//							String[] tagId0Strs = tagId0Str.split("_");							
+//							criteria = criteria.and("tag_list")
+//									.elemMatch(Criteria.where("tagId").is(tagId0Strs[0]).and("value").is(tagIdsStr[2]));
+//						}else{
+//							criteria = criteria.and("custom_tag_list")
+//									.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
+//						}
+//					}else{
+//						criteria = criteria.and("custom_tag_list")
+//								.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
+//
+//					}					
+//					List<DataParty> dpListM1 = mongoTemplate.find(new Query(criteria), DataParty.class);
+//					if(CollectionUtils.isNotEmpty(dpListM1)) {
+//						isMatchOne = true;
+//						break;
+//					}
+				    
+                    Integer dataId = s.getDataId();
+                    if (CollectionUtils.isNotEmpty(tagTypesStrList)) {
+                        String tagTypeStr = tagTypesStrList.get(i);
+                        if (CampaignTagTypeEnum.CAMPAIGN_TAG_TYPE_SYSTEM.getCode().equals(
+                                Integer.parseInt(tagTypeStr))) {
+                            String tagIdStr = tagIdList.get(i);
+                            String[] tagIdsStr = tagIdStr.split(":");
+                            // tagId0Str="BrTJgfab_0";
+                            if (isTagCovered(dataId, tagIdsStr[0])) {
+                                isMatchOne = true;
+                                break;
+                            }
+                        } else {
+                            // 自定义标签的处理逻辑被移除
+                        }
+                    } else {
+                        // 自定义标签的处理逻辑被移除
+                    }                
 				}
 				if(isMatchOne) {
 					segmentListToMqYes.add(s);
@@ -234,36 +273,57 @@ public class CampaignDecisionTagTask extends CampaignAutoCancelTaskService {
 				int matchCount = 0;
 				boolean matchTwoMore = false;
 				for(int i=0;i<tagIdList.size();i++){
-					Integer dataIdStr3 = s.getDataId();
-					Criteria criteria3 = Criteria.where("mid").is(dataIdStr3);
-					if(CollectionUtils.isNotEmpty(tagTypesStrList)){
-						String tagTypeStr = tagTypesStrList.get(i);
-						if(CampaignTagTypeEnum.CAMPAIGN_TAG_TYPE_SYSTEM.getCode().equals(Integer.parseInt(tagTypeStr))){
-							String tagIdStr = tagIdList.get(i);
-							String[] tagIdsStr = tagIdStr.split(":");
-							String tagId0Str = tagIdsStr[0];
-							//tagId0Str="BrTJgfab_0";
-							String[] tagId0Strs = tagId0Str.split("_");							
-							criteria3 = criteria3.and("tag_list")
-									.elemMatch(Criteria.where("tag_id").is(tagId0Strs[0]).and("tag_value").is(tagIdsStr[1]));
-
-						}else{
-							criteria3 = criteria3.and("custom_tag_list")
-									.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
-						}
-					}else{
-						criteria3 = criteria3.and("custom_tag_list")
-								.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
-					}
-					
-					List<DataParty> dpListM1 = mongoTemplate.find(new Query(criteria3), DataParty.class);
-					if(CollectionUtils.isNotEmpty(dpListM1)) {
-						++matchCount;
-					}
-					if(matchCount >= 2) {
-						matchTwoMore = true;
-						break;
-					}
+//					Integer dataIdStr3 = s.getDataId();
+//					Criteria criteria3 = Criteria.where("mid").is(dataIdStr3);
+//					if(CollectionUtils.isNotEmpty(tagTypesStrList)){
+//						String tagTypeStr = tagTypesStrList.get(i);
+//						if(CampaignTagTypeEnum.CAMPAIGN_TAG_TYPE_SYSTEM.getCode().equals(Integer.parseInt(tagTypeStr))){
+//							String tagIdStr = tagIdList.get(i);
+//							String[] tagIdsStr = tagIdStr.split(":");
+//							String tagId0Str = tagIdsStr[0];
+//							//tagId0Str="BrTJgfab_0";
+//							String[] tagId0Strs = tagId0Str.split("_");							
+//							criteria3 = criteria3.and("tag_list")
+//									.elemMatch(Criteria.where("tagId").is(tagId0Strs[0]).and("value").is(tagIdsStr[2]));
+//
+//						}else{
+//							criteria3 = criteria3.and("custom_tag_list")
+//									.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
+//						}
+//					}else{
+//						criteria3 = criteria3.and("custom_tag_list")
+//								.elemMatch(Criteria.where("custom_tag_id").is(tagIdList.get(i)));
+//					}
+//					
+//					List<DataParty> dpListM1 = mongoTemplate.find(new Query(criteria3), DataParty.class);
+//					if(CollectionUtils.isNotEmpty(dpListM1)) {
+//						++matchCount;
+//					}
+//					if(matchCount >= 2) {
+//						matchTwoMore = true;
+//						break;
+//					}
+                    Integer dataId = s.getDataId();
+                    if (CollectionUtils.isNotEmpty(tagTypesStrList)) {
+                        String tagTypeStr = tagTypesStrList.get(i);
+                        if (CampaignTagTypeEnum.CAMPAIGN_TAG_TYPE_SYSTEM.getCode().equals(
+                                Integer.parseInt(tagTypeStr))) {
+                            String tagIdStr = tagIdList.get(i);
+                            String[] tagIdsStr = tagIdStr.split(":");
+                            // tagId0Str="BrTJgfab_0";
+                            if (isTagCovered(dataId, tagIdsStr[0])) {
+                                ++matchCount;
+                            }
+                            if (matchCount >= 2) {
+                                matchTwoMore = true;
+                                break;
+                            }
+                        } else {
+                            // 自定义标签的处理逻辑被移除
+                        }
+                    } else {
+                        // 自定义标签的处理逻辑被移除
+                    }
 				}
 				if(matchTwoMore) {
 					segmentListToMqYes.add(s);
@@ -293,6 +353,26 @@ public class CampaignDecisionTagTask extends CampaignAutoCancelTaskService {
 	public void task(Integer taskId) {
 	}
 	
+	
+    private boolean isTagCovered(Integer mid, String tagSeq) {
+        if (mid == null || StringUtils.isBlank(tagSeq)) {
+            return false;
+        }
+        boolean result = false;
+        Jedis jedis = null;
+        try {
+            jedis = JedisConnectionManager.getConnection();
+            jedis.select(2);
+            result = jedis.sismember("tagcoverid:" + tagSeq, mid.toString());
+        } catch (Exception e) {
+            logger.info("redis Exception", e);
+        } finally {
+            if (jedis != null) {
+                JedisConnectionManager.closeConnection(jedis);
+            }
+        }
+        return result;
+    }
 	
     public static void main(String[] args) {
     	String tagTypesStr = "1,2,3,4";
