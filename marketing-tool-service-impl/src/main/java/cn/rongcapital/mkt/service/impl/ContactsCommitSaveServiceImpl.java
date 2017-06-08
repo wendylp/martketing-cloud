@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -334,7 +335,12 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
 
         List<ContactDownLoadField> dataList = new ArrayList<ContactDownLoadField>();
         for (ContactList contactList : list) {
-            String gender = 1 == contactList.getGender() ? "男" : "女";
+        	String gender;
+        	if(contactList.getGender()==null){
+        		gender = "不确定";
+        	}else{
+        		gender = (1 == contactList.getGender() ? "男" : "女");
+        	}
             ContactDownLoadField contactDownLoadField = new ContactDownLoadField(
                             contactList.getId(), contactList.getName(), gender,
                             contactList.getBirthday(), contactList.getMobile(),
@@ -349,7 +355,7 @@ public class ContactsCommitSaveServiceImpl implements ContacsCommitSaveService {
             dataList.add(contactDownLoadField);
         }
         Map<String, Object> map = new HashMap<String, Object>();
-        String fileName = generateDownloadFile(list);
+        String fileName = generateDownloadFile(dataList);
         map.put("download_url", fileName);
         result.getData().add(map);
 

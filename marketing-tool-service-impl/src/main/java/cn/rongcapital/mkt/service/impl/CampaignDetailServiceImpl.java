@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,7 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 	/**
 	 * key: key:campaignId:itemId
 	 */
-	private Map<String, CampaignDetail> cache = new HashMap<String, CampaignDetail>();
+	private Map<String, CampaignDetail> cache = new ConcurrentHashMap<String, CampaignDetail>();
 
 	@Override
 	public CampaignDetailOut campaignDetail(String name) {
@@ -394,8 +395,8 @@ public class CampaignDetailServiceImpl implements CampaignDetailService {
 		DataParty dp = dataParties.get(0);
 		CampaignMember member = new CampaignMember(campaignId, itemId, dp.getId(), dp2 == null ? null : dp2.getMemberId());
 		member.setPhone(dp.getMobile());
-		member.setWxId(dp.getWxmpId());
-		member.setOpenId(dp.getWxCode());
+		member.setWxId(dp.getWxCode());
+		member.setOpenId(dp.getWxmpId());
 		member.setItemType(detail.getItemType());
 		if (detail.getItemType() != null && detail.getItemType().intValue() == WX_TYPE) {
 			member.setIsTouch(1);// 微信默认是触达
