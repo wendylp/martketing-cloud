@@ -158,7 +158,7 @@ public class GenerateSmsDetailTask implements TaskService {
 
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void task(String taskHeadIdStr) {
         strategyMap.put(SmsTargetAudienceTypeEnum.SMS_TARGET_SEGMENTATION.getTypeCode(),segmentCalcSmsTargetAudienceStrategy);
@@ -227,9 +227,11 @@ public class GenerateSmsDetailTask implements TaskService {
 		if (isEventTask) { // 事件类型的活动
 			targetHead.setTotalCoverNum(targetHead.getTotalCoverNum() + targetDistinctReceiveMobiles.size());
 			targetHead.setWaitingNum(targetHead.getWaitingNum() + targetDistinctReceiveMobiles.size());
+			logger.info("事件类型活动，有 {} 个手机号。", targetDistinctReceiveMobiles.size());
 		} else {
 			targetHead.setTotalCoverNum(targetDistinctReceiveMobiles.size());
 			targetHead.setWaitingNum(targetDistinctReceiveMobiles.size());
+			logger.info("非事件类型活动，有 {} 个手机号。", targetDistinctReceiveMobiles.size());
 		}
 
         smsTaskHeadDao.updateById(targetHead);
@@ -241,11 +243,12 @@ public class GenerateSmsDetailTask implements TaskService {
         //4检测TaskHead的发送状态
 		if (currentTaskHead.getSmsTaskStatus() == SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode()) {
 			// mqTopicService.sendSmsByTaskId(taskHeadIdStr);
+			logger.info("调用SmsSendTaskServiceImpl发送短信， 短信HEAD id {}", currentTaskHead.getId());
 			smsSyncCouponService.beforeProcessSmsStatus(taskHeadIdStr); // @since 1.9.0
         }
-        
     }
 
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
     private void insertDataToSmsDetailAndDetailState(Long taskHeadId, SmsTaskHead targetHead, Set<String> targetDistinctReceiveMobiles) {
         List<SmsTaskDetail> smsTaskDetailList = new LinkedList<>();
         List<SmsTaskDetailState> smsTaskDetailStateList = new LinkedList<>();
