@@ -158,7 +158,7 @@ public class GenerateSmsDetailTask implements TaskService {
 
     }
 
-	@Transactional(propagation = Propagation.NEVER, readOnly = false)
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Override
     public void task(String taskHeadIdStr) {
         strategyMap.put(SmsTargetAudienceTypeEnum.SMS_TARGET_SEGMENTATION.getTypeCode(),segmentCalcSmsTargetAudienceStrategy);
@@ -248,6 +248,7 @@ public class GenerateSmsDetailTask implements TaskService {
         }
     }
 
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
     private void insertDataToSmsDetailAndDetailState(Long taskHeadId, SmsTaskHead targetHead, Set<String> targetDistinctReceiveMobiles) {
         List<SmsTaskDetail> smsTaskDetailList = new LinkedList<>();
         List<SmsTaskDetailState> smsTaskDetailStateList = new LinkedList<>();

@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import cn.rongcapital.mkt.bbx.service.BbxCouponCodeAddService;
@@ -30,6 +31,7 @@ import cn.rongcapital.mkt.service.SmsSyncCouponService;
  * @email Liuqi@rongcapital.cn
  */
 @Service
+@Transactional // Add 2017-6-12 17:17:58
 public class SmsSyncCouponServiceImpl implements SmsSyncCouponService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
