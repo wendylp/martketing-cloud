@@ -95,6 +95,13 @@ public class SmsSendTaskServiceImpl implements TaskService {
 
 	@Override
 	public void task(String jsonMessage) {
+
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+
 		if (this.smsApi == null) {
 			ResteasyWebTarget target = client.target(smsUrlService);
 			this.smsApi = target.proxy(SmsApi.class);
