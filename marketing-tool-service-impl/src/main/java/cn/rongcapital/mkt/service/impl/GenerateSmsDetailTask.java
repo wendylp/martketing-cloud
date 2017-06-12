@@ -245,11 +245,6 @@ public class GenerateSmsDetailTask implements TaskService {
 			// mqTopicService.sendSmsByTaskId(taskHeadIdStr);
 			smsSyncCouponService.beforeProcessSmsStatus(taskHeadIdStr); // @since 1.9.0
         }
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
     }
 
     private void insertDataToSmsDetailAndDetailState(Long taskHeadId, SmsTaskHead targetHead, Set<String> targetDistinctReceiveMobiles) {
