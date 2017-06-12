@@ -308,7 +308,8 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
 
         Criteria orCriteria = new Criteria();
         orCriteria.orOperator(Criteria.where("checked").exists(false), Criteria.where("checked").is(false));
-        payCriteria.andOperator(Criteria.where("couponid").exists(true).ne(null),orCriteria);
+        payCriteria.andOperator(Criteria.where("couponid").exists(true).ne(null).and("pretreated").is(true),orCriteria);
+
         query.addCriteria(payCriteria);
 
         //查询出一共的条数
@@ -334,7 +335,7 @@ public class BbxCouponCodeAddServiceImpl implements BbxCouponCodeAddService {
             List<TBBXOrderPayDetail> payDetails = this.mongoTemplate.find(query.with(pageable), TBBXOrderPayDetail.class);
 
             for (TBBXOrderPayDetail detail: payDetails) {
-                TBBXTransactionHeadAndDetail head = this.mongoTemplate.findOne(new Query(Criteria.where("orderid").is(detail.getOrderid())), TBBXTransactionHeadAndDetail.class);
+                TBBXTransactionHeadAndDetail head = this.mongoTemplate.findOne(new Query(Criteria.where("orderid").is(detail.getOrderid()).and("pretreated").is(true)), TBBXTransactionHeadAndDetail.class);
                 if (head != null) {
                     long memberId = head.getMemberid();
                     long couponId = detail.getCouponid();
