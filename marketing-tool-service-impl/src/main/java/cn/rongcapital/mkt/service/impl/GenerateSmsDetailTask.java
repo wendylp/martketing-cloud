@@ -227,7 +227,9 @@ public class GenerateSmsDetailTask implements TaskService {
 		if (isEventTask) { // 事件类型的活动
 			targetHead.setTotalCoverNum(targetHead.getTotalCoverNum() + targetDistinctReceiveMobiles.size());
 			targetHead.setWaitingNum(targetHead.getWaitingNum() + targetDistinctReceiveMobiles.size());
+			logger.info("event targetDistinctReceiveMobiles size {}", targetDistinctReceiveMobiles.size());
 		} else {
+			logger.info("normal targetDistinctReceiveMobiles size {}", targetDistinctReceiveMobiles.size());
 			targetHead.setTotalCoverNum(targetDistinctReceiveMobiles.size());
 			targetHead.setWaitingNum(targetDistinctReceiveMobiles.size());
 		}
@@ -243,7 +245,11 @@ public class GenerateSmsDetailTask implements TaskService {
 			// mqTopicService.sendSmsByTaskId(taskHeadIdStr);
 			smsSyncCouponService.beforeProcessSmsStatus(taskHeadIdStr); // @since 1.9.0
         }
-        
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
     }
 
     private void insertDataToSmsDetailAndDetailState(Long taskHeadId, SmsTaskHead targetHead, Set<String> targetDistinctReceiveMobiles) {
