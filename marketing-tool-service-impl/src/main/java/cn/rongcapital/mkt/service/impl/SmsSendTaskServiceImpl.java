@@ -181,7 +181,7 @@ public class SmsSendTaskServiceImpl implements TaskService {
 					smsTaskHeadDao.updateById(smsHead);
 					count = 0;
 					SmsBatchMap.clear();
-					continue;
+					smsList.clear();
 				}
 			}
 			// Map<String, SmsResponse> rs = null;
