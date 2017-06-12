@@ -78,15 +78,12 @@ public class SmsSendTaskServiceImpl implements TaskService {
 	@Autowired
 	private BbxCouponCodeAddService bbxCouponCodeAddService;
 
-	private ResteasyClient client = new ResteasyClientBuilder()//
-			.connectionPoolSize(1000)//
-			.maxPooledPerRoute(1000)//
-			.socketTimeout(30000, TimeUnit.MILLISECONDS).build();
-
 	@Value("${sms.url.service}")
 	private String smsUrlService;
 
 	private SmsApi smsApi;
+	
+	private ResteasyClient client;
 
 	@Override
 	public void task(Integer taskId) {
@@ -167,6 +164,10 @@ public class SmsSendTaskServiceImpl implements TaskService {
 					logger.info("第 {} 次",i);
 					// 调用发送API接口（批量）
 					try {
+						client = new ResteasyClientBuilder()//
+								.connectionPoolSize(1000)//
+								.maxPooledPerRoute(1000)//
+								.socketTimeout(30000, TimeUnit.MILLISECONDS).build();
 						ResteasyWebTarget target = client.target(smsUrlService);
 						this.smsApi = target.proxy(SmsApi.class);
 						response = this.smsApi.sendMultSms(smsList);
