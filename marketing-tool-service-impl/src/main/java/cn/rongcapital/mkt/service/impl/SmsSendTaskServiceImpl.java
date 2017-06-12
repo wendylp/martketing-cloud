@@ -143,6 +143,7 @@ public class SmsSendTaskServiceImpl implements TaskService {
 			Map<Long, String> SmsBatchMap = new LinkedHashMap<Long, String>();
 			List<Sms> smsList = new ArrayList<Sms>();
 			SmsStatusResponse response = null;
+			int i = 0;
 			for (SmsTaskDetail detail : smsDetailList) {
 
 				detail.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_DONE);
@@ -160,7 +161,7 @@ public class SmsSendTaskServiceImpl implements TaskService {
 				SmsBatchMap.put(id, receiveMobile);
 				
 				logger.info("SMS_SEND_BACTH_COUNT :{}",SMS_SEND_BACTH_COUNT);
-				int i = 0;
+				
 				if (count >= SMS_SEND_BACTH_COUNT) {
 					i++;
 					logger.info("第 {} 次",i);
