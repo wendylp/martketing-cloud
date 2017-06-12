@@ -95,10 +95,10 @@ public class SmsSendTaskServiceImpl implements TaskService {
 
 	@Override
 	public void task(String jsonMessage) {
-		if (this.smsApi == null) {
+		/*if (this.smsApi == null) {
 			ResteasyWebTarget target = client.target(smsUrlService);
 			this.smsApi = target.proxy(SmsApi.class);
-		}
+		}*/
 
 		logger.info("mq task coming, id is {}", jsonMessage);
 		// 根据任务ID查询sms_task_head表 判断 sms_task_status 是否是执行中状态
@@ -167,6 +167,8 @@ public class SmsSendTaskServiceImpl implements TaskService {
 					logger.info("第 {} 次",i);
 					// 调用发送API接口（批量）
 					try {
+						ResteasyWebTarget target = client.target(smsUrlService);
+						this.smsApi = target.proxy(SmsApi.class);
 						response = this.smsApi.sendMultSms(smsList);
 					} catch (Exception e) {
 						logger.error("短信服务器连接失败", e);
