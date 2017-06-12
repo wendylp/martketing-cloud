@@ -158,8 +158,12 @@ public class SmsSendTaskServiceImpl implements TaskService {
 				// logger.info("receive_mobile is {}, send_message is {} id is {}", receiveMobile, sendMessage, id);
 
 				SmsBatchMap.put(id, receiveMobile);
-
+				
+				logger.info("SMS_SEND_BACTH_COUNT :{}",SMS_SEND_BACTH_COUNT);
+				int i = 0;
 				if (count >= SMS_SEND_BACTH_COUNT) {
+					i++;
+					logger.info("第 {} 次",i);
 					// 调用发送API接口（批量）
 					try {
 						response = this.smsApi.sendMultSms(smsList);
