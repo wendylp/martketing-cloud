@@ -158,7 +158,7 @@ public class GenerateSmsDetailTask implements TaskService {
 
     }
 
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@Transactional(propagation = Propagation.NEVER, readOnly = false)
     @Override
     public void task(String taskHeadIdStr) {
         strategyMap.put(SmsTargetAudienceTypeEnum.SMS_TARGET_SEGMENTATION.getTypeCode(),segmentCalcSmsTargetAudienceStrategy);
