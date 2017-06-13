@@ -78,15 +78,15 @@ public class SmsSendTaskServiceImpl implements TaskService {
 	@Autowired
 	private BbxCouponCodeAddService bbxCouponCodeAddService;
 
-	private ResteasyClient client = new ResteasyClientBuilder()//
-			.connectionPoolSize(1000)//
-			.maxPooledPerRoute(1000)//
-			.socketTimeout(30000, TimeUnit.MILLISECONDS).build();
-
 	@Value("${sms.url.service}")
 	private String smsUrlService;
 
 	private SmsApi smsApi;
+	
+	private ResteasyClient client = new ResteasyClientBuilder()//
+			.connectionPoolSize(1000)//
+			.maxPooledPerRoute(1000)//
+			.socketTimeout(30000, TimeUnit.MILLISECONDS).build();
 
 	@Override
 	public void task(Integer taskId) {
@@ -143,6 +143,7 @@ public class SmsSendTaskServiceImpl implements TaskService {
 			Map<Long, String> SmsBatchMap = new LinkedHashMap<Long, String>();
 			List<Sms> smsList = new ArrayList<Sms>();
 			SmsStatusResponse response = null;
+			int i = 0;
 			for (SmsTaskDetail detail : smsDetailList) {
 
 				detail.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_DONE);
@@ -158,8 +159,12 @@ public class SmsSendTaskServiceImpl implements TaskService {
 				// logger.info("receive_mobile is {}, send_message is {} id is {}", receiveMobile, sendMessage, id);
 
 				SmsBatchMap.put(id, receiveMobile);
-
+				
+				logger.info("SMS_SEND_BACTH_COUNT :{}",SMS_SEND_BACTH_COUNT);
+				
 				if (count >= SMS_SEND_BACTH_COUNT) {
+					i++;
+					logger.info("第 {} 次",i);
 					// 调用发送API接口（批量）
 					try {
 						response = this.smsApi.sendMultSms(smsList);
@@ -175,7 +180,7 @@ public class SmsSendTaskServiceImpl implements TaskService {
 					smsTaskHeadDao.updateById(smsHead);
 					count = 0;
 					SmsBatchMap.clear();
-					continue;
+					smsList.clear();
 				}
 			}
 			// Map<String, SmsResponse> rs = null;

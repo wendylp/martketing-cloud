@@ -158,4 +158,12 @@ public class SmsTaskDetail extends BaseQuery {
 	public void setSendStatus(Integer sendStatus) {
 		this.sendStatus = sendStatus;
 	}
+
+	@Override
+	public String toString() {
+		return "SmsTaskDetail [id=" + id + ", smsTaskHeadId=" + smsTaskHeadId + ", receiveMobile=" + receiveMobile + ", sendMessage=" + sendMessage
+				+ ", materielCouponCodeId=" + materielCouponCodeId + ", materielCouponCodeCode=" + materielCouponCodeCode + ", status=" + status + ", createTime="
+				+ createTime + ", updateTime=" + updateTime + ", sendMobile=" + sendMobile + ", sendStatus=" + sendStatus + ", sendTime=" + sendTime + "]";
+	}
+
 }
