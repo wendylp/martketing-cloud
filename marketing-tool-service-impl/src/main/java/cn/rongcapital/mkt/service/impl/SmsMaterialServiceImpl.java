@@ -239,10 +239,11 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
      */
     private SmsMaterial getSmsMaterial(@NotEmpty SmsMaterialIn smsMaterialIn) {
         SmsMaterial smsMaterial = new SmsMaterial();
-        if (smsMaterial.getId() == null) {
+        if (smsMaterialIn.getId() == null) {
             smsMaterial.setCreator(getValidateString(smsMaterialIn.getCreator()));
             smsMaterial.setCreateTime(new Date());
             smsMaterial.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+            smsMaterial.setUseStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         }
         smsMaterial.setId(getValidateInteger(smsMaterialIn.getId()));
         smsMaterial.setUpdateUser(getValidateString(smsMaterialIn.getUpdateUser()));
@@ -252,7 +253,6 @@ public class SmsMaterialServiceImpl implements SmsMaterialService {
         smsMaterial.setSmsSignName(getValidateString(smsMaterialIn.getSmsSignName()));
         smsMaterial.setSmsType(getValidateInteger(smsMaterialIn.getSmsType()).byteValue());
         smsMaterial.setSmsTempletId(getValidateInteger(smsMaterialIn.getSmsTempletId()));
-        smsMaterial.setUseStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
         if (smsMaterialIn.getSmsTempletId() != null && smsMaterialIn.getSmsTempletId() != 0) {
             SmsTemplet paramSmsTemplet = new SmsTemplet();
             paramSmsTemplet.setId(smsMaterialIn.getSmsTempletId());
