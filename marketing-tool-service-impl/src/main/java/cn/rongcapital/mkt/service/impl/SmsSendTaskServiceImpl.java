@@ -144,6 +144,7 @@ public class SmsSendTaskServiceImpl implements TaskService {
 			List<Sms> smsList = new ArrayList<Sms>();
 			SmsStatusResponse response = null;
 			int i = 0;
+			logger.info("SMS_SEND_BACTH_COUNT :{}",SMS_SEND_BACTH_COUNT);
 			for (SmsTaskDetail detail : smsDetailList) {
 
 				detail.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_DONE);
@@ -160,8 +161,6 @@ public class SmsSendTaskServiceImpl implements TaskService {
 
 				SmsBatchMap.put(id, receiveMobile);
 				
-				logger.info("SMS_SEND_BACTH_COUNT :{}",SMS_SEND_BACTH_COUNT);
-				
 				if (count >= SMS_SEND_BACTH_COUNT) {
 					i++;
 					logger.info("第 {} 次",i);
@@ -172,7 +171,7 @@ public class SmsSendTaskServiceImpl implements TaskService {
 						logger.error("短信服务器连接失败", e);
 						response = new SmsStatusResponse("-1", "短信服务器连接失败");
 					}
-
+					logger.info("短信返回状态码：{}，消息内容：{}，response：{} ", response.getErrorCode(), response.getErrorMsg(), response);
 					// Map<Long, Double> sendSmsResult = SmsSendUtilByIncake.sendSms(SmsBatchMap);
 					// 统计一批短信的成功和失败的个数,根据短信API判断状态回写sms_task_detail_state表和head表
 					updateSmsDetailState(response, SmsBatchMap, smsHead);
