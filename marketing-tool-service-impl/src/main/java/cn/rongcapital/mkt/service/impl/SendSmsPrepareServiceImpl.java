@@ -35,7 +35,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import cn.rongcapital.mkt.bbx.service.BbxCouponCodeAddService;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.SmsDetailSendStateEnum;
 import cn.rongcapital.mkt.common.enums.SmsMaterialVariableEnum;
@@ -149,8 +148,6 @@ public class SendSmsPrepareServiceImpl implements SendSmsPrepare{
     
     @Autowired
     private MaterialCouponDao materialCouponDao;
-    @Autowired
-    private BbxCouponCodeAddService couponCodeAddService;
     @Autowired
     private SmsSyncCouponService smsSyncCouponService;
 

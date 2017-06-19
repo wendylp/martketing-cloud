@@ -232,8 +232,10 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 					if (audienceGenerateStatus != null && audienceGenerateStatus != 1
 							&& smsTaskHeadBack.getTotalCoverNum() > 0) {
 						
-						// mqTopicService.sendSmsByTaskId(String.valueOf(id));
-						smsSyncCouponService.beforeProcessSmsStatus(String.valueOf(id)); // @since 1.9.0
+						 mqTopicService.sendSmsByTaskId(String.valueOf(id));
+						 ////////////////暂时取消同步优惠券流程start @since 1.10.0
+//						smsSyncCouponService.beforeProcessSmsStatus(String.valueOf(id)); // @since 1.9.0
+						////////////////暂时取消同步优惠券流程end
 					}
 				}
 			}

@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import cn.rongcapital.mkt.bbx.service.BbxCouponCodeAddService;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.enums.MaterialCouponCodeReleaseStatusEnum;
 import cn.rongcapital.mkt.common.enums.MaterialCouponStatusEnum;
@@ -74,9 +73,6 @@ public class SmsSendTaskServiceImpl implements TaskService {
 
 	@Autowired
 	private SmsMaterialDao smsMaterialDao;
-
-	@Autowired
-	private BbxCouponCodeAddService bbxCouponCodeAddService;
 
 	@Value("${sms.url.service}")
 	private String smsUrlService;

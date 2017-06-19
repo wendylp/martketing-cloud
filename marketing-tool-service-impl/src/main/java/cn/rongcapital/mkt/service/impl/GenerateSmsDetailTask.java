@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
-import cn.rongcapital.mkt.bbx.service.BbxCouponCodeAddService;
 import cn.rongcapital.mkt.common.enums.SmsTaskStatusEnum;
 import cn.rongcapital.mkt.dao.AudienceListDao;
 import cn.rongcapital.mkt.dao.AudienceListPartyMapDao;
@@ -49,6 +48,9 @@ public class GenerateSmsDetailTask implements TaskService {
 	@Autowired
 	private SmsSyncCouponService smsSyncCouponService;
 
+    @Autowired
+    private MQTopicService mqTopicService;
+
     @Override
     public void task(Integer taskId) {
 
@@ -60,9 +62,11 @@ public class GenerateSmsDetailTask implements TaskService {
         SmsTaskHead currentTaskHead = sendSmsPrepare.getSmSTaskHead(taskHeadIdStr);
         //4检测TaskHead的发送状态
 		if (currentTaskHead!=null && currentTaskHead.getSmsTaskStatus() == SmsTaskStatusEnum.TASK_EXECUTING.getStatusCode()) {
-			// mqTopicService.sendSmsByTaskId(taskHeadIdStr);
-			logger.info("调用SmsSendTaskServiceImpl发送短信， 短信HEAD id {}", currentTaskHead.getId());
-			smsSyncCouponService.beforeProcessSmsStatus(taskHeadIdStr); // @since 1.9.0
+			 mqTopicService.sendSmsByTaskId(taskHeadIdStr);
+			 ////////////////////////////去掉同步优惠券流程start @since 1.10.0
+//			logger.info("调用SmsSendTaskServiceImpl发送短信， 短信HEAD id {}", currentTaskHead.getId());
+//			smsSyncCouponService.beforeProcessSmsStatus(taskHeadIdStr); // @since 1.9.0
+            ////////////////////////////去掉同步优惠券流程end @since 1.10.0
         }
     }
 

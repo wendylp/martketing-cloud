@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import cn.rongcapital.mkt.bbx.service.BbxCouponCodeAddService;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
 import cn.rongcapital.mkt.dao.SmsTaskDetailDao;
@@ -44,8 +43,10 @@ public class SmsSyncCouponServiceImpl implements SmsSyncCouponService {
 	private SmsTaskDetailDao smsTaskDetailDao;
 	@Autowired
 	private SmsTaskDetailStateDao smsTaskDetailStateDao;
+
+
 	@Autowired
-	private BbxCouponCodeAddService couponCodeAddService;
+	private SmsSyncCouponService smsSyncCouponService;
 
 	@Override
 	public boolean processSmsStatus(Integer campaignHeadId, Long smsTaskHeadId, List<Long> smsTaskDetailIds) {
@@ -140,8 +141,11 @@ public class SmsSyncCouponServiceImpl implements SmsSyncCouponService {
 			smsDetail.setStartIndex(null);
 			smsDetail.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_WRITING);
 			List<SmsTaskDetail> smsDetailList = smsTaskDetailDao.selectList(smsDetail);
+
 			// 同步优惠券
-			couponCodeAddService.addCouponCodeToBBX(smsDetailList, campaignHeadId, smsSendHeadId, campaignItemId);
+			//清理掉贝贝熊同步优惠券的流程
+			//couponCodeAddService.addCouponCodeToBBX(smsDetailList, campaignHeadId, smsSendHeadId, campaignItemId);
+
 		}
 	}
 
