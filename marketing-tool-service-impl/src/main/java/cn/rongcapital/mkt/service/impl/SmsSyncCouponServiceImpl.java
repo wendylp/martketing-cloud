@@ -45,9 +45,6 @@ public class SmsSyncCouponServiceImpl implements SmsSyncCouponService {
 	private SmsTaskDetailStateDao smsTaskDetailStateDao;
 
 
-	@Autowired
-	private SmsSyncCouponService smsSyncCouponService;
-
 	@Override
 	public boolean processSmsStatus(Integer campaignHeadId, Long smsTaskHeadId, List<Long> smsTaskDetailIds) {
 		if (smsTaskHeadId == null) {
