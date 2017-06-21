@@ -498,18 +498,4 @@ public class CouponApi {
         return materialCouponAudienceCreateService.createTargetAudienceGroup(mcca);
     }
 	
-	
-    /**
-     * @author shanjingqi
-     * @功能简述:优惠券设置stock_total，并生成对应数量的码（贝贝熊）
-     * @param input
-     * @return
-     */
-    @POST
-    @Path("/mkt.materiel.coupon.totalCount.save")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    public BaseOutput couponSaveForBBX(@Valid MaterialCouponStockTotalIn couponInfo){
-        return couponSaveService.saveForBBX(couponInfo);
-    }
-
 }

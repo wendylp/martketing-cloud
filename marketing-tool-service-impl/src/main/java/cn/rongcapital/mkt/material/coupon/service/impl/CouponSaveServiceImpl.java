@@ -313,29 +313,5 @@ public class CouponSaveServiceImpl implements CouponSaveService {
         return afterDate;
     }
 
-	@Override
-	public BaseOutput saveForBBX(MaterialCouponStockTotalIn couponInfo) {
-		BaseOutput baseOutput = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
-				ApiConstant.INT_ZERO, null);
-
-		JSONObject json = new JSONObject();
-		json.put("id", couponInfo.getId());
-		json.put("stock_total", couponInfo.getStockTotal());
-
-		try {
-            ActiveMqMessageVO message = new ActiveMqMessageVO();
-            message.setTaskName("优惠码生成_贝贝熊");
-            message.setServiceName(MQ_CODE_BBX_SERVICE);
-            message.setMessage(json.toString());
-            mqTopicService.senderMessage(MQ_CODE_BBX_SERVICE, message);
-        } catch (JMSException e) {
-            logger.error("MQ发送信息异常", e.getMessage());
-            baseOutput.setCode(ApiErrorCode.SYSTEM_ERROR.getCode());
-            baseOutput.setMsg(ApiErrorCode.SYSTEM_ERROR.getMsg());
-            return baseOutput;
-        }
-		
-		return baseOutput;
-	}
   
 }
