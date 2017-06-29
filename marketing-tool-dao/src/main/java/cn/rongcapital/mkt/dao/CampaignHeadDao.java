@@ -98,4 +98,10 @@ public interface CampaignHeadDao extends BaseDao<CampaignHead>{
      */
     List<CampaignHead> selectCampaignHeadListBySearchDate(@Param("searchDate") String searchDate);
     
+	/**
+	 * @功能简述: 查询在基础表中查询对象list(不关联组织表),查询条件:where id in(id1,id2...);非null的id才有效
+	 * @param: List<Integer> idList
+	 * @return: List<T>
+	 */
+    List<CampaignHead> selectListByIdListFromBasic(List<Integer> idList);
 }

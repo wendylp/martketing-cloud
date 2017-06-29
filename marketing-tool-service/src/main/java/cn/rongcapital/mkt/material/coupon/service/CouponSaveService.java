@@ -8,6 +8,4 @@ public interface CouponSaveService {
 
     BaseOutput save(MaterialCouponInfoIn couponInfo);
     
-    BaseOutput saveForBBX(MaterialCouponStockTotalIn couponInfo);
-    
 }

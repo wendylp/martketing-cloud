@@ -23,7 +23,7 @@ import cn.rongcapital.mkt.service.CampaignHeaderUpdateService;
 import cn.rongcapital.mkt.vo.out.CampaignManualStartOut;
 
 @Service
-public class CampaignTriggerTimeTask extends BaseMQService implements TaskService {
+public class CampaignTriggerTimeTask extends CampaignAutoCancelTaskService {
 
 	private static Logger logger = LoggerFactory.getLogger(CampaignTriggerTimeTask.class);
 	
