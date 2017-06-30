@@ -142,10 +142,10 @@ public class CampaignActionSendSmsTask extends CampaignAutoCancelTaskService  {
 						segmentListToNext.add(segment);//数据放入向后面节点传递的list里
 						dataPartyIds.add(dp.getMid());	
                     } else {
-                        logger.info("该主数据信息[{}]Mysql中不存在,无法发送。",JSON.toJSONString(segment));
+                        logger.info("该主数据信息[{}]Mysql中不存在,无法发送。", JSON.toJSONString(segment));
                     }
                 } else {
-                    logger.info("该主数据信息[{}]Mongo中不存在,无法发送。",JSON.toJSONString(segment));
+                    logger.info("该主数据信息[{}]Mongo中不存在,无法发送。", JSON.toJSONString(segment));
                 }
 			}
 		}

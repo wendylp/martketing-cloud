@@ -147,7 +147,7 @@ public class CampaignActionPubWechatSendH5Task extends CampaignAutoCancelTaskSer
 						logger.info("不是公众号粉丝,无法发送,"+JSON.toJSONString(segment));
 					}
 				} else {
-                    logger.info("该主数据信息[{}]Mongo中不存在,无法发送。",JSON.toJSONString(segment));
+                    logger.info("该主数据信息[{}]Mongo中不存在,无法发送。", JSON.toJSONString(segment));
                 }
 				campaignDetailService.saveCampaignMember(campaignHeadId, itemId, segment.getDataId()); // @since 1.9 记录活动统计数据
 			}
