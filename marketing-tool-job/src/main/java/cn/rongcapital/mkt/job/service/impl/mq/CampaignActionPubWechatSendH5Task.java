@@ -132,8 +132,7 @@ public class CampaignActionPubWechatSendH5Task extends CampaignAutoCancelTaskSer
 				Integer dataId = segment.getDataId();
 				//从mongo的主数据表中查询该条id对应的主数据详细信息
 				DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(dataId)), DataParty.class);
-				if(null!=dp && null !=dp.getMdType() &&
-				   dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_POPULATION) {
+				if(null!=dp) {
 					boolean isFans = isPubWechatFans(dp, pubId, null);
 					logger.info("是否是微信公众号粉丝标识------------------------------------>："+isFans);
 					if(isFans) {
@@ -147,7 +146,9 @@ public class CampaignActionPubWechatSendH5Task extends CampaignAutoCancelTaskSer
 					} else {
 						logger.info("不是公众号粉丝,无法发送,"+JSON.toJSONString(segment));
 					}
-				}
+				} else {
+                    logger.info("该主数据信息[{}]Mongo中不存在,无法发送。",JSON.toJSONString(segment));
+                }
 				campaignDetailService.saveCampaignMember(campaignHeadId, itemId, segment.getDataId()); // @since 1.9 记录活动统计数据
 			}
 		}
