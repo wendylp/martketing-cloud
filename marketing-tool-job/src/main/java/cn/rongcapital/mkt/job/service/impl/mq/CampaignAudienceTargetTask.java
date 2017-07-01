@@ -83,6 +83,7 @@ public class CampaignAudienceTargetTask extends CampaignAutoCancelTaskService {
 				logger.info("redis key {} get value {}.", mongoKey, smembers.size());
 				if (CollectionUtils.isNotEmpty(smembers)) {
 					List<List<String>> setList = ListSplit.getSetSplit(smembers, BATCH_SIZE);
+					logger.info("campaign audience target split list list size is {}.",setList.size());
 					for (List<String> segmentIdList : setList) {
 						Future<List<Segment>> segmentFutureList = executor.submit(new Callable<List<Segment>>() {
 							@Override
@@ -103,12 +104,14 @@ public class CampaignAudienceTargetTask extends CampaignAutoCancelTaskService {
 				logger.error(e.getMessage());
 			}
 
+			logger.info("campaign audience target  List<Future<List<Segment>>> size is {}.",resultList.size());
 			// 遍历任务的结果
 			if (CollectionUtils.isNotEmpty(resultList)) {
 				for (Future<List<Segment>> fs : resultList) {
 					try {
 						List<Segment> list = fs.get(); // 打印各个线程（任务）执行的结果
 						if (CollectionUtils.isNotEmpty(list)) {
+							logger.info("get segment size is {}.",list.size());
 							for (Segment segment : list) {
 								segment.setSegmentationHeadId(cat.getSegmentationId());
 								boolean audienceExist = checkNodeAudienceExist(campaignHeadId, itemId,
