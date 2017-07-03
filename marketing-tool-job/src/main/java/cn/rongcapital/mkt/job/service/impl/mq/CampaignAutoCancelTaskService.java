@@ -39,6 +39,11 @@ public abstract class CampaignAutoCancelTaskService extends BaseMQService implem
 
     private static Logger logger = LoggerFactory.getLogger(CampaignAutoCancelTaskService.class);
 
+    //执行的线程数
+    private static final int THREAD_POOL_FIX_SIZE = 10;
+    //执行线程的Service公共类
+    public static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+
 
     @Override
     @Transactional

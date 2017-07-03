@@ -44,9 +44,6 @@ public class CampaignAudienceTargetTask extends CampaignAutoCancelTaskService {
 	private static final String REDIS_SNAP_IDS_KEY_PREFIX = "segmentsnapcoverid:";
 
 
-	private ExecutorService executor = null;
-
-	private static final int THREAD_POOL_FIX_SIZE = 10;
 
 	private static final int BATCH_SIZE = 50;
 
@@ -76,7 +73,7 @@ public class CampaignAudienceTargetTask extends CampaignAutoCancelTaskService {
 			
 			// TODO congshulin mongo转成redis
 			long startTime = System.currentTimeMillis();
-			executor = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
+
 			List<Future<List<Segment>>> resultList = new ArrayList<Future<List<Segment>>>();
 			try {
 				Set<String> smembers = JedisClient.smembers(mongoKey, 2);
@@ -85,7 +82,7 @@ public class CampaignAudienceTargetTask extends CampaignAutoCancelTaskService {
 					List<List<String>> setList = ListSplit.getSetSplit(smembers, BATCH_SIZE);
 					logger.info("campaign audience target split list list size is {}.",setList.size());
 					for (List<String> segmentIdList : setList) {
-						Future<List<Segment>> segmentFutureList = executor.submit(new Callable<List<Segment>>() {
+						Future<List<Segment>> segmentFutureList = EXECUTOR_SERVICE.submit(new Callable<List<Segment>>() {
 							@Override
 							public List<Segment> call() throws Exception {
 								List<Segment> selectSegmentByIdList = dataPartyDao.selectSegmentByIdList(segmentIdList);
@@ -95,9 +92,7 @@ public class CampaignAudienceTargetTask extends CampaignAutoCancelTaskService {
 						resultList.add(segmentFutureList);
 					}
 				}
-				executor.shutdown();
-				// 设置最大阻塞时间，所有线程任务执行完成再继续往下执行
-				executor.awaitTermination(24, TimeUnit.HOURS);
+
 				long endTime = System.currentTimeMillis();
 				logger.info("=====================从dataParty同步segment的name,用时" + (endTime - startTime) + "毫秒");
 			} catch (Exception e) {
@@ -126,7 +121,6 @@ public class CampaignAudienceTargetTask extends CampaignAutoCancelTaskService {
 					} catch (InterruptedException e) {
 						logger.error(e.getMessage());
 					} catch (ExecutionException e) {
-						executor.shutdownNow();
 						logger.error(e.getMessage());
 					}
 				}
