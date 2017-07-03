@@ -106,7 +106,7 @@ public class CampaignAudienceTargetTask extends CampaignAutoCancelTaskService {
 					try {
 						List<Segment> list = fs.get(); // 打印各个线程（任务）执行的结果
 						if (CollectionUtils.isNotEmpty(list)) {
-							logger.info("get segment size is {}.",list.size());
+							logger.info("campaign is {},item is is {}, current thread get segment size is {}.",taskSchedule.getCampaignHeadId(),taskSchedule.getCampaignItemId(),list.size());
 							for (Segment segment : list) {
 								segment.setSegmentationHeadId(cat.getSegmentationId());
 								boolean audienceExist = checkNodeAudienceExist(campaignHeadId, itemId,
