@@ -44,6 +44,7 @@ import cn.rongcapital.mkt.dao.WechatChannelDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeDao;
 import cn.rongcapital.mkt.dao.WechatQrcodeTicketDao;
 import cn.rongcapital.mkt.dao.WechatRegisterDao;
+import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
 import cn.rongcapital.mkt.po.WechatChannel;
 import cn.rongcapital.mkt.po.WechatInterfaceLog;
@@ -81,6 +82,10 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 	WechatRegisterDao wechatRegisterDao;
 	@Autowired
 	private CustomTagMaterialMapService customTagMaterialMapService;
+	
+	  @Autowired
+    private DataAuthService dataAuthService;  //调用数据权限类
+	  
 	/**
 	 * 从微信获取二维码信息
 	 * @param sceneId
@@ -449,7 +454,9 @@ public class WechatQrcodeBizImpl extends BaseBiz implements WechatQrcodeBiz {
 			//新建人群管理保存
 			Audience audience = new Audience();
 			audience.setAudience_name(wechatQrcodeIn.getFixed_audience());
-			saveAudienceListService.saveAudienceList(audience);
+			int audienceid=saveAudienceListService.getAudienceId(audience);
+			dataAuthService.put(wechatQrcodeIn.getOrg_id(), "audience_list", audienceid); //插入数据dataauth表中
+			
 		}else{
 			wechatQrcode.setIsAudience(NumUtil.int2OneByte(0));
 		}			

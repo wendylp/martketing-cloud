@@ -635,6 +635,7 @@ public class MktWeChatApi {
 	@POST
 	@Path("/mkt.weixin.qrcode.create")
 	@Consumes({ MediaType.APPLICATION_JSON })
+	@CaasAuth(res = "#body.org_id", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
 	public BaseOutput createQrcode(@Valid WechatQrcodeIn body) {
 		BaseOutput baseOutput = wechatQrcodeBiz.createQrcode(body);
 		return baseOutput;
