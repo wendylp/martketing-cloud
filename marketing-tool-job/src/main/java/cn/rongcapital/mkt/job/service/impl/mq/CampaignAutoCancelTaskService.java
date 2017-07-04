@@ -97,7 +97,7 @@ public abstract class CampaignAutoCancelTaskService extends BaseMQService implem
      */
     private boolean validScheduleFutureRunning(ScheduledFutureExecutor scheduledFutureExecutor){
         scheduledFutureExecutor.getScheduledExecutor().shutdown();
-        if(!scheduledFutureExecutor.getScheduledExecutor().isShutdown() || !scheduledFutureExecutor.getScheduledFuture().isDone()){
+        if(!scheduledFutureExecutor.getScheduledExecutor().isTerminated()){
             return true;
         }
         return  false;

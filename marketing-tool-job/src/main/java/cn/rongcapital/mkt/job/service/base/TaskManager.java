@@ -115,10 +115,10 @@ public class TaskManager {
     			v.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
 //    			ScheduledFuture<?> scheduledFuture = TaskManager.taskMap.get(k);
                 ScheduledFutureExecutor scheduledFutureExecutor = TaskManager.taskMap.get(k);
-                if (null != scheduledFutureExecutor && scheduledFutureExecutor.getScheduledFuture().isDone()) {
+                if (null != scheduledFutureExecutor) {
                     //将任务线程所在的线程池停掉
                     scheduledFutureExecutor.getScheduledExecutor().shutdown();
-                    if(scheduledFutureExecutor.getScheduledExecutor().isShutdown()) {
+                    if(scheduledFutureExecutor.getScheduledExecutor().isTerminated()) {
                         TaskManager.taskMap.remove(k);// 任务从内存中删除
                         TaskManager.taskPropMap.remove(k);//从内存中删掉已经停止的线程
                     }
