@@ -120,6 +120,7 @@ public class TaskManager {
                     scheduledFutureExecutor.getScheduledExecutor().shutdown();
                     if(scheduledFutureExecutor.getScheduledExecutor().isShutdown()) {
                         TaskManager.taskMap.remove(k);// 任务从内存中删除
+                        TaskManager.taskPropMap.remove(k);//从内存中删掉已经停止的线程
                     }
     			}
     		}
