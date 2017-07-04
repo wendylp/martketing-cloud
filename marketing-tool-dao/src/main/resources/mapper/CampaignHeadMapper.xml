@@ -204,4 +204,15 @@
 			limit 5
 	</select>
 		
+	<!-- 在基础表中查询查询,通过主键IN(array) -->
+	<select id="selectListByIdListFromBasic" parameterType="cn.rongcapital.mkt.po.CampaignHead" resultType="cn.rongcapital.mkt.po.CampaignHead">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST_BASE"/>
+		<include refid="QUERY_FROM_TABLE_BASE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+		
 </mapper>

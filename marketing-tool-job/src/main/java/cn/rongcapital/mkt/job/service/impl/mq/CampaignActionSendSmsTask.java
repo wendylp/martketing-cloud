@@ -133,8 +133,7 @@ public class CampaignActionSendSmsTask extends CampaignAutoCancelTaskService  {
 				Integer dataId = segment.getDataId();
 				//从mongo的主数据表中查询该条id对应的主数据详细信息
 				DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(dataId)), DataParty.class);
-				if(null!=dp && null !=dp.getMdType() &&
-				    dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_POPULATION) {
+				if(null!=dp) {
 					Integer mid = dp.getMid();
 					cn.rongcapital.mkt.po.DataParty dataParty = new cn.rongcapital.mkt.po.DataParty();
 					dataParty.setId(mid);
@@ -142,8 +141,12 @@ public class CampaignActionSendSmsTask extends CampaignAutoCancelTaskService  {
 					if(CollectionUtils.isNotEmpty(dataPartyList)){
 						segmentListToNext.add(segment);//数据放入向后面节点传递的list里
 						dataPartyIds.add(dp.getMid());	
-					}
-				}
+                    } else {
+                        logger.info("该主数据信息[{}]Mysql中不存在,无法发送。", JSON.toJSONString(segment));
+                    }
+                } else {
+                    logger.info("该主数据信息[{}]Mongo中不存在,无法发送。", JSON.toJSONString(segment));
+                }
 			}
 		}
 		

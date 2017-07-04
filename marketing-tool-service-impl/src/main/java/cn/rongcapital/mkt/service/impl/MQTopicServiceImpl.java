@@ -58,7 +58,6 @@ public class MQTopicServiceImpl implements MQTopicService {
     private static final String MQ_CUSTOM_TAG_UPDATE_PARENT_TOPIC = "customTagUpdateParentTopic";
 	private static final String MQ_CUSTOM_TAG_NAME_EDIT_TOPIC = "customTagNameEditTopic";
 	private static final String MQ_CUSTOM_TAG_DELETE_TOPIC = "customTagDeleteTopic";
-	private static final String MQ_CODE_BBX_SERVICE = "CouponCodeSaveTaskBBXImpl";
 	
 	@Value("${spring.activemq.broker-url}")
 	private String providerUrl;
@@ -199,7 +198,6 @@ public class MQTopicServiceImpl implements MQTopicService {
 			receiverMessageComm(connection,MQ_CUSTOM_TAG_UPDATE_PARENT_TOPIC);
 			receiverMessageComm(connection,MQ_CUSTOM_TAG_NAME_EDIT_TOPIC);
 			receiverMessageComm(connection,MQ_CUSTOM_TAG_DELETE_TOPIC);
-			receiverMessageComm(connection,MQ_CODE_BBX_SERVICE);
 			
 		} catch (JMSException e) {
 			e.printStackTrace();
