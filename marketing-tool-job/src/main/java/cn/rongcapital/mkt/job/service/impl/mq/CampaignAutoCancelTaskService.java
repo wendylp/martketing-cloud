@@ -40,7 +40,7 @@ public abstract class CampaignAutoCancelTaskService extends BaseMQService implem
     private static Logger logger = LoggerFactory.getLogger(CampaignAutoCancelTaskService.class);
 
     //执行的线程数
-    private static final int THREAD_POOL_FIX_SIZE = 10;
+    private static final int THREAD_POOL_FIX_SIZE = 50;
     //执行线程的Service公共类
     public static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(THREAD_POOL_FIX_SIZE);
 
@@ -97,7 +97,7 @@ public abstract class CampaignAutoCancelTaskService extends BaseMQService implem
      */
     private boolean validScheduleFutureRunning(ScheduledFutureExecutor scheduledFutureExecutor){
         scheduledFutureExecutor.getScheduledExecutor().shutdown();
-        if(!scheduledFutureExecutor.getScheduledExecutor().isShutdown()){
+        if(!scheduledFutureExecutor.getScheduledExecutor().isShutdown() || !scheduledFutureExecutor.getScheduledFuture().isDone()){
             return true;
         }
         return  false;
