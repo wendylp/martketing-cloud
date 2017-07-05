@@ -110,4 +110,7 @@ public interface WechatQrcodeFocusDao extends BaseDao<WechatQrcodeFocus>{
 	 * 根据qrcodeId选取这个二维码的关注时间
 	 */
 	List<WechatQrcodeFocus> selectTheEarliestFocusByQrcodeId(@Param("qrcodeId") String qrcodeId);
+	
+	
+	List<WechatQrcodeFocus> getWeChatAudienceInfo();
 }
