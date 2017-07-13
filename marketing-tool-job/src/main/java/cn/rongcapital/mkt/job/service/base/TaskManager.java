@@ -153,6 +153,7 @@ public class TaskManager {
                                     //验证当前任务节点所处活动是否已经停止了
                                     CampaignHead t = new CampaignHead();
                                     t.setId(v.getCampaignHeadId());
+                                    logger.info("Search campaign param is {}",JSON.toJSONString(t));
                                     List<CampaignHead> campaignHeads = this.campaignHeadDao.selectList(t);
                                     if (campaignHeads.get(0).getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH) {
                                         //修改此节点对应的数据库状态
