@@ -7,4 +7,6 @@ import cn.rongcapital.mkt.vo.in.Audience;
  */
 public interface SaveAudienceListService {
     Object saveAudienceList(Audience audience);
+    
+    int getAudienceId(Audience audience);
 }

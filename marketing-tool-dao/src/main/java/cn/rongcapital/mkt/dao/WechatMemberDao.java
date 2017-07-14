@@ -175,5 +175,12 @@ public interface WechatMemberDao extends BaseDao<WechatMember>{
 	 * @return
 	 */
 	List<WechatMember> selectListByIdListNoSelected(List<Long> idLists);
+	
+	
+	
+	//根据微信会员openid来查询data_population表中的keyid值
+	
+	 List<Integer> getPopulationKeyId(List<String> ids);
+	 
 		
 }

@@ -48,4 +48,18 @@ public class SaveAudienceListServiceImpl implements SaveAudienceListService{
         baseOutput.setTotal(0);
         return Response.ok().entity(baseOutput).build();
     }
+    
+    //新增返回audienceList的id
+   public int getAudienceId(Audience audience)
+   {
+     //2.保存人群名称到audience_list表中 
+       AudienceList audienceListT = new AudienceList();
+       audienceListT.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+       audienceListT.setAudienceName(audience.getAudience_name());    
+       audienceListT.setAudienceRows(0);
+       audienceListT.setSource(ApiConstant.AUDIENCE_SOUCE_NAME_WX);
+       audienceListDao.insert(audienceListT);
+       return audienceListT.getId();
+       
+   }
 }
