@@ -1,11 +1,14 @@
 package cn.rongcapital.mkt.job.service.base;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.*;
 
+import cn.rongcapital.mkt.dao.CampaignHeadDao;
 import cn.rongcapital.mkt.job.util.ScheduledFutureExecutor;
+import cn.rongcapital.mkt.po.CampaignHead;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,6 +42,9 @@ public class TaskManager {
     private TaskScheduleDao taskScheduleDao;
     @Autowired
     private TaskRunLogDao taskRunLogDao;
+
+    @Autowired
+    private CampaignHeadDao campaignHeadDao;
 
     private static final int pageSize = 100;
 
@@ -115,11 +121,12 @@ public class TaskManager {
     			v.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
 //    			ScheduledFuture<?> scheduledFuture = TaskManager.taskMap.get(k);
                 ScheduledFutureExecutor scheduledFutureExecutor = TaskManager.taskMap.get(k);
-                if (null != scheduledFutureExecutor && scheduledFutureExecutor.getScheduledFuture().isDone()) {
+                if (null != scheduledFutureExecutor) {
                     //将任务线程所在的线程池停掉
                     scheduledFutureExecutor.getScheduledExecutor().shutdown();
-                    if(scheduledFutureExecutor.getScheduledExecutor().isShutdown()) {
+                    if(scheduledFutureExecutor.getScheduledExecutor().isTerminated()) {
                         TaskManager.taskMap.remove(k);// 任务从内存中删除
+                        TaskManager.taskPropMap.remove(k);//从内存中删掉已经停止的线程
                     }
     			}
     		}
@@ -141,6 +148,26 @@ public class TaskManager {
                 if (null == scheduledFutureExecutor) {
                     if (v.getStartTime() == null || v.getStartTime().before(Calendar.getInstance().getTime())) {
                         if (v.getEndTime() == null || v.getEndTime().after(Calendar.getInstance().getTime())) {
+                            //校验是否是活动的定时触发和受众任务，并且当前活动是否处于活动中的状态
+                            if (ApiConstant.TASK_NAME_CAMPAIGN_TRUGGER_TIME.equals(v.getServiceName()) || ApiConstant.TASK_NAME_CAMPAIGN_AUDIENCE_FIX.equals(v.getServiceName()) || ApiConstant.TASK_NAME_CAMPAIGN_AUDIENCE_TARGET.equals(v.getServiceName())) {
+                                if (v.getCampaignHeadId() != null) {
+                                    //验证当前任务节点所处活动是否已经停止了
+                                    CampaignHead t = new CampaignHead();
+                                    t.setId(v.getCampaignHeadId());
+                                    t.setStatus(null);
+                                    logger.info("Search campaign param is {}",JSON.toJSONString(t));
+                                    List<CampaignHead> campaignHeads = this.campaignHeadDao.selectList(t);
+                                    if ((CollectionUtils.isNotEmpty( campaignHeads) && (campaignHeads.get(0).getPublishStatus() == ApiConstant.CAMPAIGN_PUBLISH_STATUS_FINISH))
+                                            ||(CollectionUtils.isNotEmpty( campaignHeads) && (campaignHeads.get(0).getStatus() == ApiConstant.TABLE_DATA_STATUS_INVALID))
+                                            ) {
+                                        //修改此节点对应的数据库状态
+                                        v.setTaskStatus(ApiConstant.TASK_STATUS_INVALID);
+                                        v.setStatus(ApiConstant.TABLE_DATA_STATUS_INVALID);
+                                        this.taskScheduleDao.updateById(v);
+                                        return;
+                                    }
+                                }
+                            }
                             startTask(v);
                         }
                     }
@@ -183,7 +210,7 @@ public class TaskManager {
     private synchronized void startTask(TaskSchedule taskSchedulePo) {
         Runnable task = new Runnable() {
             public void run() {
-            	logger.info("startTask:" + JSON.toJSONString(taskSchedulePo));
+            	logger.debug("startTask:" + JSON.toJSONString(taskSchedulePo));
                 try {
                     String serviceName = getServiceName(taskSchedulePo.getServiceName());
                     Object serviceBean = cotext.getBean(serviceName);

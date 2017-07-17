@@ -27,6 +27,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.CouponCodeType;
@@ -39,13 +43,10 @@ import cn.rongcapital.mkt.dao.material.coupon.MaterialCouponDao;
 import cn.rongcapital.mkt.material.coupon.po.MaterialCoupon;
 import cn.rongcapital.mkt.material.coupon.service.CouponSaveService;
 import cn.rongcapital.mkt.material.coupon.vo.in.MaterialCouponInfoIn;
+import cn.rongcapital.mkt.material.coupon.vo.in.MaterialCouponStockTotalIn;
 import cn.rongcapital.mkt.service.MQTopicService;
 import cn.rongcapital.mkt.vo.ActiveMqMessageVO;
 import cn.rongcapital.mkt.vo.BaseOutput;
-
-import com.alibaba.druid.support.json.JSONUtils;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 @Service
 public class CouponSaveServiceImpl implements CouponSaveService {
@@ -64,6 +65,8 @@ public class CouponSaveServiceImpl implements CouponSaveService {
     public static final String PATTERN_STANDARD19H = "yyyy-MM-dd 00:00:00";
 
     private static final String MQ_CODE_SERVICE = "couponCodeSaveTaskImpl";
+    
+    private static final String MQ_CODE_BBX_SERVICE = "CouponCodeSaveTaskBBXImpl";
     
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -309,5 +312,6 @@ public class CouponSaveServiceImpl implements CouponSaveService {
         Date afterDate = new Date(dateStart(dateStr, null).getTime()+(1000*minute));
         return afterDate;
     }
+
   
 }

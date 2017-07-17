@@ -3,12 +3,38 @@
 <mapper namespace="cn.rongcapital.mkt.dao.SmsMaterialDao">
 
 	<!-- 所有查询列 -->
-	<sql id="QUERY_COLUMN_LIST">
+	<sql id="QUERY_COLUMN_LIST_BASE">
 		<![CDATA[ id as id,code as code,name as name,channel_type as channelType,sms_type as smsType,sms_templet_id as smsTempletId,sms_templet_content as smsTempletContent,sms_sign_id as smsSignId,sms_sign_name as smsSignName,status as status,creator as creator,create_time as createTime,update_user as updateUser,update_time as updateTime,use_status as useStatus]]>
 	</sql>
-
+	
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<include refid="QUERY_COLUMN_LIST_BASE"/>
+		<include refid="QUERY_DATA_COLUMN_LIST"/>
+	</sql>
+	<!-- 所有数据权限列 -->
+	<sql id="QUERY_DATA_COLUMN_LIST">
+		<if test="orgId != null"> 
+		<![CDATA[ ,da.org_id as orgId,da.firsthand as firsthand, da.share_type as shareType,da.writeable as writeable,da.from_org_id as fromOrgId, da.from_resource_id as fromResourceId, da.shared as shared,da.da_create_time as daCreateTime]]>
+		</if>
+	</sql>
+	<!-- 组织机构 添加在表名后 -->
+	<sql id="QUERY_ORGANIZATION">
+		<if test="orgId != null"> 
+    		<![CDATA[ INNER JOIN data_auth da ON da.table_name='sms_material' AND da.resource_id = id AND da.org_id = #{orgId} ]]>
+   		   	<if test="firsthand != null "><![CDATA[ AND da.firsthand = #{firsthand}]]></if>
+   		</if>
+	</sql>
 	<!-- 查询列来源表-->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM sms_material]]></sql>
+	<sql id="QUERY_FROM_TABLE">
+		<include refid="QUERY_FROM_TABLE_BASE"/>
+		<include refid="QUERY_ORGANIZATION"/>
+	</sql>
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE_BASE">
+		<![CDATA[FROM sms_material]]>
+	</sql>
+	
 	
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
@@ -90,8 +116,8 @@
 	<!-- 查询,通过主键IN(array) -->
 	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.SmsMaterial" resultType="cn.rongcapital.mkt.po.SmsMaterial">
 		<![CDATA[SELECT]]>
-		<include refid="QUERY_COLUMN_LIST"/>
-		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_COLUMN_LIST_BASE"/>
+		<include refid="QUERY_FROM_TABLE_BASE"/>
 		<![CDATA[WHERE id IN]]>
 		<foreach collection="list" item="id" open="(" separator="," close=")">
 			<![CDATA[#{id}]]>

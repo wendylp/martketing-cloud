@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+import cn.rongcapital.caas.agent.spring.CaasAuth;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeDictionaryService;
 import cn.rongcapital.mkt.material.coupon.service.CouponCodeListService;
@@ -53,6 +54,7 @@ import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponCreateAudienceVO;
 import cn.rongcapital.mkt.material.coupon.vo.MaterialCouponDeleteIn;
 import cn.rongcapital.mkt.material.coupon.vo.in.MaterialCouponCodeVerifyIn;
 import cn.rongcapital.mkt.material.coupon.vo.in.MaterialCouponInfoIn;
+import cn.rongcapital.mkt.material.coupon.vo.in.MaterialCouponStockTotalIn;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeDictionaryListOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.CouponCodeMaxCountOut;
 import cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponListOut;
@@ -491,7 +493,9 @@ public class CouponApi {
 	@POST
     @Path("/mkt.material.coupon.audience.create")
     @Consumes({ MediaType.APPLICATION_JSON })
+	@CaasAuth(res = "#mcca.orgid", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
     public BaseOutput createTargetAudienceGroup(@Valid MaterialCouponCreateAudienceVO mcca) throws JMSException {
         return materialCouponAudienceCreateService.createTargetAudienceGroup(mcca);
     }
+	
 }

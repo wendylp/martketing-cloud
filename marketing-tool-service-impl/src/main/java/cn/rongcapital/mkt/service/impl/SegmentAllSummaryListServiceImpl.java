@@ -46,8 +46,10 @@ public class SegmentAllSummaryListServiceImpl implements SegmentAllSummaryListSe
 	@Override
 	@ReadWrite(type=ReadWriteType.READ)
 	public SegmentSummaryListOut segmentAllSummaryList(String userToken, 
-										   Integer publishStatus,String ver) {
+										   Integer publishStatus,String ver,Integer orgId,Boolean firsthand) {
 		SegmentationHead head = constructSegmentationHead(publishStatus);
+		head.setOrgId(orgId);
+		head.setFirsthand(firsthand);
 		int totalCount = segmentationHeadDao.selectListCount(head);
 		adjustmentSegmentationHead(head, totalCount);		
 		SegmentSummaryListOut segSummaryList = new SegmentSummaryListOut(

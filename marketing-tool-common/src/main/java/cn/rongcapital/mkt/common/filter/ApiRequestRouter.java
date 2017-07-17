@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.rongcapital.mkt.common.constant.ApiConstant;
@@ -91,7 +92,18 @@ public class ApiRequestRouter implements ContainerRequestFilter {
 	   			}
 		   		if(HttpMethod.GET.equals(requestContext.getMethod()) ||(HttpMethod.POST.equals(requestContext.getMethod()))) { 	   			
 		   		    if(redisUserTokenVO.getCode()==0&&StringUtils.isNotEmpty(redisUserTokenVO.getMsg())){
-		   		        requestContext.getUriInfo().getQueryParameters().add(ApiConstant.API_USER_TOKEN, ApiConstant.API_USER_TOKEN_VALUE);
+		   		        if(!url.contains(ApiConstant.EVENT_API_PATH)) {  //event 不适用
+		   		      InputStream   inputStream =requestContext.getEntityStream();
+		   		      if(inputStream!=null)
+		   		      {
+		   		          String temp=IOUtils.toString(inputStream);
+						  //将微信的回调过滤掉，在进行json转换
+						  if(!"".equals(temp) && !temp.contains("<xml>")) {
+						  	requestContext.setProperty(ApiConstant.API_USER_ID, JSON.parseObject(temp).getString(ApiConstant.API_USER_ID));
+						  }
+		   		      }
+		   		        }
+		   		      requestContext.getUriInfo().getQueryParameters().add(ApiConstant.API_USER_TOKEN, ApiConstant.API_USER_TOKEN_VALUE);
 		   		    }
 		   		   
 		   			List<String> pList = requestContext.getUriInfo().getQueryParameters().get(ApiConstant.API_METHOD);
@@ -244,6 +256,7 @@ public class ApiRequestRouter implements ContainerRequestFilter {
     	whiteMapOfMethod.put("mkt.contact.list.info.get","mkt.contact.list.info.get");
     	whiteMapOfMethod.put("mkt.contacts.commit.save","mkt.contacts.commit.save");
     	whiteMapOfMethod.put("mkt.contacts.longurl.get","mkt.contacts.longurl.get");
+    	whiteMapOfMethod.put("mkt.audience.create","mkt.audience.create");
 		return whiteMapOfMethod;   	
     }
 }

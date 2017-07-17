@@ -14,6 +14,8 @@ import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.util.DateUtil;
 import cn.rongcapital.mkt.common.util.UserSessionUtil;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
+import cn.rongcapital.mkt.dataauth.interceptor.DataAuthPut;
+import cn.rongcapital.mkt.dataauth.interceptor.ParamType;
 import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.service.CampaignHeaderCreateService;
 import cn.rongcapital.mkt.vo.BaseOutput;
@@ -26,6 +28,7 @@ public class CampaignHeaderCreateServiceImpl implements CampaignHeaderCreateServ
 	private CampaignHeadDao campaignHeadDao;
 
 	@Override
+	@DataAuthPut(resourceType = "campaign_head", orgId = "#body.orgId", outputResourceId = "code == T(cn.rongcapital.mkt.common.constant.ApiErrorCode).SUCCESS.getCode() && data!=null && data.size()>0?data[0][id]:null", type = ParamType.SpEl)
 	public BaseOutput campaignHeaderCreate(CampaignHeadCreateIn body, SecurityContext securityContext) {
 		CampaignHead t = new CampaignHead();
 		t.setName(body.getCampaignName());

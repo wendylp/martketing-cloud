@@ -15,16 +15,16 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
-
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignDecisionPubFansDao;
-import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CampaignDecisionPubFans;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
+import cn.rongcapital.mkt.service.CampaignDetailService;
+
+import com.alibaba.fastjson.JSON;
 
 @Service
 public class CampaignDecisionWechatSubscribeTask extends CampaignAutoCancelTaskService {
@@ -34,6 +34,8 @@ public class CampaignDecisionWechatSubscribeTask extends CampaignAutoCancelTaskS
 	private CampaignDecisionPubFansDao campaignDecisionPubFansDao;
 	@Autowired
 	private MongoTemplate mongoTemplate;
+	@Autowired
+	private CampaignDetailService campaignDetailService; // 活动统计
 	
 	public void task (TaskSchedule taskSchedule) {
 		//验证当前活动是否已经停止
@@ -78,6 +80,15 @@ public class CampaignDecisionWechatSubscribeTask extends CampaignAutoCancelTaskS
 					segmentListToNextYes.add(segment);
 				}else{
 					segmentListToNextNo.add(segment);
+				}
+				if (campaignHeadId != null && StringUtils.isNotBlank(itemId)) {
+					if (!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {// @since 1.9
+						logger.debug("保存流过节点的数据，活动id：{}， 节点id：{}", campaignHeadId, itemId);
+						insertNodeAudience(campaignHeadId, itemId, segment);
+						// campaignDetailService.saveCampaignMember(campaignHeadId, itemId, segment.getDataId()); // @since 1.9 记录活动统计数据
+					}
+				} else {
+					logger.error("无效是数据，活动id：{}， 节点id：{}", campaignHeadId, itemId);
 				}
 			}
 			if(CollectionUtils.isNotEmpty(campaignSwitchYesList)) {

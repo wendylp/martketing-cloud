@@ -20,6 +20,7 @@ import cn.rongcapital.mkt.dao.SmsTaskHeadDao;
 import cn.rongcapital.mkt.po.SmsTaskBody;
 import cn.rongcapital.mkt.po.SmsTaskHead;
 import cn.rongcapital.mkt.service.MQTopicService;
+import cn.rongcapital.mkt.service.SmsSyncCouponService;
 import cn.rongcapital.mkt.service.SmsTaskHeadService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.out.ColumnsOut;
@@ -49,10 +50,12 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 	private final int SMS_DETAIL_SEND_SUCCESS = 1;
 	// 发送失败
 	private final int SMS_DETAIL_SEND_FAILURE = 2;
+	@Autowired
+	private SmsSyncCouponService smsSyncCouponService;
 
 	@Override
 	public BaseOutput smsTaskHeadList(String userId, Integer index, Integer size, String smsTaskAppType,
-			String smsTaskStatus, String smsTaskName) throws Exception {
+			String smsTaskStatus, String smsTaskName, Integer orgId,Boolean firsthand) throws Exception {
 		BaseOutput output = this.newSuccessBaseOutput();
 		SmsTaskHead smsTaskHeadTemp = new SmsTaskHead();
 		if (StringUtils.isNotEmpty(smsTaskAppType)) {
@@ -69,7 +72,9 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 		smsTaskHeadTemp.setOrderFieldType("DESC");
 		smsTaskHeadTemp.setStartIndex((index - 1) * size);
 		smsTaskHeadTemp.setPageSize(size);
-
+		smsTaskHeadTemp.setOrgId(orgId);
+		smsTaskHeadTemp.setFirsthand(firsthand); 
+		
 		int totalCount = smsTaskHeadDao.selectListCount(smsTaskHeadTemp);
 		output.setTotalCount(totalCount);
 		if (totalCount > 0) {
@@ -226,7 +231,11 @@ public class SmsTaskHeadServiceImpl implements SmsTaskHeadService {
 					Integer audienceGenerateStatus = smsTaskHeadBack.getAudienceGenerateStatus();
 					if (audienceGenerateStatus != null && audienceGenerateStatus != 1
 							&& smsTaskHeadBack.getTotalCoverNum() > 0) {
-						mqTopicService.sendSmsByTaskId(String.valueOf(id));
+						
+						 mqTopicService.sendSmsByTaskId(String.valueOf(id));
+						 ////////////////暂时取消同步优惠券流程start @since 1.10.0
+//						smsSyncCouponService.beforeProcessSmsStatus(String.valueOf(id)); // @since 1.9.0
+						////////////////暂时取消同步优惠券流程end
 					}
 				}
 			}

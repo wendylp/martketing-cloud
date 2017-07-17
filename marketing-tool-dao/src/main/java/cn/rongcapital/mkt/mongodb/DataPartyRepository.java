@@ -17,6 +17,8 @@ public interface  DataPartyRepository extends MongoRepository<DataParty,Long> {
 	 */
 	public List<DataParty> findByMid(String mid);
 	
+    public DataParty findFirstByMemberId(Integer memberId);
+	
 	Page<DataParty> findAll(Pageable pageable);
 
 }

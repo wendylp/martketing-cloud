@@ -9,6 +9,10 @@ public class SegmentationHead extends BaseQuery {
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
+	
+	private Integer orgId;
+	
+	private Boolean firsthand;
 
     private String name;
 
@@ -26,7 +30,23 @@ public class SegmentationHead extends BaseQuery {
 
     private String tagIds;
     
-    public SegmentationHead() {
+    public Boolean getFirsthand() {
+		return firsthand;
+	}
+
+	public void setFirsthand(Boolean firsthand) {
+		this.firsthand = firsthand;
+	}
+
+	public Integer getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(Integer orgId) {
+		this.orgId = orgId;
+	}
+
+	public SegmentationHead() {
     }
     
     public SegmentationHead(Integer startIndex, Integer pageSize) {

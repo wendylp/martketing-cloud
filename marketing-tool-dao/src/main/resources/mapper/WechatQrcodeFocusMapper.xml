@@ -326,4 +326,18 @@
 		WHERE qrcode_id = #{qrcodeId}
 		ORDER BY focus_datetime
 	</select>
+	
+	
+	
+	
+	
+	
+	
+	<select id="getWeChatAudienceInfo"  resultType="cn.rongcapital.mkt.po.WechatQrcodeFocus">
+	  select a.openid as openid,c.id as id from wechat_qrcode_focus a 
+	  join wechat_qrcode b  join audience_list c 
+    on a.qrcode_id=b.id and b.audience_name is not null and c.audience_name=b.audience_name
+    and c.source='微信二维码'
+	</select>
+	
 </mapper>

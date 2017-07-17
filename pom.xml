@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cn.rongcapital.mkt</groupId>
 	<artifactId>marketing-cloud</artifactId>
-	<version>1.8.0</version>
+	<version>1.9.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<build>
 	<plugins>
@@ -14,6 +14,34 @@
 		          <skip>true</skip>
 		        </configuration>
 		      </plugin>
+		<plugin>
+			<artifactId>maven-resources-plugin</artifactId>
+			<version>2.6</version>
+			<executions>
+				<execution>
+					<id>copy-resources</id>
+					<!-- here the phase you need -->
+					<phase>validate</phase>
+					<goals>
+						<goal>copy-resources</goal>
+					</goals>
+					<configuration>
+						<outputDirectory>${basedir}/target/classes</outputDirectory>
+						<resources>
+							<resource>
+								<directory>src/main/resources/${mvnvar.conf.path}</directory>
+								<includes>
+									<include>
+										**/djob-client.properties
+									</include>
+								</includes>
+								<filtering>true</filtering>
+							</resource>
+						</resources>
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
 	</plugins>
 	</build>
 	
@@ -171,7 +199,7 @@
 			<version>1.9.5</version>
 			<scope>test</scope>
 		</dependency>
-	      
+
     </dependencies>
 
 		
@@ -185,7 +213,7 @@
                 <mvnvar.log.path>/rc/log/mkt/dev</mvnvar.log.path>
                 <mvnvar.conf.path>conf_dev</mvnvar.conf.path>
                 <!-- 本机编译 -->
-                <maven.repository.rongcapital.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.rongcapital.url>
+                <maven.repository.rongcapital.url>http://nexus.in.dataengine.com/repository/maven-public/</maven.repository.rongcapital.url>
                 <!-- 服务器编译  -->
                 <!--  
                 <maven.repository.rongcapital.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.rongcapital.url>
@@ -197,7 +225,7 @@
             <properties>
             	<mvnvar.log.path>/rc/log/mkt/test</mvnvar.log.path>
                 <mvnvar.conf.path>conf_test</mvnvar.conf.path>
-                <maven.repository.rongcapital.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.rongcapital.url>
+                <maven.repository.rongcapital.url>http://nexus.in.dataengine.com/repository/maven-public/</maven.repository.rongcapital.url>
             </properties>
         </profile>
         <profile>
@@ -208,6 +236,14 @@
                 <maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
             </properties>
         </profile>
+		<profile>
+			<id>poc</id>
+			<properties>
+				<mvnvar.log.path>/rc/log/mkt/poc</mvnvar.log.path>
+				<mvnvar.conf.path>conf_poc</mvnvar.conf.path>
+				<maven.repository.remote.url>http://nexus.in.dataengine.com/repository/maven-public/</maven.repository.remote.url>
+			</properties>
+		</profile>
         <profile>
             <id>production_gbs</id>
             <properties>
@@ -222,7 +258,7 @@
             <properties>
             	<mvnvar.log.path>/rc/log/mkt/production_sit</mvnvar.log.path>
                 <mvnvar.conf.path>cloud_dev</mvnvar.conf.path>
-                <maven.repository.remote.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.remote.url>
+                <maven.repository.remote.url>http://nexus.in.dataengine.com/repository/maven-public/</maven.repository.remote.url>
             </properties>
         </profile>
         <profile>
@@ -240,7 +276,7 @@
             <properties>
                 <mvnvar.log.path>/rc/log/event/dev</mvnvar.log.path>
                 <mvnvar.conf.path>event_conf_dev</mvnvar.conf.path>
-                <maven.repository.rongcapital.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.rongcapital.url>
+                <maven.repository.rongcapital.url>http://nexus.in.dataengine.com/repository/maven-public</maven.repository.rongcapital.url>
             </properties>
         </profile>
         <profile>
@@ -248,7 +284,7 @@
             <properties>
             	<mvnvar.log.path>/rc/log/event/test</mvnvar.log.path>
                 <mvnvar.conf.path>event_conf_test</mvnvar.conf.path>
-                <maven.repository.rongcapital.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.rongcapital.url>
+                <maven.repository.rongcapital.url>http://nexus.in.dataengine.com/repository/maven-public/</maven.repository.rongcapital.url>
             </properties>
         </profile>
         <profile>
@@ -259,6 +295,14 @@
                 <maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
             </properties>
         </profile>
+		<profile>
+			<id>event_conf_poc</id>
+			<properties>
+				<mvnvar.log.path>/rc/log/event/poc</mvnvar.log.path>
+				<mvnvar.conf.path>event_conf_poc</mvnvar.conf.path>
+				<maven.repository.remote.url>http://nexus.in.dataengine.com/repository/maven-public/</maven.repository.remote.url>
+			</properties>
+		</profile>
         <profile>
             <id>event_production_gbs</id>
             <properties>

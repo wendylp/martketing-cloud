@@ -37,6 +37,7 @@ import cn.rongcapital.mkt.dao.AudienceColumnsDao;
 import cn.rongcapital.mkt.dao.AudienceListDao;
 import cn.rongcapital.mkt.dao.AudienceListPartyMapDao;
 import cn.rongcapital.mkt.dao.SmsTaskTargetAudienceCacheDao;
+import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.AudienceColumns;
 import cn.rongcapital.mkt.po.AudienceCount;
 import cn.rongcapital.mkt.po.AudienceList;
@@ -61,6 +62,9 @@ public class AudienceListServiceImpl implements AudienceListService {
 	@Autowired
 	AudienceListPartyMapDao audienceListPartyMapDao;
 	
+	@Autowired
+	private DataAuthService dataAuthService;
+	
 	private static final String ORDER_BY_FIELD_NAME = "field_order";//排序的字段名
 	
 	private ExecutorService executor = null;
@@ -71,10 +75,12 @@ public class AudienceListServiceImpl implements AudienceListService {
 	
 	@Override
 	@ReadWrite(type=ReadWriteType.READ)
-	public BaseOutput audienceList(String userToken,Integer size,Integer index) {
+	public BaseOutput audienceList(String userToken,Integer size,Integer index,Integer orgId, Boolean firsthand) {
 		
 		AudienceList param = new AudienceList();
 		param.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		param.setOrgId(orgId);
+		param.setFirsthand(firsthand);
 		int totalCount = audienceListDao.selectListCount(param);
 		param.setPageSize(size);
 		param.setStartIndex((index-1)*size);
@@ -146,9 +152,11 @@ public class AudienceListServiceImpl implements AudienceListService {
     }
 
 	@Override
-	public BaseOutput audienceCount(String userToken) {
+	public BaseOutput audienceCount(String userToken, Integer orgId, Boolean firsthand) {
 		AudienceList param = new AudienceList();
 		param.setStatus(ApiConstant.TABLE_DATA_STATUS_VALID);
+		param.setOrgId(orgId);
+		param.setFirsthand(firsthand);
         AudienceCount audienceCount = audienceListDao.selectAudienceCount(param);
         BaseOutput result = new BaseOutput(ApiErrorCode.SUCCESS.getCode(), ApiErrorCode.SUCCESS.getMsg(),
                                                   ApiConstant.INT_ZERO, null);
@@ -160,7 +168,7 @@ public class AudienceListServiceImpl implements AudienceListService {
 
     @Override
     public boolean saveAudienceByMobile(Long taskHeadId, List<String> mobileList,
-                    String audienceName) {
+                    String audienceName, Long orgId) {
         if(taskHeadId == null || CollectionUtils.isEmpty(mobileList) || StringUtils.isEmpty(audienceName)){
             logger.error("parameter is not valid!");
             return false;
@@ -217,6 +225,8 @@ public class AudienceListServiceImpl implements AudienceListService {
         audience.setSource("优惠码");
         audience.setCreateTime(new Date());
         audienceListDao.insert(audience);
+        dataAuthService.put(orgId, "audience_list", audience.getId()); //数据权限插入语句
+    	
         //保存到map
         List<Map<String,Object>> paramInsertLists = new ArrayList<>();
         for(Long Keyid : dataIdlistAll){

@@ -6,7 +6,7 @@ import cn.rongcapital.mkt.vo.BaseOutput;
 
 public interface AudienceListService {
 
-    public BaseOutput audienceList(String userToken, Integer size, Integer index);
+    public BaseOutput audienceList(String userToken, Integer size, Integer index, Integer orgId, Boolean firsthand);
 
     /**
      * mkt.audience.listbyid.get
@@ -22,8 +22,8 @@ public interface AudienceListService {
      */
     public BaseOutput getAudienceByListId(String userToken, Integer audienceId, Integer size, Integer index);
 
-    BaseOutput audienceCount(String userToken);
+    BaseOutput audienceCount(String userToken, Integer orgId, Boolean firsthand);
     
-    boolean saveAudienceByMobile(Long taskHeadId, List<String> mobileList, String audienceName );
+    boolean saveAudienceByMobile(Long taskHeadId, List<String> mobileList, String audienceName ,Long orgId);
 
 }

@@ -4,16 +4,16 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 public class Tag {
 
-	@Field(value = "tag_id")
+	@Field(value = "tagId")
 	private String tagId;
 	
-    @Field(value = "tag_name")
+    @Field(value = "name")
     private String tagName;
     
     @Field(value = "tag_name_eng")
     private String tagNameEng;
 	
-    @Field(value = "tag_value")
+    @Field(value = "value")
     private String tagValue;
 	
 	@Field(value = "tag_group_id")

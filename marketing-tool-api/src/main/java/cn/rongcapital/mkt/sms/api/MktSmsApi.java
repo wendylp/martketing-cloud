@@ -1,8 +1,41 @@
 package cn.rongcapital.mkt.sms.api;
 
+import javax.jms.JMSException;
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+
+import org.hibernate.validator.constraints.NotEmpty;
+import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
+
+import cn.rongcapital.caas.agent.spring.CaasAuth;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
-import cn.rongcapital.mkt.service.*;
+import cn.rongcapital.mkt.common.exception.NoWriteablePermissionException;
+import cn.rongcapital.mkt.service.SmsActivationCreateOrUpdateService;
+import cn.rongcapital.mkt.service.SmsMaterialGetService;
+import cn.rongcapital.mkt.service.SmsMessageSendRecordGetService;
+import cn.rongcapital.mkt.service.SmsMessageSendTestService;
+import cn.rongcapital.mkt.service.SmsSignatureListGetService;
+import cn.rongcapital.mkt.service.SmsSmstempletDelService;
+import cn.rongcapital.mkt.service.SmsSmstempletIdGetService;
+import cn.rongcapital.mkt.service.SmsTargetAudienceListGetService;
+import cn.rongcapital.mkt.service.SmsTaskDeleteService;
 import cn.rongcapital.mkt.vo.BaseOutput;
 import cn.rongcapital.mkt.vo.in.SmsActivationCreateIn;
 import cn.rongcapital.mkt.vo.in.SmsMessageSendTestIn;
@@ -10,22 +43,6 @@ import cn.rongcapital.mkt.vo.in.SmsSmstempletDelIn;
 import cn.rongcapital.mkt.vo.in.SmsTaskDeleteIn;
 import cn.rongcapital.mkt.vo.out.SmsSignatureListOut;
 import cn.rongcapital.mkt.vo.out.SmsTargetAudienceListOut;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
-
-import javax.jms.JMSException;
-import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 
 /**
  * Created by byf on 10/18/16.
@@ -100,9 +117,12 @@ public class MktSmsApi {
 	 */
 	@GET
 	@Path("/mkt.sms.audienct.get")
+	@CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
 	public SmsTargetAudienceListOut smsAudienceListGet(@NotEmpty @QueryParam("user_token") String userToken,
-			@QueryParam("ver") String ver) throws Exception {
-		return smsTargetAudienceListGetService.getSmsTargetAudienceList();
+			@NotNull @QueryParam("org_id") Integer orgId,
+			@QueryParam("ver") String ver,
+			@QueryParam("firsthand") Boolean firsthand) throws Exception {
+		return smsTargetAudienceListGetService.getSmsTargetAudienceList(orgId, firsthand);
 	}
 
 	/**
@@ -114,6 +134,7 @@ public class MktSmsApi {
 	@POST
 	@Path("/mkt.sms.message.createorupdate")
 	@Consumes({ MediaType.APPLICATION_JSON })
+	@CaasAuth(res = "#smsActivationCreateIn.orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)
 	public BaseOutput createOrUpdateSmsMessage(@Valid SmsActivationCreateIn smsActivationCreateIn,
 			@Context SecurityContext securityContext) throws JMSException {
 		return smsActivationCreateOrUpdateService.createOrUpdateSmsActivation(smsActivationCreateIn);
@@ -121,7 +142,7 @@ public class MktSmsApi {
 
 	/**
 	 * 返回当前任务的发送记录列表（可以按照手机号查询）
-	 * 
+	 *
 	 * @param smsTaskHeadId
 	 * @param receiveMobile
 	 * @param index
@@ -141,7 +162,7 @@ public class MktSmsApi {
 
 	/**
 	 * 任务删除接口
-	 * 
+	 *
 	 * @param body
 	 * @param securityContext
 	 * @return
@@ -157,7 +178,7 @@ public class MktSmsApi {
 
 	/**
 	 * 短信白名单测试发送
-	 * 
+	 *
 	 * @param body
 	 * @param securityContext
 	 * @return
@@ -177,12 +198,15 @@ public class MktSmsApi {
 	 *                   ver
 	 * @return: Object
 	 */
-	@GET
-	@Path("/mkt.sms.smsmaterial.count.get")
-	public BaseOutput getSmsMaterialCount(@NotEmpty @QueryParam("user_token") String userToken,
-			@QueryParam("ver") String ver, @NotNull @QueryParam("channel_type") Integer channelType) throws Exception {
-		return smsMaterialGetService.getSmsMaterialCount(channelType);
-	}
+    @GET
+    @Path("/mkt.sms.smsmaterial.count.get")
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+    public BaseOutput getSmsMaterialCount(@NotEmpty @QueryParam("user_token") String userToken,
+            @QueryParam("ver") String ver, @NotNull @QueryParam("org_id") Integer orgId,
+            @QueryParam("firsthand") Boolean firsthand, @NotNull @QueryParam("channel_type") Integer channelType)
+            throws Exception {
+        return smsMaterialGetService.getSmsMaterialCount(orgId, firsthand, channelType);
+    }
 
 	/**
 	 * @功能简述: For testing, will remove later
@@ -197,74 +221,82 @@ public class MktSmsApi {
 		return smsMaterialGetService.getSmsMaterialById(id);
 	}
 
-	/**
-	 * @功能简述: For testing, will remove later
-	 * @param:String userToken,String
-	 *                   ver
-	 * @return: Object
-	 */
-	@GET
-	@Path("/mkt.sms.smsmaterial.getlist")
-	public BaseOutput getSmsMaterial(@NotEmpty @QueryParam("user_token") String userToken,
-			@QueryParam("ver") String ver, @QueryParam("search_word") String searchWord,
-			@QueryParam("channel_type") Integer channelType, @NotNull @QueryParam("sms_type") Integer smsType,
-			@DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
-			@DefaultValue("10") @Min(1) @Max(100) @QueryParam("page_size") Integer size) throws Exception {
-		return smsMaterialGetService.getSmsMaterialListByKeyword(searchWord, channelType, smsType, index, size);
-	}
+    /**
+     * @功能简述: For testing, will remove later
+     * @param:String userToken,String
+     *                   ver
+     * @return: Object
+     */
+    @GET
+    @Path("/mkt.sms.smsmaterial.getlist")
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+    public BaseOutput getSmsMaterial(@NotEmpty @QueryParam("user_token") String userToken,
+                                     @QueryParam("ver") String ver,
+                                     @NotNull @QueryParam("org_id") Integer orgId,
+                                     @QueryParam("firsthand") Boolean firsthand,
+                                     @QueryParam("search_word") String searchWord,
+                                     @QueryParam("channel_type") Integer channelType,
+                                     @NotNull @QueryParam("sms_type") Integer smsType,
+                                     @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
+                                     @DefaultValue("10") @Min(1) @Max(100) @QueryParam("page_size") Integer size) throws Exception {
+        return smsMaterialGetService.getSmsMaterialListByKeyword(orgId, firsthand, searchWord,channelType,smsType,index,size);
+    }
+    
+    /**
 
-	/**
-	 * 短信模板id查询模板
-	 * 
-	 * 接口：mkt.sms.smstemplet.id.get
-	 * 
-	 * @param id
-	 * @return
-	 * @Date 2016-11-11
-	 * @author shuiyangyang
-	 */
-	@GET
-	@Path("/mkt.sms.smstemplet.id.get")
-	public BaseOutput smsSmstempletIdGet(@NotEmpty @QueryParam("user_token") String userToken,
-			@QueryParam("ver") String ver, @NotNull @QueryParam("id") Integer id) throws Exception {
-		return smsSmstempletIdGetService.getSmsSmstempletById(id);
-	}
+     * 短信模板id查询模板
+     *
+     * 接口：mkt.sms.smstemplet.id.get
+     *
+     * @param id
+     * @return
+     * @Date 2016-11-11
+     * @author shuiyangyang
+     */
+    @GET
+    @Path("/mkt.sms.smstemplet.id.get")
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)public BaseOutput smsSmstempletIdGet(@NotEmpty @QueryParam("user_token") String userToken,
+                    @QueryParam("ver") String ver, @NotNull @QueryParam("id") Integer id,  @NotNull @QueryParam("org_id") Integer orgId,@NotNull @QueryParam("firsthand")boolean firsthand)
+                    throws Exception {
+        return smsSmstempletIdGetService.getSmsSmstempletById(id, orgId,firsthand);
+    }
 
-	/**
-	 * 短信模板删除
-	 * 
-	 * @param body
-	 * @param securityContext
-	 * @return
-	 * @author shuiyangyang
-	 * @Date 2016-11-14
-	 */
-	@POST
-	@Path("/mkt.sms.smstemplet.del")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseOutput smsSmstempletDel(@Valid SmsSmstempletDelIn body, @Context SecurityContext securityContext) {
-		return smsSmstempletDelService.delSmsTemple(body, securityContext);
+    /**
+     * 短信模板删除
+     *
+     * @param body
+     * @param securityContext
+     * @return
+     * @author shuiyangyang
+     * @Date 2016-11-14
+     */
+    @POST
+    @Path("/mkt.sms.smstemplet.del")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @CaasAuth(res = "#body.orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_WRITE", type = CaasAuth.Type.SpEl)public BaseOutput smsSmstempletDel(@Valid SmsSmstempletDelIn body,
+                    @Context SecurityContext securityContext) throws NoWriteablePermissionException{
+        return smsSmstempletDelService.delSmsTemple(body, securityContext);
 
-	}
-
-	/**
+    }/**
 	 * @功能简述:查询未占用的短信素材
-	 * 
+	 *
 	 * @param:channelType 短信通道类型
 	 * @param:smsMaterialName 短信素材名称
 	 * @return:BaseOutput
 	 */
-	@GET
-	@Path("/mkt.sms.material.get")
-	public BaseOutput getSmsMaterialByStatus(@NotEmpty @QueryParam("user_token") String userToken,
-			@QueryParam("ver") String ver, @NotNull @QueryParam("channel_type") Integer channelType,
-			@QueryParam("sms_material_name") String smsMaterialName) throws Exception {
-		return smsMaterialGetService.getSmsMaterialByStatus(channelType, smsMaterialName);
-	}
+    @GET
+    @Path("/mkt.sms.material.get")
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+    public BaseOutput getSmsMaterialByStatus(@NotEmpty @QueryParam("user_token") String userToken,
+            @QueryParam("ver") String ver, @NotNull @QueryParam("org_id") Integer orgId,
+            @QueryParam("firsthand") Boolean firsthand, @NotNull @QueryParam("channel_type") Integer channelType,
+            @QueryParam("sms_material_name") String smsMaterialName) throws Exception {
+        return smsMaterialGetService.getSmsMaterialByStatus(orgId, firsthand, channelType, smsMaterialName);
+    }
 
 	/**
 	 * @功能简述:根据素材id查询选中的短信素材是否被占用
-	 * 
+	 *
 	 * @param:smsMaterialId 短信素材id
 	 * @return:BaseOutput
 	 */

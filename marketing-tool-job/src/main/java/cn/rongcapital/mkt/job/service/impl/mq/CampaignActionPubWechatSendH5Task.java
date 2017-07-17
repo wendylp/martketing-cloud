@@ -22,24 +22,23 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
-import com.tagsin.wechat_sdk.App;
-
 import cn.rongcapital.mkt.biz.MessageSendBiz;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignActionSendPubDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
 import cn.rongcapital.mkt.dao.WebchatAuthInfoDao;
 import cn.rongcapital.mkt.dao.WechatRegisterDao;
-import cn.rongcapital.mkt.job.service.base.TaskService;
 import cn.rongcapital.mkt.po.CampaignActionSendPub;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.WebchatAuthInfo;
-
 import cn.rongcapital.mkt.po.WechatRegister;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
+import cn.rongcapital.mkt.service.CampaignDetailService;
+
+import com.alibaba.fastjson.JSON;
+import com.tagsin.wechat_sdk.App;
 
 @Service
 public class CampaignActionPubWechatSendH5Task extends CampaignAutoCancelTaskService {
@@ -60,6 +59,8 @@ public class CampaignActionPubWechatSendH5Task extends CampaignAutoCancelTaskSer
 	
 	@Autowired
 	private MessageSendBiz messageSendBiz;
+	@Autowired
+	private CampaignDetailService campaignDetailService; // 活动统计
 	
 	public void task(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
@@ -131,8 +132,7 @@ public class CampaignActionPubWechatSendH5Task extends CampaignAutoCancelTaskSer
 				Integer dataId = segment.getDataId();
 				//从mongo的主数据表中查询该条id对应的主数据详细信息
 				DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(dataId)), DataParty.class);
-				if(null!=dp && null !=dp.getMdType() &&
-				   dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_POPULATION) {
+				if(null!=dp) {
 					boolean isFans = isPubWechatFans(dp, pubId, null);
 					logger.info("是否是微信公众号粉丝标识------------------------------------>："+isFans);
 					if(isFans) {
@@ -146,19 +146,20 @@ public class CampaignActionPubWechatSendH5Task extends CampaignAutoCancelTaskSer
 					} else {
 						logger.info("不是公众号粉丝,无法发送,"+JSON.toJSONString(segment));
 					}
-				}
+				} else {
+                    logger.info("该主数据信息[{}]Mongo中不存在,无法发送。", JSON.toJSONString(segment));
+                }
+				campaignDetailService.saveCampaignMember(campaignHeadId, itemId, segment.getDataId()); // @since 1.9 记录活动统计数据
 			}
 		}
+		boolean isPubSent=false;
 		if(fansWeixinIds.size() > 0) {
-			//boolean isPubSent = sendPubWechatByH5Interface(pubId,materialId,fansWeixinIds,campaignHeadId,itemId);
-			for(String wxCode : fansWeixinIds){
-				
-				boolean isPubSent = false;
-				if(null != app){
-					isPubSent = messageSendBiz.sendMpnews(app.getAuthAppId(), app.getAuthRefreshToken(), wxCode, materialId);
-				}
-				logger.info("向受众人群粉丝发送微信图文成功标识------------------------------------>："+isPubSent);
-				
+     StringBuffer message =new StringBuffer("{\"touser\":");
+    message.append(JSON.toJSONString(fansWeixinIds)).append(",\"mpnews\":");
+    message.append("{\"media_id\":\"");
+    message.append(materialId).append("\"},\"msgtype\":\"mpnews\",\"send_ignore_reprint\":0}");
+    logger.info("群分消息内容为 :{}",message.toString());
+    isPubSent=messageSendBiz.sendGroup(app.getAuthAppId(), app.getAuthRefreshToken(), message.toString());		
 				if(!isPubSent) {//公众号执行发送动作失败
 					segmentListToNext = null;
 				} else {
@@ -167,11 +168,11 @@ public class CampaignActionPubWechatSendH5Task extends CampaignAutoCancelTaskSer
 	                if (!CollectionUtils.isEmpty(dataPartyIds)) {
 	                    Query query = new Query(Criteria.where("mid").in(dataPartyIds));
 	                    Update update = new Update();
+	                    //update.
 	                    update.inc("receiveCount", Integer.valueOf(1));
 	                    mongoTemplate.updateMulti(query, update, DataParty.class);
 	                }
 				}
-			}
 		}
 		if(CollectionUtils.isNotEmpty(campaignEndsList) && CollectionUtils.isNotEmpty(segmentListToNext)) {
 			for(CampaignSwitch cs:campaignEndsList) {

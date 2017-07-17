@@ -15,7 +15,7 @@ public interface SmsTaskHeadService {
 	 * @param smsTaskName
 	 * @return
 	 */
-	public BaseOutput smsTaskHeadList(String userId, Integer index, Integer size, String smsTaskAppType,String smsTaskStatus, String smsTaskName) throws Exception;
+	public BaseOutput smsTaskHeadList(String userId, Integer index, Integer size, String smsTaskAppType,String smsTaskStatus, String smsTaskName, Integer orgId,Boolean firsthand) throws Exception;
 	
 	/**
 	 * 根据任务ID发布任务

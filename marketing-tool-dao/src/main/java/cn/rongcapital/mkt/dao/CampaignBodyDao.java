@@ -10,10 +10,10 @@
 
 package cn.rongcapital.mkt.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.rongcapital.mkt.dao.base.BaseDao;
 import cn.rongcapital.mkt.po.CampaignBody;
-
-import java.util.List;
 
 public interface CampaignBodyDao extends BaseDao<CampaignBody>{
 
@@ -43,7 +43,7 @@ public interface CampaignBodyDao extends BaseDao<CampaignBody>{
 	 * @param 
 	 * @return int
 	 */
-	int selectCampaignAudienceCount();
+	int selectCampaignAudienceCount(@Param("orgId") Integer orgId, @Param("firsthand") Boolean firsthand);
 	
 	int deleteByCampaignHeadId(int campaignHeadId);
 

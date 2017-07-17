@@ -1149,6 +1149,7 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
 			String tagType = tagIn.getTag_type();
 			if (TagIn.TAG_TYPE_SYS.equals(tagType)) {
 				id += ":" + tagIn.getTag_name();
+				id += ":" + tagIn.getTag_value();
 			}
 
 			tagIdList.add(id);
@@ -1403,6 +1404,11 @@ public class CampaignBodyCreateServiceImpl implements CampaignBodyCreateService 
         campaignEventMap.setEventId(campaignTriggerEvent.getEventId());
         campaignEventMap.setEventCode(campaignTriggerEvent.getEventCode());
         campaignEventMap.setEventName(campaignTriggerEvent.getEventName());
+        if(ApiConstant.CARING_EVENT_CODE.equals(campaignTriggerEvent.getEventCode()) && campaignTriggerEvent.getCaringTime() == null){
+        	campaignEventMap.setCaringTime(ApiConstant.CARING_EVENT_TIME);
+        }else{
+        	campaignEventMap.setCaringTime(campaignTriggerEvent.getCaringTime());
+        }
         campaignEventMap.setCreateTime(new Date());
         return campaignEventMap;
     }

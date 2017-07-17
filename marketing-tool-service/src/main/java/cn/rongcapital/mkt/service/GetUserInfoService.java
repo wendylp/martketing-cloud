@@ -1,6 +1,7 @@
 package cn.rongcapital.mkt.service;
 
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.UserInfoIn;
 
 public interface GetUserInfoService {
     
@@ -13,5 +14,9 @@ public interface GetUserInfoService {
      * @throws
      */
      BaseOutput getUserInfo(String userId);
+     
+     
+     
+     BaseOutput getUserMappInfo(UserInfoIn userInfo);
 
 }

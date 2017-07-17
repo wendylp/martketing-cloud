@@ -58,7 +58,7 @@ public class MQTopicServiceImpl implements MQTopicService {
     private static final String MQ_CUSTOM_TAG_UPDATE_PARENT_TOPIC = "customTagUpdateParentTopic";
 	private static final String MQ_CUSTOM_TAG_NAME_EDIT_TOPIC = "customTagNameEditTopic";
 	private static final String MQ_CUSTOM_TAG_DELETE_TOPIC = "customTagDeleteTopic";
-
+	
 	@Value("${spring.activemq.broker-url}")
 	private String providerUrl;
 

@@ -74,7 +74,7 @@ public class SmsTargetAudienceListGetServiceTest {
     @Test
     public void testSmsSignatrueListGetService()	{
         //执行待测的service方法getSmsSignatureList()
-        SmsTargetAudienceListOut smsTargetAudienceListOut=smsTargetAudienceListGetService.getSmsTargetAudienceList();
+        SmsTargetAudienceListOut smsTargetAudienceListOut=smsTargetAudienceListGetService.getSmsTargetAudienceList(16, true);
 
         //断言判断结果正确
         //判断细分人群的结果

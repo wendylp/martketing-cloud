@@ -3,7 +3,7 @@
 	<parent>
     	<groupId>cn.rongcapital.mkt</groupId>
     	<artifactId>marketing-cloud</artifactId>
-    	<version>1.8.0</version>
+    	<version>1.9.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>marketing-tool-service</artifactId>
 	<packaging>jar</packaging>
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>cn.rongcapital.mc.datatag</groupId>
             <artifactId>mc-data-tag-agent-temp</artifactId>
-            <version>1.9.4-SNAPSHOT</version>
+            <version>1.9.9-SNAPSHOT</version>
         </dependency>
 	</dependencies>
 

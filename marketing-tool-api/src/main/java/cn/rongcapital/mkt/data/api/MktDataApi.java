@@ -41,8 +41,10 @@ import org.jboss.resteasy.plugins.validation.hibernate.ValidateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import cn.rongcapital.caas.agent.spring.CaasAuth;
 import cn.rongcapital.mc.datatag.agent.DataTagAgent;
 import cn.rongcapital.mc.datatag.agent.DataType;
 import cn.rongcapital.mc.datatag.agent.dto.Column;
@@ -52,9 +54,11 @@ import cn.rongcapital.mc.datatag.agent.dto.DataTypeCount;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.common.constant.ApiErrorCode;
 import cn.rongcapital.mkt.common.enums.FileNameEnum;
+import cn.rongcapital.mkt.dataauth.service.OrganizationService;
 import cn.rongcapital.mkt.po.ContactWay;
 import cn.rongcapital.mkt.po.TaskRunLog;
 import cn.rongcapital.mkt.service.AudienceAllListService;
+import cn.rongcapital.mkt.service.AudienceCreateService;
 import cn.rongcapital.mkt.service.AudienceIdListService;
 import cn.rongcapital.mkt.service.AudienceListDeleteService;
 import cn.rongcapital.mkt.service.AudienceListService;
@@ -93,6 +97,7 @@ import cn.rongcapital.mkt.service.MigrationFileUploadUrlService;
 import cn.rongcapital.mkt.service.TagGetCustomService;
 import cn.rongcapital.mkt.service.UploadFileService;
 import cn.rongcapital.mkt.vo.BaseOutput;
+import cn.rongcapital.mkt.vo.in.AudienceCreateIn;
 import cn.rongcapital.mkt.vo.in.AudienceListDeleteIn;
 import cn.rongcapital.mkt.vo.in.CustomizeViewCheckboxIn;
 import cn.rongcapital.mkt.vo.in.DataGetFilterAudiencesIn;
@@ -100,6 +105,7 @@ import cn.rongcapital.mkt.vo.in.DataMainBaseInfoUpdateIn;
 import cn.rongcapital.mkt.vo.in.DataMainSearchIn;
 import cn.rongcapital.mkt.vo.in.DataUpdateMainSegmenttagIn;
 import cn.rongcapital.mkt.vo.in.FileTagUpdateIn;
+import cn.rongcapital.mkt.vo.in.UserInfoIn;
 import cn.rongcapital.mkt.vo.out.DataGetFilterContactwayOut;
 import cn.rongcapital.mkt.vo.out.DataGetFilterRecentTaskOut;
 import cn.rongcapital.mkt.vo.out.DataGetMainCountOut;
@@ -230,18 +236,27 @@ public class MktDataApi {
     @Autowired(required = false)
     private DataTagAgent dataTagAgent;
 
-    /**
-     * @功能简述: 获取某条主数据详细信息
-     * @param userToken
-     * @param contactId
-     * @return BaseOutput
-     */
-    @GET
-    @Path("/mkt.data.main.basicinfo.get")
-    public BaseOutput getPartyBehaviorByCondition(@NotEmpty @QueryParam("user_token") String userToken,
-            @NotNull @QueryParam("contact_id") Integer contactId, @NotNull @QueryParam("md_type") Integer dataType) {
-        return mainBasicInfoGetService.getMainBasicInfo(contactId, dataType, userToken);
-    }
+    @Autowired
+    private AudienceCreateService audienceCreateService;
+
+	@Autowired
+	private OrganizationService organizationService;
+
+
+	@Autowired
+    private Environment env;
+	/**
+	 * @功能简述: 获取某条主数据详细信息
+	 * @param userToken
+	 * @param contactId
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.data.main.basicinfo.get")
+	public BaseOutput getPartyBehaviorByCondition(@NotEmpty @QueryParam("user_token") String userToken,
+			@NotNull @QueryParam("contact_id") Integer contactId, @NotNull @QueryParam("md_type") Integer dataType) {
+		return mainBasicInfoGetService.getMainBasicInfo(contactId, dataType, userToken);
+	}
 
     /**
      * @功能简述: 获取文件接入的总览信息
@@ -341,11 +356,13 @@ public class MktDataApi {
     public Object getUnqualifiedCount(@NotEmpty @QueryParam("method") String method,
             @NotEmpty @QueryParam("user_token") String userToken, @NotEmpty @QueryParam("ver") String ver) {
         DataTotal dataTotal = dataTagAgent.statistic();
+        logger.info("Got statistic result {}", dataTotal);
         DataGetMainCountOut result = new DataGetMainCountOut(ApiErrorCode.SUCCESS.getCode(),
                 ApiErrorCode.SUCCESS.getMsg(), ApiConstant.INT_ZERO, null);
         result.setDataSourceCount(dataTotal.getData_source_count());
         result.getData().addAll(dataTotal.getData());
         result.setTotal(result.getData().size());
+        logger.info("End statistic");
         return Response.ok().entity(result).build();
         //return dataGetMainCountService.getMainCount(method, userToken, ver);
     }
@@ -528,6 +545,7 @@ public class MktDataApi {
         result.setTotal(result.getData().size());
         result.setCountList(mapList);
         result.getColNames().addAll(dataResult.getCol_names());
+        result.setMdType(dataGetFilterAudiencesIn.getMdType());
         return Response.ok().entity(result).build();
 
         //                return dataGetFilterAudiencesService.getFilterAudiences(dataGetFilterAudiencesIn.getMethod(),
@@ -669,10 +687,24 @@ public class MktDataApi {
      */
     @GET
     @Path("/mkt.audience.list.get")
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
     public BaseOutput audienceList(@NotEmpty @QueryParam("user_token") String userToken,
+    		@NotNull @QueryParam("org_id") Integer orgId,
+            @QueryParam("firsthand") Boolean firsthand,
             @DefaultValue("1") @Min(1) @QueryParam("index") Integer index,
             @DefaultValue("10") @Min(1) @Max(100) @QueryParam("size") Integer size) {
-        return audienceListService.audienceList(userToken, size, index);
+        return audienceListService.audienceList(userToken, size, index, orgId, firsthand);
+    }
+
+    /**
+     * @功能简述: 创建固定人群(第三方调用 )
+     * @param: in
+     * @return: Object
+     */
+    @POST
+    @Path("/mkt.audience.create")
+    public BaseOutput audienceCreate(@NotNull @Valid AudienceCreateIn in) {
+        return audienceCreateService.createAudience(in);
     }
 
     /**
@@ -683,8 +715,9 @@ public class MktDataApi {
      */
     @GET
     @Path("/mkt.audience.all.list.get")
-    public BaseOutput audienceAllList(@NotEmpty @QueryParam("user_token") String userToken) {
-        return audienceAllListService.audienceAllList(userToken);
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+    public BaseOutput audienceAllList(@NotEmpty @QueryParam("user_token") String userToken, @NotNull @QueryParam("org_id") Integer orgId, @QueryParam("firsthand") Boolean firsthand) {
+        return audienceAllListService.audienceAllList(userToken, orgId, firsthand);
     }
 
     /**
@@ -694,8 +727,9 @@ public class MktDataApi {
      */
     @GET
     @Path("/mkt.audience.count.get")
-    public BaseOutput audienceCount(@NotEmpty @QueryParam("user_token") String userToken) {
-        return audienceListService.audienceCount(userToken);
+    @CaasAuth(res = "#orgId", oper = "T(cn.rongcapital.mkt.common.constant.ApiConstant).CAAS_READ", type = CaasAuth.Type.SpEl)
+    public BaseOutput audienceCount(@NotEmpty @QueryParam("user_token") String userToken, @NotNull @QueryParam("org_id") Integer orgId, @QueryParam("firsthand") Boolean firsthand) {
+        return audienceListService.audienceCount(userToken, orgId, firsthand);
     }
 
     /**
@@ -866,7 +900,7 @@ public class MktDataApi {
     /**
      * @功能简述: 下载某个主数据分类的数据
      * @return BaseOutput
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException
      */
     @GET
     @Path("/mkt.data.main.list.download")
@@ -953,4 +987,47 @@ public class MktDataApi {
 
         return audienceSearchDownloadService.searchData(audience_id);
     }
+
+	/**
+	 * 获取组织结构列表
+	 * @param id
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.organization.child.list")
+	public BaseOutput getChildOrgListById(@NotNull @QueryParam("id") Long id) {
+
+		return organizationService.getOrgTreeByIdForUI(id);
+	}
+
+
+	/**
+	 * 获取组织结构列表
+	 * @param id
+	 * @return BaseOutput
+	 */
+	@GET
+	@Path("/mkt.organization.child.brother.list")
+	public BaseOutput getChildAndBrotherOrgListById(@NotNull @QueryParam("id") Long id) {
+		return organizationService.getChildTreeAndBrotherListById(id);
+	}
+
+	    /**
+	     *   根据user_id,user_code 查询
+	         * @author liuhaizhan
+	         * @功能简述:
+	         * @param
+	         * @return
+	     */
+	    @POST
+	    @Path("/mkt.data.userinfo.mapping")
+	    @Consumes({ MediaType.APPLICATION_JSON })
+	    public BaseOutput getUserMappInfo(@Valid UserInfoIn userofIn)
+	    {
+	        Integer orgid=Integer.valueOf(env.getProperty("default.orgid"));
+	        if(userofIn.getOrgId() ==null){
+	        	userofIn.setOrgId(orgid);
+	        }
+	        return userInfoService.getUserMappInfo(userofIn);
+	    }
 }

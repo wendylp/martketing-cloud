@@ -6,5 +6,5 @@ import cn.rongcapital.mkt.vo.out.SmsTargetAudienceListOut;
  * Created by byf on 10/18/16.
  */
 public interface SmsTargetAudienceListGetService {
-    SmsTargetAudienceListOut getSmsTargetAudienceList();
+    SmsTargetAudienceListOut getSmsTargetAudienceList(Integer orgId, Boolean firsthand);
 }

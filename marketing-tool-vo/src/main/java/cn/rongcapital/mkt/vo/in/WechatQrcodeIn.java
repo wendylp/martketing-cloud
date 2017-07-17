@@ -41,9 +41,31 @@ public class WechatQrcodeIn extends BaseInput{
     
     private String qrcode_url;
  
+   
+
     private String ticket;
     
     private List<CustomTagIn> customTagList;
+    
+    private Long org_id;  //新增org_id
+    
+    public Long getOrg_id() {
+        return org_id;
+    }
+
+    public void setOrg_id(Long org_id) {
+        this.org_id = org_id;
+    }
+
+    private String firsthand;// 是否是直接权限
+
+    public String getFirsthand() {
+        return firsthand;
+    }
+
+    public void setFirsthand(String firsthand) {
+        this.firsthand = firsthand;
+    }
 
     @JsonProperty("wx_name")
 	public String getWx_name() {

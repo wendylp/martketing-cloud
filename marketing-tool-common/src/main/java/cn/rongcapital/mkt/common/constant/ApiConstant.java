@@ -67,7 +67,7 @@ public class ApiConstant {
 	public static final String COUPON_FILE_UPLOAD_URL = "mkt.materiel.coupon.file.upload";   //文件上传地址
 	
 	public static final String USERSOURCE_FILE_UPLOAD = "mkt.usersource.file.upload";
-	
+
 	public static final int WECHAT_ASSET_SERVER_NUMBER = 0;
 	public static final int WECHAT_ASSET_PERSONAL_NUMBER = 1;
 	public static final int WECHAT_ASSET_SUBSCRIPTION_NUMBER=2;
@@ -121,7 +121,7 @@ public class ApiConstant {
 	public static final byte CAMPAIGN_ITEM_ACTION_SEND_SMS = 6;//发送短信
 	public static final byte CAMPAIGN_ITEM_ACTION_SEND_PRVT_INFO = 7;//发送个人号信息
 	public static final byte CAMPAIGN_ITEM_ACTION_SEND_H5 = 8;//发送H5活动
-	
+
 	public static final byte TASK_STATUS_VALID = 0;//任务可运行
 	public static final byte TASK_STATUS_INVALID = 1;//任务不可运行
 	
@@ -418,7 +418,7 @@ public class ApiConstant {
      *自定义标签未分类对应的分类ID
      */
     public static final String CUSTOM_TAG_DEFAULT_CATEGORY_ID = "yr1oorLSpl1484637382955";
-    
+
     /**
      * 物料类型-微信
      */
@@ -429,9 +429,35 @@ public class ApiConstant {
 	 */
 	public static final Integer SMS_TASK_PROCESS_STATUS_WRITING = 0; // 任务状态 0：未处理 1：已处理
 	public static final Integer SMS_TASK_PROCESS_STATUS_DONE = 1; // 任务状态 0：未处理 1：已处理
-    
+
     /**
      * 用户来源
      */
     public static final long USER_SOURCE_AVAILABLE = 1; // 是否启用  0：不启用 1：启用
+
+    /**
+     * 生日关怀CODE
+     */
+    public static final String CARING_EVENT_CODE = "campaign_event_map";
+
+    public static final Integer CARING_EVENT_TIME = 7;
+
+    /*
+     *CAAS_读取
+     */
+    public static final String CAAS_READ = "READ";
+    /*
+     *CAAS_写入
+     */
+    public static final String CAAS_WRITE = "WRITE";
+
+    /*
+     *CAAS_下发
+     */
+    public static final String CAAS_SHARE = "SHARE";
+
+    /*
+     *CAAS_分享
+     */
+    public static final String CAAS_CLONE = "CLONE";
 }

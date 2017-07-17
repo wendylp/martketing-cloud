@@ -6,6 +6,12 @@
 	<sql id="QUERY_COLUMN_LIST">
 		<![CDATA[ id as id, campaign_head_id as campaignHeadId, sms_task_name as smsTaskName,sms_task_signature_id as smsTaskSignatureId,sms_task_material_id as smsTaskMaterialId,sms_task_material_content as smsTaskMaterialContent,sms_task_send_type as smsTaskSendType,sms_task_app_type as smsTaskAppType,sms_task_status as smsTaskStatus,status as status,create_time as createTime,update_time as updateTime,total_cover_num as totalCoverNum,sending_success_num as sendingSuccessNum,waiting_num as waitingNum,sending_fail_num as sendingFailNum,audience_generate_status as audienceGenerateStatus,sms_task_code as smsTaskCode,sms_task_batch as smsTaskBatch,sms_task_type as smsTaskType, sms_task_trigger as smsTaskTrigger]]>
 	</sql>
+	<!-- 所有数据权限列 -->
+	<sql id="QUERY_DATA_COLUMN_LIST">
+		<if test="orgId != null"> 
+		<![CDATA[ ,da.org_id as orgId,da.firsthand as firsthand, da.share_type as shareType,da.writeable as writeable,da.from_org_id as fromOrgId, da.from_resource_id as fromResourceId, da.shared as shared,da.da_create_time as daCreateTime]]>
+		</if>
+	</sql>
 
 	<!-- 查询列来源表-->
 	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM sms_task_head]]></sql>
@@ -41,6 +47,14 @@
 	<sql id="QUERY_ORDER_LIMIT_CONDTION">
 		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
 		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+	
+	<!-- 组织机构 添加在表名后 -->
+	<sql id="QUERY_ORGANIZATION">
+		<if test="orgId != null"> 
+    		<![CDATA[ INNER JOIN data_auth da ON da.table_name='sms_task_head' AND da.resource_id = id AND da.org_id = #{orgId} ]]>
+   		   	<if test="firsthand != null "><![CDATA[ AND da.firsthand = #{firsthand}]]></if>
+   		</if>
 	</sql>
 
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
@@ -120,6 +134,7 @@
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_ORGANIZATION"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
 	</select>
@@ -146,6 +161,7 @@
 	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.SmsTaskHead" resultType="int">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_ORGANIZATION"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
 	

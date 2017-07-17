@@ -24,13 +24,15 @@ import org.springframework.stereotype.Service;
 import cn.rongcapital.mkt.common.constant.ApiConstant;
 import cn.rongcapital.mkt.dao.CampaignActionSendSmsDao;
 import cn.rongcapital.mkt.dao.DataPartyDao;
-import cn.rongcapital.mkt.job.service.base.TaskService;
+import cn.rongcapital.mkt.dao.dataauth.DataAuthMapper;
+import cn.rongcapital.mkt.dataauth.service.DataAuthService;
 import cn.rongcapital.mkt.po.CampaignActionSendSms;
 import cn.rongcapital.mkt.po.CampaignSwitch;
 import cn.rongcapital.mkt.po.TaskSchedule;
 import cn.rongcapital.mkt.po.mongodb.DataParty;
 import cn.rongcapital.mkt.po.mongodb.Segment;
 import cn.rongcapital.mkt.service.CampaignActionSendSmsService;
+import cn.rongcapital.mkt.service.CampaignDetailService;
 import cn.rongcapital.mkt.service.SmsActivationCreateOrUpdateService;
 import cn.rongcapital.mkt.vo.in.SmsActivationCreateIn;
 
@@ -53,8 +55,14 @@ public class CampaignActionSendSmsTask extends CampaignAutoCancelTaskService  {
 	
 	@Autowired
 	private SmsActivationCreateOrUpdateService smsActivationCreateOrUpdateService;
-	
-	
+
+    @Autowired
+    private DataAuthMapper dataAuthMapper;
+    @Autowired
+    private DataAuthService service;
+	@Autowired
+	private CampaignDetailService campaignDetailService;
+
 	public void task(TaskSchedule taskSchedule) {
 		Integer campaignHeadId = taskSchedule.getCampaignHeadId();
 		String itemId = taskSchedule.getCampaignItemId();
@@ -121,11 +129,11 @@ public class CampaignActionSendSmsTask extends CampaignAutoCancelTaskService  {
 		for(Segment segment:segmentList) {
 			if(!checkNodeAudienceExist(campaignHeadId, itemId, segment.getDataId())) {
 				insertNodeAudience(campaignHeadId, itemId, segment);
+				campaignDetailService.saveCampaignMember(campaignHeadId, itemId, segment.getDataId()); // @since 1.9 记录活动统计数据
 				Integer dataId = segment.getDataId();
 				//从mongo的主数据表中查询该条id对应的主数据详细信息
 				DataParty dp = mongoTemplate.findOne(new Query(Criteria.where("mid").is(dataId)), DataParty.class);
-				if(null!=dp && null !=dp.getMdType() &&
-				    dp.getMdType() == ApiConstant.DATA_PARTY_MD_TYPE_POPULATION) {
+				if(null!=dp) {
 					Integer mid = dp.getMid();
 					cn.rongcapital.mkt.po.DataParty dataParty = new cn.rongcapital.mkt.po.DataParty();
 					dataParty.setId(mid);
@@ -133,8 +141,12 @@ public class CampaignActionSendSmsTask extends CampaignAutoCancelTaskService  {
 					if(CollectionUtils.isNotEmpty(dataPartyList)){
 						segmentListToNext.add(segment);//数据放入向后面节点传递的list里
 						dataPartyIds.add(dp.getMid());	
-					}
-				}
+                    } else {
+                        logger.info("该主数据信息[{}]Mysql中不存在,无法发送。", JSON.toJSONString(segment));
+                    }
+                } else {
+                    logger.info("该主数据信息[{}]Mongo中不存在,无法发送。", JSON.toJSONString(segment));
+                }
 			}
 		}
 		

@@ -14,6 +14,8 @@ import cn.rongcapital.mkt.common.jedis.JedisClient;
 import cn.rongcapital.mkt.common.jedis.JedisException;
 import cn.rongcapital.mkt.dao.CampaignHeadDao;
 import cn.rongcapital.mkt.dao.SmsMaterialDao;
+import cn.rongcapital.mkt.dao.dataauth.DataAuthMapper;
+import cn.rongcapital.mkt.dataauth.po.DataAuth;
 import cn.rongcapital.mkt.po.CampaignActionSendSms;
 import cn.rongcapital.mkt.po.CampaignHead;
 import cn.rongcapital.mkt.po.SmsMaterial;
@@ -34,7 +36,8 @@ public class CampaignActionSendSmsServiceImpl implements CampaignActionSendSmsSe
 	
 	public static final String SMS_TASK_NAME="（活动）";
 	
-	
+	@Autowired
+    private DataAuthMapper dataAuthMapper;
 	
 	@Autowired
 	public SmsMaterialDao smsMaterialDao;
@@ -75,6 +78,12 @@ public class CampaignActionSendSmsServiceImpl implements CampaignActionSendSmsSe
 			smsActivationCreateIn.setSmsTargetAudienceInArrayList(smsTargetAudienceInArrayList);
 		}
 		smsActivationCreateIn.setDataPartyIds(dataPartyIds);
+        List<DataAuth> owners = dataAuthMapper.selectOwnerByResouceId("campaign_head", campaignHeadId);
+        Long orgId = 0L;
+        if (CollectionUtils.isNotEmpty(owners)) {
+            orgId = owners.get(0).getOrgId();
+        }
+        smsActivationCreateIn.setOrgId(orgId);
 		return smsActivationCreateIn;
 	}
 

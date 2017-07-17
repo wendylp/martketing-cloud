@@ -181,6 +181,25 @@
 			<![CDATA[#{id}]]>
 		</foreach>
 	</select>
+	
+	
+	<!-- 新增根据微信会员openid关系查询 data_population中的keyId -->
+	
+	<select id="getPopulationKeyId" parameterType="java.util.List" resultType="java.lang.Integer">
+	  select 
+	    b.keyid 
+	  from (select keyid from wechat_member where selected=1 and wx_code in 
+	  <foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	  ) a join (select id,keyid from data_population where status=2 and source='公众号') b
+	  on a.keyid=b.id
+	
+	</select>
+	
+	
+	
+	
 
 	<!-- 查询,通过条件 -->
 	<select id="selectList" parameterType="cn.rongcapital.mkt.po.WechatMember" resultType="cn.rongcapital.mkt.po.WechatMember">

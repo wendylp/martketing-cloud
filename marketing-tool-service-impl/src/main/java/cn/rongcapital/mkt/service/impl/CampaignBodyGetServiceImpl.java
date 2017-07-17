@@ -580,6 +580,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 										|| TagOut.TAG_TYPE_CUSTOM.endsWith(tagTypeList.get(i));
 					String tagType = isCustomTag ? TagOut.TAG_TYPE_CUSTOM : TagOut.TAG_TYPE_SYS;
 					String tagName = null;
+					String tagValue = null;
 					if (isCustomTag) {
 						Query query = new Query(Criteria.where("custom_tag_id").is(tagIdStr));
 						CustomTag targetTag = mongoTemplate.findOne(query,CustomTag.class);
@@ -588,12 +589,14 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
 						String[] infos = tagIdStr.split(":");
 						tagIdStr = infos[0];
 						tagName = infos[1];
+						tagValue = infos[2];
 					}
 					Log.info("--------------" + tagName);
 										
 					TagOut tagOut = new TagOut();
 					tagOut.setTagId(tagIdStr);
 					tagOut.setTagName(tagName);
+					tagOut.setTagValue(tagValue);
 					tagOut.setTagType(tagType);
 					tags.add(tagOut);
 				}
@@ -864,6 +867,7 @@ public class CampaignBodyGetServiceImpl implements CampaignBodyGetService {
             campaignTriggerEventOut.setName(campaignTriggerTimer.getName());
             campaignTriggerEventOut.setEventCode(campaignTriggerTimer.getEventCode());
             campaignTriggerEventOut.setEventName(campaignTriggerTimer.getEventName());
+            campaignTriggerEventOut.setCaringTime(campaignTriggerTimer.getCaringTime());
         }
         return campaignTriggerEventOut;
     }

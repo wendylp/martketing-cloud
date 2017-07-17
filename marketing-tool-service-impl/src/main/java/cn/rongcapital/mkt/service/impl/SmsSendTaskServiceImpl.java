@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
@@ -45,7 +46,9 @@ import cn.rongcapital.mkt.service.impl.vo.SmsStatusResponse;
 @Service
 public class SmsSendTaskServiceImpl implements TaskService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	private Integer SMS_SEND_BACTH_COUNT = 500;
+	
+	@Value("${sms.batch.count}")
+	private Integer SMS_SEND_BACTH_COUNT;
 	private final Integer SMS_MATERIEL_TYPE = 0;
 
 	private final static Byte SMS_TYPE_DYNAMICS = 1;
@@ -71,12 +74,15 @@ public class SmsSendTaskServiceImpl implements TaskService {
 	@Autowired
 	private SmsMaterialDao smsMaterialDao;
 
-	private ResteasyClient client = new ResteasyClientBuilder().build();
-
 	@Value("${sms.url.service}")
 	private String smsUrlService;
 
 	private SmsApi smsApi;
+	
+	private ResteasyClient client = new ResteasyClientBuilder()//
+			.connectionPoolSize(1000)//
+			.maxPooledPerRoute(1000)//
+			.socketTimeout(30000, TimeUnit.MILLISECONDS).build();
 
 	@Override
 	public void task(Integer taskId) {
@@ -122,7 +128,7 @@ public class SmsSendTaskServiceImpl implements TaskService {
 			List<SmsTaskDetail> smsDetailList = smsTaskDetailDao.selectList(smsDetail);
 			if (CollectionUtils.isEmpty(smsDetailList)) {
 				logger.warn("no send message,taskId is: {}", jsonMessage);
-				return;
+				// return;
 			}
 
 			Integer smsCount = smsDetailList.size();
@@ -133,6 +139,8 @@ public class SmsSendTaskServiceImpl implements TaskService {
 			Map<Long, String> SmsBatchMap = new LinkedHashMap<Long, String>();
 			List<Sms> smsList = new ArrayList<Sms>();
 			SmsStatusResponse response = null;
+			int i = 0;
+			logger.info("SMS_SEND_BACTH_COUNT :{}",SMS_SEND_BACTH_COUNT);
 			for (SmsTaskDetail detail : smsDetailList) {
 
 				detail.setSendStatus(ApiConstant.SMS_TASK_PROCESS_STATUS_DONE);
@@ -148,8 +156,10 @@ public class SmsSendTaskServiceImpl implements TaskService {
 				// logger.info("receive_mobile is {}, send_message is {} id is {}", receiveMobile, sendMessage, id);
 
 				SmsBatchMap.put(id, receiveMobile);
-
+				
 				if (count >= SMS_SEND_BACTH_COUNT) {
+					i++;
+					logger.info("第 {} 次",i);
 					// 调用发送API接口（批量）
 					try {
 						response = this.smsApi.sendMultSms(smsList);
@@ -157,7 +167,7 @@ public class SmsSendTaskServiceImpl implements TaskService {
 						logger.error("短信服务器连接失败", e);
 						response = new SmsStatusResponse("-1", "短信服务器连接失败");
 					}
-
+					logger.info("短信返回状态码：{}，消息内容：{}，response：{} ", response.getErrorCode(), response.getErrorMsg(), response);
 					// Map<Long, Double> sendSmsResult = SmsSendUtilByIncake.sendSms(SmsBatchMap);
 					// 统计一批短信的成功和失败的个数,根据短信API判断状态回写sms_task_detail_state表和head表
 					updateSmsDetailState(response, SmsBatchMap, smsHead);
@@ -165,7 +175,7 @@ public class SmsSendTaskServiceImpl implements TaskService {
 					smsTaskHeadDao.updateById(smsHead);
 					count = 0;
 					SmsBatchMap.clear();
-					continue;
+					smsList.clear();
 				}
 			}
 			// Map<String, SmsResponse> rs = null;
@@ -184,6 +194,8 @@ public class SmsSendTaskServiceImpl implements TaskService {
 					response = new SmsStatusResponse("-1", "短信服务器连接失败");
 				}
 			}
+
+			logger.info("短信返回状态码：{}，消息内容：{}，response：{} ", response.getErrorCode(), response.getErrorMsg(), response);
 
 			// 处理不满一批的短信
 			updateSmsDetailState(response, SmsBatchMap, smsHead);

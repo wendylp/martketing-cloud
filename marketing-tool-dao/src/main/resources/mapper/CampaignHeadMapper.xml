@@ -3,12 +3,35 @@
 <mapper namespace="cn.rongcapital.mkt.dao.CampaignHeadDao">
 
 	<!-- 所有查询列 -->
-	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[ id as id,name as name,publish_status as publishStatus,status as status,create_time as createTime,update_time as updateTime]]>
+	<sql id="QUERY_COLUMN_LIST_BASE">
+		<![CDATA[ id as id,name as name,publish_status as publishStatus,status as status,create_time as createTime,update_time as updateTime, start_time as startTime, end_time as endTime]]>
 	</sql>
-
+	<sql id="QUERY_COLUMN_LIST">
+		<include refid="QUERY_COLUMN_LIST_BASE"/>
+		<include refid="QUERY_DATA_COLUMN_LIST"/>
+	</sql>
+	<!-- 所有数据权限列 -->
+	<sql id="QUERY_DATA_COLUMN_LIST">
+		<if test="orgId != null"> 
+		<![CDATA[ ,da.org_id as orgId,da.firsthand as firsthand, da.share_type as shareType,da.writeable as writeable,da.from_org_id as fromOrgId, da.from_resource_id as fromResourceId, da.shared as shared,da.da_create_time as daCreateTime]]>
+		</if>
+	</sql>
+	<!-- 组织机构 添加在表名后 -->
+	<sql id="QUERY_ORGANIZATION">
+		<if test="orgId != null"> 
+    		<![CDATA[ INNER JOIN data_auth da ON da.table_name='campaign_head' AND da.resource_id = id AND da.org_id = #{orgId} ]]>
+   		   	<if test="firsthand != null "><![CDATA[ AND da.firsthand = #{firsthand}]]></if>
+   		</if>
+	</sql>
 	<!-- 查询列来源表-->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM campaign_head]]></sql>
+	<sql id="QUERY_FROM_TABLE_BASE">
+		<![CDATA[FROM campaign_head]]>
+	</sql>
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE">
+		<include refid="QUERY_FROM_TABLE_BASE"/>
+		<include refid="QUERY_ORGANIZATION"/>
+	</sql>
 	
 	<!-- 全部条件 -->
 	<sql id="QUERY_WHERE_CLAUSE">
@@ -19,6 +42,8 @@
 		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
 		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
 		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+                <if test="startTime != null"><![CDATA[ AND start_time = #{startTime}]]></if>
+                <if test="endTime != null"><![CDATA[ AND end_time = #{endTime}]]></if>
 		</where>
 	</sql>
 	
@@ -33,7 +58,9 @@
 		<set>
 		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
 		    	<if test="publishStatus != null"><![CDATA[publish_status = #{publishStatus},]]></if>
-		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+                <if test="startTime != null"><![CDATA[start_time = #{startTime},]]></if>
+                <if test="endTime != null"><![CDATA[end_time = #{endTime}]]></if>
 		</set>
 	</sql>
 
@@ -104,14 +131,9 @@
 	
 	<!-- 对campaign_head表做count统计，获取总有多少个活动 -->
 	<select id="selectCampaignCount" resultType="int">
-		<![CDATA[
-			SELECT
-				count(id) AS count
-			FROM
-				campaign_head
-			WHERE
-				STATUS = 0
-		]]>
+		<![CDATA[SELECT count(id) AS count ]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE STATUS = 0]]>
 	</select>
 	
 	<!-- 根据条件从campaign_head表中查询 -->
@@ -170,8 +192,8 @@
 	
 	<select id="selectCampaignHeadListBySearchDate" resultType="cn.rongcapital.mkt.po.CampaignHead" parameterType="java.lang.String">
 		<![CDATA[SELECT]]>
-		<include refid="QUERY_COLUMN_LIST"/>
-		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_COLUMN_LIST_BASE"/>
+		<include refid="QUERY_FROM_TABLE_BASE"/>
 		WHERE 
 			publish_status IN (1,2) 
 		<![CDATA[
@@ -180,6 +202,17 @@
  		]]>
 			ORDER BY status DESC , create_time ASC
 			limit 5
+	</select>
+		
+	<!-- 在基础表中查询查询,通过主键IN(array) -->
+	<select id="selectListByIdListFromBasic" parameterType="cn.rongcapital.mkt.po.CampaignHead" resultType="cn.rongcapital.mkt.po.CampaignHead">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST_BASE"/>
+		<include refid="QUERY_FROM_TABLE_BASE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
 	</select>
 		
 </mapper>
